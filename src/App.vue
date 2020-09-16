@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <shouye></shouye>
+    <router-link to='/zi'></router-link>
+       <router-view></router-view>
   </div>
 </template>
 
