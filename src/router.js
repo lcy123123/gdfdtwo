@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Zi from './components/ziyuan.vue'
 import Tubiao from './components/tubiao.vue'
+import First from './components/first.vue'
+// import Cesium from './components/cesium'
 
 
 //使用路由
@@ -19,6 +21,10 @@ export default new Router({
         {
             path:'/tb',
             component:Tubiao
+        },
+        {
+            path:'/first',
+            component:First
         }
     ]
 })

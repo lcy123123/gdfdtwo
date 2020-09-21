@@ -1,8 +1,15 @@
 import Vue from 'vue'
 import App from './App.vue'
 import ElementUI from 'element-ui'
-// import echarts from 'echarts'
+
 import router from './router'
+// import axios from 'axios'
+
+// import Cesium from '../public/Cesium/Cesium'
+// Vue.prototype.Cesium=Cesium;
+
+// Vue.prototype.widgets = widgets
+
 
 
 //任意位置都可以使用
