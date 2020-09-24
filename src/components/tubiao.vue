@@ -161,7 +161,7 @@ export default {
 .right {
   width: 320px;
   height: 420px;
-  background-color: #04053b;
+  /* background-color: #04053b; */
   position: absolute;
   top: 40px;
   right: 78px;

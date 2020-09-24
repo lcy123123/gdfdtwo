@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!-- <div class="zy-b" v-if="this.$router.path=='/first'?true:false"> -->
         <div class="zy-b">
             <div class="tu">图例</div>
             <div><img class="i1" src="../assets/lv.png" alt=""><span class="s1">可规划</span></div>
@@ -44,6 +45,8 @@ export default {
 .i1{
        vertical-align :middle;
        margin-right: 20px;
+       width: 35px;
+       height: 20px;
 }
 .s1{
      vertical-align :middle;

@@ -3,12 +3,15 @@ import App from './App.vue'
 import ElementUI from 'element-ui'
 
 import router from './router'
+
 // import axios from 'axios'
 
 // import Cesium from '../public/Cesium/Cesium'
 // Vue.prototype.Cesium=Cesium;
 
 // Vue.prototype.widgets = widgets
+
+// import 'element-ui/lib/theme-chalk/index.css';
 
 
 

@@ -4,13 +4,13 @@
 
 <script>
 // import Cesium from 'cesium'
- let Cesium = require('cesium/Source/Cesium')
+let Cesium = require("cesium/Source/Cesium");
 // import widget from 'cesium/Build/Cesium/Widgets/widgets.css'
+
 export default {
-    // name: "CesiumScene",
+  // name: "CesiumScene",
   data() {
-    return {
-    };
+    return {};
   },
   mounted() {
     // 调用初始化方法
@@ -32,41 +32,43 @@ export default {
         terrainProvider: Cesium.createWorldTerrain(),
         // 初始化天地图
         imageryProvider: new Cesium.WebMapTileServiceImageryProvider({
-           url: "http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=ebf64362215c081f8317203220f133eb",
+          url:"http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=ebf64362215c081f8317203220f133eb",
+        //  url: "http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=cva&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default.jpg&tk=2ce94f67e58faa24beb7cb8a09780552",
+
           layer: "tdtBasicLayer",
           style: "default",
-          subdomains: ['0','1','2','3','4','5','6','7'],
+          subdomains: ["0", "1", "2", "3", "4", "5", "6", "7"],
           format: "image/jpeg",
           tileMatrixSetID: "GoogleMapsCompatible",
           show: false
         })
       };
-      let viewer = new Cesium.Viewer("cesiumContainer",viewerOption);
+      let viewer = new Cesium.Viewer("cesiumContainer", viewerOption);
       // 添加图层
-      var cva_w = new Cesium.WebMapTileServiceImageryProvider({
-           url: "http://t0.tianditu.com/cta_c/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=ebf64362215c081f8317203220f133eb",
-          layer: "tdtBasicLayer",
+
+      viewer.imageryLayers.addImageryProvider(
+        new Cesium.WebMapTileServiceImageryProvider({
+          url:"http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=e33757cdce9295f804cb6c77aa22afe3",
+          layer: "tdtAnnoLayer",
           style: "default",
-          subdomains: ['0','1','2','3','4','5','6','7'],
           format: "image/jpeg",
-          tileMatrixSetID: "GoogleMapsCompatible",
-          show: false
+          tileMatrixSetID: "GoogleMapsCompatible"
         })
-       viewer.imageryLayers.addImageryProvider(cva_w);
+      );
 
       viewer.camera.flyTo({
         // 将位置定位到中国 通过给xyz的坐标控制在广东位置
         destination: Cesium.Cartesian3.fromDegrees(112, 23, 1785000),
         orientation: {
-            heading :  Cesium.Math.toRadians(348.4202942851978),
-            pitch : Cesium.Math.toRadians(-89.74026687972041),
-            roll : Cesium.Math.toRadians(0)
+          heading: Cesium.Math.toRadians(348.4202942851978),
+          pitch: Cesium.Math.toRadians(-89.74026687972041),
+          roll: Cesium.Math.toRadians(0)
         },
-        complete:function callback() {
-            // 定位完成之后的回调函数
+        complete: function callback() {
+          // 定位完成之后的回调函数
         }
-    });
-        viewer._cesiumWidget._creditContainer.style.display = "none";// 隐藏版权
+      });
+      viewer._cesiumWidget._creditContainer.style.display = "none"; // 隐藏版权
     }
   }
 };
@@ -80,4 +82,5 @@ export default {
   padding: 0;
   overflow: hidden;
 }
+
 </style>

@@ -2,12 +2,12 @@
     <div v-if="this.$route.path=='/zi'?false:true">
     <div class="header"><img class="header-img" src="../assets/header.png" alt=""></div>
         <div class="z" v-if="this.$route.path!=='/zi'?true:false">
-            <div class="small"></div>
+            <div class="small" v-if="(this.$route.path=='/first'||this.$route.path=='/second')?false:true"></div>
         <!-- 上边的按钮 -->
         <button class="b1">评估数据展示台</button>
         <button class="b2">评估与决策平台</button>
         </div>
-        <div v-if="(this.$route.path=='/tb'||this.$route.path=='/first')?false:true">
+        <div v-if="this.$route.path!='/'?false:true">
          <!-- 右上边的盒子 -->
           <div class="right-1">
               <div class="right-t">风速和风能频次分布直方图<button class="right-1-btn">×</button></div>
@@ -21,12 +21,13 @@
         </div>
        
           <!-- 左上角两个div -->
-          <div class="div-z">
+          <div class="div-z" v-if="(this.$route.path=='/first'||this.$route.path=='/second')?false:true">
               <div class="div1" @click="cs" >风资源参数展示</div>
               <div class="div2" @click="tb">风资源统计图表展示</div>
           </div>
           <!-- 底部玫瑰图 -->
-          <div class="bottom" v-if="(this.$route.path=='/tb'||this.$route.path=='/first')?false:true">
+          <!-- <div class="bottom" v-if="(this.$route.path=='/tb'||this.$route.path=='/first')?false:true"> -->
+          <div class="bottom" v-if="this.$route.path!='/'?false:true">
               <div class="bottom-t">风速风向玫瑰图<button class="bottom-btn">×</button></div>
              <div class="a">
                   <div class="title-1">博贺ZephlR300激光雷达</div>
@@ -48,16 +49,17 @@
              </div>
           </div>
           <!-- 右侧六个小按钮 -->
+          <div @click="togg" class="aaa"> > </div>
           <ul>
           <li @click="first"><img src="../assets/01.png" alt=""></li>
-          <li><img src="../assets/02.png" alt=""></li>
+          <li @click="second"><img src="../assets/02.png" alt=""></li>
           <li><img src="../assets/03.png" alt=""></li>
           <li><img src="../assets/04.png" alt=""></li>
           <li><img src="../assets/05.png" alt=""></li>
           <li><img src="../assets/06.png" alt=""></li>
         </ul>
          <!-- 时间轴 -->
-       <div class="sjz-z" v-if="(this.$route.path=='/tb'||this.$route.path=='/first')?true:false">
+       <div class="sjz-z" v-if="(this.$route.path=='/tb'||this.$route.path=='/first'||this.$route.path=='/second'||this.$route.path=='/three')?true:false">
         <div>
             <span class="btn-1"><img src="../assets/001.png" alt=""></span>
             <span class="btn-2"><img src="../assets/002.png" alt=""></span>
@@ -74,9 +76,11 @@
           <span class="btn-7"><img src="../assets/007.png" alt=""></span>
         </div>
     </div>
+   
     </div>
 </template>
 <script>
+import $ from 'jquery'
 import echarts from 'echarts'
 export default {
     data () {
@@ -85,6 +89,9 @@ export default {
         }
     },
     methods: {
+        togg:function(){
+                $('ul').toggle();
+        },
         cs:function(){  
             // 跳转资源页
             this.$router.push('/zi')
@@ -99,6 +106,10 @@ export default {
         first:function(){
             // 跳转页面
             this.$router.push('/first')
+        },
+        second:function(){
+            // 跳转页面
+            this.$router.push('/second')
         }
     }
     
@@ -414,6 +425,14 @@ myEchartTop.setOption(optionTop)
 window.onload = load;
 </script>
 <style>
+.aaa{
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top:30px;
+    right: 70px;
+    border: 1px solid red;
+}
 .b1{
     background-color: #1E4292;
     /* background: url(../assets/cd.png); */
@@ -424,8 +443,6 @@ window.onload = load;
     top:40px;
     left: 18px;
     border-radius: 10%;
-    
-
 }
 /* .b1,img{
     width: 150px;
@@ -454,8 +471,8 @@ window.onload = load;
 }
 .right-1{
    
-    background-color: #04053B;
-    background:rgba(4,5,59);
+    /* background-color: #04053B;
+    background:rgba(4,5,59); */
     border: 1px solid #01CAEB;
     height: 280px;
     width: 350px;
@@ -465,8 +482,8 @@ window.onload = load;
     
 }
 .right-2{
-    background-color: #04053B;
-    background:rgba(4,5,59);
+    /* background-color: #04053B;
+    background:rgba(4,5,59); */
     border: 1px solid #01CAEB;
     height: 280px;
     width: 350px;
@@ -493,8 +510,8 @@ window.onload = load;
     height: 280px;
     opacity: 1;
     border: 1px solid #01CAEB;
-    background-color: #04053B;
-    background:rgba(4,5,59);
+    /* background-color: #04053B; */
+    /* background:rgba(4,5,59); */
     position:absolute;
     bottom:0px;
     
@@ -587,7 +604,8 @@ img{
     position: absolute;
     top:0;
     left: 0;
-    width: 100%;
+    width: 99%;
+    margin-left: 5px;
 }
 .header-img{
 height: 40px;
@@ -673,4 +691,5 @@ overflow: hidden;
     height: 12px;
 
 }
+
 </style>
