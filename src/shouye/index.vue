@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 右侧六个小按钮 -->
-    <div class="tog-six">
+    <div class="tog-six" v-if="this.$route.path=='/tb'?false:true">
       <div @click="togg" class="tog"><img src="../assets/t.jpg" alt="" /></div>
       <ul>
         <li @click="first"><img src="../assets/01.png" alt="" /></li>
@@ -12,18 +12,7 @@
       </ul>
     </div>
     <!-- 时间轴 -->
-    <div
-      class="sjz-z"
-      v-if="
-        this.$route.path == '/tb' ||
-        this.$route.path == '/first' ||
-        this.$route.path == '/second' ||
-        this.$route.path == '/' ||
-        this.$route.path == '/three'
-          ? true
-          : false
-      "
-    >
+    <div class="sjz-z" v-if="this.$route.path!='/tb'?true:false">
       <div>
         <span class="btn-1"><img src="../assets/001.png" alt=""/></span>
         <span class="btn-2"><img src="../assets/002.png" alt=""/></span>
@@ -41,10 +30,14 @@
         <span class="btn-7"><img src="../assets/007.png" alt=""/></span>
       </div>
     </div>
-    <div class="zy-b">
+    <div class="zy-b" v-if="this.$route.path!='/'?false:true">
             <div class="tu">图例</div>
-            <div><img class="i1" src="../assets/lv.png" alt=""><span class="s1">可规划</span></div>
-            <div><img class="i1" src="../assets/lan.png" alt=""><span class="s1">未规划</span></div>
+            <!-- <div><img class="i1" src="../assets/lv.png" alt=""><span class="s1">可规划</span></div> -->
+            <!-- <div><img class="i1" src="../assets/lan.png" alt=""><span class="s1">中上层鱼类产卵场</span></div> -->
+            <!-- <div> -->
+              <div class="zscdiv"></div>
+              <div class="s1">中上层鱼类产卵场</div>
+            <!-- </div> -->
         </div>
   </div>
 </template>
@@ -198,4 +191,20 @@ img {
   width: 12px;
   height: 12px;
 }
-</style>
+.zscdiv{
+  width: 40px;
+  height: 15px;
+  /* border:1px solid rgb(12, 150, 205); */
+  border:1px solid #084C79;
+  display: inline-block;
+  margin-right: 5px;
+  top:20px;
+  vertical-align: bottom;
+  background-color: #0C96CD;
+
+}
+.s1{
+  display: inline-block;
+  vertical-align: bottom;
+}
+</style> 

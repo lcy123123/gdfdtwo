@@ -5,14 +5,14 @@
     <!-- 右侧 -->
     <div class="header-right">
       <span class="xtsz"><i class="el-icon-setting"></i>  系统设置</span>
-      <span class="yhm"><i class="el-icon-user"></i> yonghuming</span>
+      <span class="yhm"><i class="el-icon-user"></i> yonghuming <i class="el-icon-arrow-down"></i> </span>
       
     </div>
     <!-- 左侧 -->
     <div class="nac-z">
       <div class="nav nav1" @click="fn"><span>风能资源</span></div>
       <div class="nav nav2" @click="zh"><i class="el-icon-lightning"></i><span>灾害天气</span></div>
-      <div class="nav nav3" @click="pg"><span>评估资源</span></div>
+      <div class="nav nav3" @click="pg"><span>评估决策</span></div>
     </div>
     <!-- 下拉框 -->
     <div class="xlk-z">
@@ -32,6 +32,7 @@
         <div>数值预报</div>
       </div>
     </div>
+   
   </div>
 </template>
 

@@ -1,5 +1,10 @@
 <template>
-  <div id="cesiumContainer"></div>
+  <div>
+    <div id="cesiumContainer">
+    <!-- <button class="aaa">矢量标记</button> -->
+  </div>
+  </div>
+
 </template>
 
 <script>
@@ -43,9 +48,9 @@ export default {
           show: false
         })
       };
-      let viewer = new Cesium.Viewer("cesiumContainer", viewerOption);
-      // 添加图层
+      var viewer = new Cesium.Viewer("cesiumContainer", viewerOption);
 
+      // 添加图层
       viewer.imageryLayers.addImageryProvider(
         new Cesium.WebMapTileServiceImageryProvider({
           url:"http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=e33757cdce9295f804cb6c77aa22afe3",
@@ -55,10 +60,10 @@ export default {
           tileMatrixSetID: "GoogleMapsCompatible"
         })
       );
-
+      // 将位置定位到中国 通过给xyz的坐标控制在广东位置
       viewer.camera.flyTo({
-        // 将位置定位到中国 通过给xyz的坐标控制在广东位置
         destination: Cesium.Cartesian3.fromDegrees(112, 23, 1785000),
+        // destination: Cesium.Cartesian3.fromDegrees(100, 23, 1785000),
         orientation: {
           heading: Cesium.Math.toRadians(348.4202942851978),
           pitch: Cesium.Math.toRadians(-89.74026687972041),
@@ -68,6 +73,17 @@ export default {
           // 定位完成之后的回调函数
         }
       });
+      //在地图上添加矢量数据
+      var promise=Cesium.GeoJsonDataSource.load('./zsc.json',{
+          stroke: new Cesium.Color(0.019,0.156,0.639,0),    //多边形轮廓线的颜色
+          // fill: Cesium.Color.CORNFLOWERBLUE.withAlpha(.7),       //多边形中间的颜色
+          // fill: new Cesium.Color(0.019,0.156,0.639,0.7),       //多边形中间的颜色
+          fill: new Cesium.Color(0.047,0.588,0.807,.5),       //多边形中间的颜色
+          strokeWidth: 5,            //多边形的厚度
+          // strokeWidth: 3,            //多边形的厚度
+          markerSymbol: false           //多边形
+        });
+        viewer.dataSources.add(promise);
       viewer._cesiumWidget._creditContainer.style.display = "none"; // 隐藏版权
     }
   }
@@ -82,5 +98,10 @@ export default {
   padding: 0;
   overflow: hidden;
 }
-
+/* .aaa{
+  position: absolute;
+  top:150px;
+  left: 50px;
+  color: white;
+} */
 </style>

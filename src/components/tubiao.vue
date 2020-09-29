@@ -1,308 +1,353 @@
 <template>
   <div>
-    <div class="zy-b">
-      <div class="tu">图例</div>
-      <div>
-        <img class="i1" src="../assets/lv.png" alt />
-        <span class="s1">建设中</span>
-      </div>
-      <div>
-        <img class="i1" src="../assets/lan.png" alt />
-        <span class="s1">建设完成</span>
-      </div>
+    <!-- 左面第一个图表 -->
+    <div class="left-1">
+      <div class="div-btn">风速月变化<button class="btn-1">×</button></div>
+      <!-- 折线统计图 -->
+      <div id="main-left-1" style="width:320px;height:200px;position:absolute;top:-20px;left:20px"></div>
     </div>
-    <div class="right">
-      <div class="right-t">
-        风资源评估与决策
-        <button class="right-1-btn">×</button>
-      </div>
-      <div class="box">
-        <span class="t1">风能参数:</span>
-        <div class="box-1">
-          <el-checkbox class="box1" label="最大风速"></el-checkbox>
-          <el-checkbox class="box1" label="第一风向"></el-checkbox>
-        </div>
-        <div>
-          <el-checkbox class="box1" label="风功率密度"></el-checkbox>
-          <el-checkbox class="box1" label="平均风速"></el-checkbox>
-        </div>
-      </div>
-      <div class="box">
-        <span class="t2">影像要素:</span>
-        <div>
-          <el-checkbox class="box1" label="海洋行政"></el-checkbox>
-          <el-checkbox class="box1" label="港口通航"></el-checkbox>
-          <el-checkbox class="box1" label="海底光"></el-checkbox>
-          <el-checkbox class="box1" label="生态红线"></el-checkbox>
-          <el-checkbox class="box1" label="气象灾害天气"></el-checkbox>
-        </div>
-        <div class="box-1">
-          <el-checkbox class="box1" label="海洋生态保护"></el-checkbox>
-          <el-checkbox class="box1" label="海洋油气管道"></el-checkbox>
-          <el-checkbox class="box1" label="自然保护区"></el-checkbox>
-          <el-checkbox class="box1" label="已规划风电场"></el-checkbox>
-        </div>
-      </div>
-      <!-- 选择日期 -->
-      <span class="t3">开始时间:</span>
-      <div class="time">
-        <el-date-picker v-model="value1" type="date" size="small" placeholder="选择日期"></el-date-picker>
-      </div>
-      <!-- <div class="block"></div> -->
-      <!-- 下拉框 -->
-      
-     <div class="xlk">
-         <span class="t4">选择模型：</span>
-         <el-select v-model="value" placeholder="请选择" size='small'>
-        <!-- <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option> -->
-      </el-select>
-     </div>
-     <div class="xlk2">
-         <span class="t5">评估名称：</span>
-         <el-select v-model="value" placeholder="请选择" size='small'>
-        <!-- <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option> -->
-      </el-select>
-     </div>
-     <button class="btn">开始评估</button>
+    <!-- 左面第二个图表 -->
+    <div class="left-2">
+      <div class="div-btn">风功率密度统计<button class="btn-1">×</button></div>
+      <div id="main-left-2" style="width:320px;height:200px;position:absolute;top:-10px;left:20px"></div>
+
+
     </div>
-    <!-- <div class="sjz-z">
-        <div>
-            <span class="btn-1"><img src="../assets/001.png" alt=""></span>
-            <span class="btn-2"><img src="../assets/002.png" alt=""></span>
-        </div>
-        中间时间轴
-        <div class="sjz-middle"><img class="sjz-img" src="../assets/sjz.png" alt="">
-         <el-slider v-model="value1"></el-slider>
-        </div>
-        <div>
-          <span class="btn-3"><img src="../assets/003.png" alt=""></span>
-          <span class="btn-4"><img src="../assets/004.png" alt=""></span>
-          <span class="btn-5"><img src="../assets/005.png" alt=""></span>
-          <span class="btn-6"><img src="../assets/006.png" alt=""></span>
-          <span class="btn-7"><img src="../assets/007.png" alt=""></span>
-        </div>
-    </div> -->
+    <!-- 左面第三个图表 -->
+    <div class="left-3">
+      <div class="div-btn">有效风速<button class="btn-1">×</button></div>
+      <div id="main-left-3" style="width:320px;height:200px;position:absolute;top:-10px;left:20px"></div>
+
+
+    </div>
+    <!-- 右面第一个图表 -->
+    <div class="right-1">
+           <div class="div-btn">风向统计<button class="btn-1">×</button></div>
+           <div id="main-left-4" style="width:300px;height:140px;position:absolute;top:22px;right:0px"></div>
+          
+
+
+    </div>
+    <!-- 右面第二个图表 -->
+    <div class="right-2">
+      <div class="div-btn">遥感数据对比<button class="btn-1">×</button></div>
+      <div id="main-left-5" style="width:320px;height:200px;position:absolute;top:-10px;right:0px"></div>
+
+
+    </div>
+    <!-- 右面第三个图表 -->
+    <div class="right-3">
+      <div class="div-btn">浮标数据对比<button class="btn-1">×</button></div>
+      <div id="main-left-6" style="width:320px;height:200px;position:absolute;top:-10px;right:0px"></div>
+
+
+    </div>
   </div>
 </template>
 
 <script>
+
 export default {
-  data() {
+  data () {
     return {
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        },
-        shortcuts: [
-          {
-            text: "今天",
-            onClick(picker) {
-              picker.$emit("pick", new Date());
-            }
-          },
-          {
-            text: "昨天",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit("pick", date);
-            }
-          },
-          {
-            text: "一周前",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", date);
-            }
-          }
-        ]
-      },
-      value1: "",
-      value2: "",
       
-    };
-    
+    }
   }
+
+}
+import echarts from 'echarts';
+function load(){
+  // 折线统计图
+var mychartsLeft1=echarts.init(document.getElementById("main-left-1"))
+var optionLeft1={
+    xAxis: {
+        type: 'category',
+        data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+        axisLabel:{
+          color:'white'
+        }
+    },
+    yAxis: {
+        type: 'value',
+        axisLabel:{
+          color:'white',
+          textStyle:{
+            color:'white'
+          }
+        }
+    },
+    series: [{
+        data: [820, 932, 901, 934, 1290, 1330, 1320],
+        type: 'line'
+    }]
 };
+mychartsLeft1.setOption(optionLeft1)
+//柱状图1
+var mychartsLeft2=echarts.init(document.getElementById("main-left-2"))
+var optionLeft2={
+   color:['#54A8F1'],
+    legend: {
+        orient: 'horizontal',
+        x:'center',      //可设定图例在左、右、居中
+        y:'bottom',  
+        color:['white'],
+         padding:[0,50,20,0],
+           textStyle: { //图例文字的样式
+                            color: 'white',
+                        },
+        data: ['平均风功率密度'],
+    },
+    xAxis: [
+        {
+            type: 'category',
+            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+            axisPointer: {
+                type: 'shadow'
+            },
+            axisLabel:{
+              color:'white'
+            },
+            axisLine:{
+                lineStyle:{
+                    color:'white'
+                }
+            }
+        }
+    ],
+    yAxis: [
+        {
+            type: 'value',
+            name: '平均风功率密度统计W/m²',
+            min: 0,
+            max: 1000,
+            interval: 200,
+            axisLabel: {
+                formatter: '{value}',
+                color:'white',
+            },
+            axisLine:{
+                lineStyle:{
+                    color:'white'
+                }
+            }
+        },
+    ],
+    series: [
+        {
+            name: '平均风功率密度',
+            type: 'bar',
+            data: [120, 149, 170, 232, 256, 767, 435, 562, 326, 200, 364, 330]
+            // data: [120, 149, 170, 232, 256, 767, 435, 562, 326, 200, 364, 330]
+        },
+    ],
+    
+};
+mychartsLeft2.setOption(optionLeft2)
+//柱状图2
+var mychartsLeft3=echarts.init(document.getElementById("main-left-3"))
+var optionLeft3={
+   color:['#54A8F1'],
+    legend: {
+        orient: 'horizontal',
+        x:'center',      //可设定图例在左、右、居中
+        y:'bottom',  
+        // color:['white'],
+         padding:[0,50,20,0],
+         textStyle:{
+             color:'white'
+         },
+        data: ['有效风速频率'],
+    },
+    xAxis: [
+        {
+            type: 'category',
+            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+            axisPointer: {
+                type: 'shadow'
+            },
+            axisLabel:{
+              color:'white'
+            },
+            axisLine:{
+                lineStyle:{
+                    color:'white'
+                }
+            }
+        }
+    ],
+    yAxis: [
+        {
+            type: 'value',
+            name: '平均风功率密度统计W/m²',
+            min: 0,
+            max: 1000,
+            interval: 200,
+            axisLabel: {
+                formatter: '{value}',
+                color:'white',
+            },
+            axisLine:{
+                lineStyle:{
+                    color:'white'
+                }
+            }
+        },
+        {
+           
+            
+        }
+    ],
+    series: [
+        {
+            name: '有效风速频率',
+            type: 'bar',
+            data: [120, 149, 170, 232, 256, 767, 435, 562, 326, 200, 364, 330]
+            // data: [120, 149, 170, 232, 256, 767, 435, 562, 326, 200, 364, 330]
+        },
+       
+    ]
+};
+mychartsLeft3.setOption(optionLeft3)
+//玫瑰图
+var mychartsLeft4=echarts.init(document.getElementById("main-left-4"))
+var optionLeft4= {
+    color:'green',
+    angleAxis: {
+        type: 'category',
+        data: ['NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'],
+        min:0,
+        max:14,
+        axisTick:{show:false},
+        axisLabel:{margin:2,color:'white'}
+    },
+    radiusAxis: {
+         name:'N',
+         nameTextStyle:{
+            color:'red'     //坐标轴文字颜色
+        }
+    },
+    polar: {
+         center: ['50%', '50%']
+    },
+    series: [{
+        type: 'bar',
+        data: [1, 2, 3, 4, 3, 5, 1,3,4,5,6,7,8,9,9,2],
+        coordinateSystem: 'polar',
+        stack: 'a'
+    }],
+    legend: {
+        show: true,
+        data: ['A', 'B', 'C']
+    }
+};
+   
+
+mychartsLeft4.setOption(optionLeft4)
+//右侧折线图1
+var mychartsLeft5=echarts.init(document.getElementById("main-left-5"))
+var optionLeft5={
+    xAxis: {
+        type: 'category',
+        data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+        axisLabel:{
+          color:'white'
+        }
+    },
+    yAxis: {
+        type: 'value',
+        axisLabel:{
+          color:'white',
+          textStyle:{
+            color:'white'
+          }
+        }
+    },
+    series: [{
+        data: [820, 932, 901, 934, 1290, 1330, 1320],
+        type: 'line'
+    }]
+};
+mychartsLeft5.setOption(optionLeft5)
+//右侧折线图2
+var mychartsLeft6=echarts.init(document.getElementById("main-left-6"))
+var optionLeft6={
+    xAxis: {
+        type: 'category',
+        data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+        axisLabel:{
+          color:'white'
+        }
+    },
+    yAxis: {
+        type: 'value',
+        axisLabel:{
+          color:'white',
+          textStyle:{
+            color:'white'
+          }
+        }
+    },
+    series: [{
+        data: [820, 932, 901, 934, 1290, 1330, 1320],
+        type: 'line'
+    },{
+        data: [820, 912, 941, 924, 1290, 1330, 1320],
+        type: 'line',
+    }]
+};
+mychartsLeft6.setOption(optionLeft6)
+
+  }
+window.onload=load;
 </script>
+
 <style scoped>
-.zy-b {
-  width: 120px;
-  height: 100px;
+/* 图表样式 */
+.left-1,.left-2,.left-3,.right-1,.right-2,.right-3{
+  border:1px solid #0B1B7A;
+  /* border-left:3px solid red;  */
+
+  width: 340px;
+  height: 170px;
+}
+.left-1{
   position: absolute;
-  bottom: 50px;
-  left: 30px;
-  color: blanchedalmond;
-  border: 1px solid #01caeb;
-  padding: 10px;
-  /* padding-top: 10px; */
+  top:50px;
+  left:20px
 }
-.i1 {
-  vertical-align: middle;
-  margin-right: 20px;
-}
-.s1 {
-  vertical-align: middle;
-}
-.tu {
-  margin: 10px 0;
-}
-.right {
-  width: 320px;
-  height: 420px;
-  /* background-color: #04053b; */
+.left-2{
   position: absolute;
-  top: 40px;
-  right: 78px;
-  border: 1px solid #01caeb;
+  top:235px;
+  left:20px
 }
-.box {
+.left-3{
+  position: absolute;
+  top:420px;
+  left:20px
+}
+.right-1{
+  position: absolute;
+  top:50px;
+  right:20px
+}
+.right-2{
+  position: absolute;
+  top:235px;
+  right:20px
+}
+.right-3{
+  position: absolute;
+  top:420px;
+  right:20px
+}
+.div-btn{
   color: white;
-  display: flex;
-  margin: 10px;
+  background-color: #092F7A;
+}
+.btn-1{
+  background-color: #092F7A;
+  color: #03DEE4;
+  float:right;
 }
 
-label {
-  margin-top: 6px;
-  margin-right: 0;
-  font-size: 10px;
-}
-.t1 {
-  width: 100px;
-  height: 30px;
-  font-size: 14px;
-  margin-top: 6px;
-}
-.t2 {
-  width: 250px;
-  height: 30px;
-  font-size: 14px;
-  margin-top: 6px;
-}
-.t3 {
-  color: white;
-  font-size: 14px;
-  margin-left: 10px;
-}
-.t4 {
-  color: white;
-  font-size: 14px;
-  position: absolute;
-  bottom: 8px;
-  left: -70px;
-}
-.t5 {
-  color: white;
-  font-size: 14px;
-  position: absolute;
-  bottom: 6px;
-  left: -70px;
-}
-.time {
-  position: absolute;
-  top: 235px;
-  left: 78px;
-}
-.xlk{
-    position:absolute;
-    bottom: 110px;
-    left: 78px;
-}
-.xlk2{
-    position:absolute;
-    bottom: 70px;
-    left: 78px;
-}
-.btn{
-    width: 80px;
-    height: 40px;
-    position: absolute;
-    bottom:20px;
-    left:120px;
-    background:#057EA0;
-    border-radius: 10%;
-    color: white;
-}
-/* .sjz-z{
-    width: 610px;
-    height: 50px;
-    position:absolute;
-    bottom: 20px;
-    left:25%;
-    border: 1px solid #091673;
-    border-radius: 30px;
-}
-.sjz-middle{
-  position: absolute;
-  left: 70px;
-  top: 10px;
-  width: 400px;
-  height: 100%;
-}
-.sjz-img{
-    width: 400px;
-    height: 17px;
-    float: left;
-    margin: 0 auto;
-}
-.btn-1>img{
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    left:10px;
-    top:18px
-}
-.btn-2>img{
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    left: 36px;
-    top:18px
-}
-.btn-3>img{
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    right: 115px;
-    top:15px
-}
-.btn-4>img{
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    right: 90px;
-    top:15px
-}
-.btn-5>img{
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    right: 65px;
-    top:15px
-}
-.btn-6>img{
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    right: 40px;
-    top:15px
-}
-.btn-7>img{
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    right: 15px;
-    top:15px
-} */
 </style>

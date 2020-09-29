@@ -3,7 +3,6 @@
     <cesium></cesium>
     <headerimg></headerimg>
     <shouye></shouye>
-    
        <router-view></router-view>
              
 
@@ -15,13 +14,14 @@ import shouye from './shouye/index.vue'
 import cesium from './components/cesium'
 import headerimg from './components/headerimg'
 
+
 export default {
   name: 'App',
  
   components: {
     cesium,
     shouye,
-    headerimg
+    headerimg,
 
   }
 }
