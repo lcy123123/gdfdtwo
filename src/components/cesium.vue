@@ -63,7 +63,7 @@ export default {
       // 将位置定位到中国 通过给xyz的坐标控制在广东位置
       viewer.camera.flyTo({
         destination: Cesium.Cartesian3.fromDegrees(112, 23, 1785000),
-        // destination: Cesium.Cartesian3.fromDegrees(100, 23, 1785000),
+        // destination: Cesium.Cartesian3.fromDegrees(116, 20, 1785000),
         orientation: {
           heading: Cesium.Math.toRadians(348.4202942851978),
           pitch: Cesium.Math.toRadians(-89.74026687972041),
@@ -79,9 +79,9 @@ export default {
           // fill: Cesium.Color.CORNFLOWERBLUE.withAlpha(.7),       //多边形中间的颜色
           // fill: new Cesium.Color(0.019,0.156,0.639,0.7),       //多边形中间的颜色
           fill: new Cesium.Color(0.047,0.588,0.807,.5),       //多边形中间的颜色
-          strokeWidth: 5,            //多边形的厚度
+          strokeWidth: 5,                //多边形的厚度
           // strokeWidth: 3,            //多边形的厚度
-          markerSymbol: false           //多边形
+          markerSymbol: '?'          //多边形
         });
         viewer.dataSources.add(promise);
       viewer._cesiumWidget._creditContainer.style.display = "none"; // 隐藏版权

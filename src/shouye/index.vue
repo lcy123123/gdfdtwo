@@ -1,8 +1,8 @@
 <template>
   <div>
     <!-- 右侧六个小按钮 -->
-    <div class="tog-six" v-if="this.$route.path=='/tb'?false:true">
-      <div @click="togg" class="tog"><img src="../assets/t.jpg" alt="" /></div>
+    <div class="tog-six" v-if="(this.$route.path=='/tb'||this.$route.path=='/first')?false:true">
+      <div @click="tog" ><img class="tog" src="../assets/down.jpg" alt="" /></div>
       <ul>
         <li @click="first"><img src="../assets/01.png" alt="" /></li>
         <li @click="second"><img src="../assets/02.png" alt="" /></li>
@@ -30,11 +30,8 @@
         <span class="btn-7"><img src="../assets/007.png" alt=""/></span>
       </div>
     </div>
-    <div class="zy-b" v-if="this.$route.path!='/'?false:true">
+    <div class="zy-b" v-if="(this.$route.path=='/'||this.$route.path=='/first')?true:false">
             <div class="tu">图例</div>
-            <!-- <div><img class="i1" src="../assets/lv.png" alt=""><span class="s1">可规划</span></div> -->
-            <!-- <div><img class="i1" src="../assets/lan.png" alt=""><span class="s1">中上层鱼类产卵场</span></div> -->
-            <!-- <div> -->
               <div class="zscdiv"></div>
               <div class="s1">中上层鱼类产卵场</div>
             <!-- </div> -->
@@ -44,6 +41,8 @@
 <script>
 import $ from "jquery";
 // import echarts from 'echarts'
+import up from '../assets/up.png'
+import down from '../assets/down.jpg'
 export default {
   data() {
     return {
@@ -51,8 +50,13 @@ export default {
     };
   },
   methods: {
-    togg: function() {
+    tog: function() {
       $("ul").slideToggle(200);
+       if($('.tog').attr('src')==down){
+        $('.tog').attr('src',up)
+      }else{
+        $('.tog').attr('src',down)
+      }
     },
     first: function() {
       // 跳转页面

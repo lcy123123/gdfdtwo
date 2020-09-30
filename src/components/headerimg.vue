@@ -10,9 +10,10 @@
     </div>
     <!-- 左侧 -->
     <div class="nac-z">
-      <div class="nav nav1" @click="fn"><span>风能资源</span></div>
-      <div class="nav nav2" @click="zh"><i class="el-icon-lightning"></i><span>灾害天气</span></div>
-      <div class="nav nav3" @click="pg"><span>评估决策</span></div>
+      <!-- <div class="nav nav1" @click="fn"><img class="i1" src="../assets/i1.png" alt=""><span>风能资源</span></div> -->
+      <div class="nav nav1" @click="fn"><img class="i1" src="../assets/i1.png" alt=""><span>风能资源</span></div>
+      <div class="nav nav2" @click="zh"><img class="i2" src="../assets/i2.png" alt=""><span>灾害天气</span></div>
+      <div class="nav nav3" @click="pg"><img class="i3" src="../assets/i3.png" alt=""><span>评估决策</span></div>
     </div>
     <!-- 下拉框 -->
     <div class="xlk-z">
@@ -38,24 +39,48 @@
 
 <script>
 import $ from 'jquery'
+import i1 from '../assets/i1.png'
+import i2 from '../assets/i2.png'
+import i3 from '../assets/i3.png'
+import i11 from '../assets/i11.png'
+import i22 from '../assets/i22.png'
+import i33 from '../assets/i33.png'
 export default {
   data () {
     return {
-      
+
     }
   },
   methods:{
     fn:function(){
       $('.xlk-1').css('display:block')
      $('.xlk-1').slideToggle(200)
+     //点击切换图标
+     if($('.i1').attr('src')==i1){
+      $('.i1').attr('src',i11)
+     }else{
+       $('.i1').attr('src',i1)
+     }
     },
     zh:function(){
       $('.xlk-2').css('display:block')
       $('.xlk-2').slideToggle(200)
+      //点击切换图标
+      if($('.i2').attr('src')==i2){
+      $('.i2').attr('src',i22)
+     }else{
+       $('.i2').attr('src',i2)
+     }
     },
     pg:function(){
       $('.xlk-3').css('display:block')
       $('.xlk-3').slideToggle(200)
+      //点击切换图标
+      if($('.i3').attr('src')==i3){
+      $('.i3').attr('src',i33)
+     }else{
+       $('.i3').attr('src',i3)
+     }
       
     },
   }
@@ -76,7 +101,16 @@ height: 45px;
 width: 100%;
 overflow: hidden;
 }
-
+.i1{
+  width: 15px;
+  height: 15px;
+  margin-right: 4px;
+}
+.i2,.i3{
+  width: 13px;
+  height: 13px;
+  margin-right: 4px;
+}
 /* 头部导航 */
 .header-right{
   width: 300px;
