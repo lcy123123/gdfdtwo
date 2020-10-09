@@ -80,7 +80,6 @@ export default {
           // fill: new Cesium.Color(0.019,0.156,0.639,0.7),       //多边形中间的颜色
           fill: new Cesium.Color(0.047,0.588,0.807,.5),       //多边形中间的颜色
           strokeWidth: 5,                //多边形的厚度
-          // strokeWidth: 3,            //多边形的厚度
           markerSymbol: '?'          //多边形
         });
         viewer.dataSources.add(promise);

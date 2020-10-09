@@ -20,7 +20,7 @@
       <!-- 中间时间轴 -->
       <div class="sjz-middle">
         <img class="sjz-img" src="../assets/sjz.png" alt="" />
-        <el-slider v-model="value1"></el-slider>
+        <el-slider  v-model="value1"></el-slider>
       </div>
       <div>
         <span class="btn-3"><img src="../assets/003.png" alt=""/></span>
