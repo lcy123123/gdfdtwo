@@ -2,7 +2,7 @@
   <div>
     <!-- 五个小按钮 -->
     <div class="fivebtn">
-       <div class="tog"><img  @click="tog" id="t" src="../assets/down.jpg" alt="" /></div>
+       <div class="tog"><img  @click="tog" id="t" src="../assets/up.png" alt="" /></div>
       <ul>
         <li @click="first"><img src="../assets/01.png" alt="" /></li>
         <li @click="second"><img src="../assets/02.png" alt="" /></li>
@@ -21,8 +21,12 @@
       <!-- 右边第一个下拉框 -->
       <div class="top-1">
         <div class="top-11">
+          <el-form>
+          <el-form-item>
           <el-checkbox>平均风速</el-checkbox>
           <el-checkbox>平均风功率密度</el-checkbox>
+          </el-form-item>
+          </el-form>
         </div>
       </div>
       <!-- 下边的 -->
@@ -83,7 +87,7 @@ export default {
         //将小图标变成不亮的
         $('.y1').attr('src',y1)
         //将背景变成没有
-        $('.right-top').css({'background': ''})
+        $('.right-top').css({'background': ' rgba(8,26,127,0)'})
         //将文字变成不亮的
         $('.y1-text').css({'color':'white'})
         //点击切换后面的小图标
@@ -117,7 +121,7 @@ export default {
         //将小图标变成不亮的
         $('.y2').attr('src',s1)
         //将背景变成没有
-        $('.right-bottom').css({'background': ''})
+        $('.right-bottom').css({'background': 'rgba(8,26,127,0)'})
         //将文字变成不亮的
         $('.y2-text').css({'color':'white'})
         //改变后面的小三角
@@ -127,7 +131,7 @@ export default {
         //将小图标变成亮的
         $('.y2').attr('src',s2)
         //将背景变成蓝色
-        $('.right-top').css({'background': 'rgba(3,37,127,.5)'})
+        $('.right-bottom').css({'background': 'rgba(3,37,127,.5)'})
         //将文字变成蓝色的
         $('.y2-text').css({'color':'#04BFEA'})
         //改变后面的小三角
@@ -141,10 +145,10 @@ export default {
       // $('#t').attr('src',up)
       $('ul').slideToggle(200)
       //点击切换图标
-      if($('#t').attr('src')==down){
-        $('#t').attr('src',up)
-      }else{
+      if($('#t').attr('src')==up){
         $('#t').attr('src',down)
+      }else{
+        $('#t').attr('src',up)
       }
     }
   }
@@ -160,12 +164,12 @@ export default {
   top:65px
 }
 .fivebtn{
-  /* border:1px solid red; */
-  /* width: 20px;
-  height: 40px; */
   position: absolute;
   top: 65px;
   right: 385px;
+}
+ul{
+  display: none;
 }
 .tog{
   position: absolute;
@@ -177,8 +181,7 @@ background: rgba(3,37,127,.5);
 border: 2px solid rgba(8,26,127,.5);
 }
 .right-bottom{
-/* border: 1px solid red; */
-/* background: rgba(3,37,127,.5); */
+background: rgba(3,37,127,.5);
 border: 2px solid rgba(8,26,127,.5);
 }
 .y1,.y2{
@@ -214,26 +217,26 @@ margin-right: 108px;
 }
 .b3{
   margin-left: 10px;
-  margin-right: 82px;
+  margin-right: 84px;
 }
 .b5{
   margin-left: 10px;
-  margin-right: 43px;
+  margin-right: 48px;
 }
 .b7{
   margin-left: 10px;
-  margin-right: 17px;
+  margin-right: 24px;
 }
 .b9{
   margin-left: 10px;
-  margin-right: 4px;
+  margin-right: 12px;
 
 }
 
  
 .el-checkbox__label {
   color: white;
-  font-size: 13px;
+  font-size: 12px;
   margin-left: -3px;
 
 }

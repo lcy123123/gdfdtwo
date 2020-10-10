@@ -2,27 +2,27 @@
   <div>
     <!-- 左面第一个图表 -->
     <div class="left-1">
-      <div class="div-btn">风速月变化<button class="btn-1">×</button></div>
+      <div class="div-btn"><span class="first-text">风速月变化</span><span class="btn-1">×</span></div>
       <!-- 折线统计图 -->
       <div id="main-left-1" style="width:320px;height:200px;position:absolute;top:-20px;left:20px"></div>
     </div>
     <!-- 左面第二个图表 -->
     <div class="left-2">
-      <div class="div-btn">风功率密度统计<button class="btn-1">×</button></div>
+      <div class="div-btn"><span class="first-text">风功率密度统计</span><span class="btn-1">×</span></div>
       <div id="main-left-2" style="width:320px;height:200px;position:absolute;top:-10px;left:20px"></div>
 
 
     </div>
     <!-- 左面第三个图表 -->
     <div class="left-3">
-      <div class="div-btn">有效风速<button class="btn-1">×</button></div>
+      <div class="div-btn"><span class="first-text">有效风速</span><span class="btn-1">×</span></div>
       <div id="main-left-3" style="width:320px;height:200px;position:absolute;top:-10px;left:20px"></div>
 
 
     </div>
     <!-- 右面第一个图表 -->
     <div class="right-1">
-           <div class="div-btn">风向统计<button class="btn-1">×</button></div>
+           <div class="div-btn"><span class="first-text">风向统计</span><span class="btn-1">×</span></div>
            <div id="main-left-4" style="width:300px;height:140px;position:absolute;top:22px;right:0px"></div>
           
 
@@ -30,14 +30,14 @@
     </div>
     <!-- 右面第二个图表 -->
     <div class="right-2">
-      <div class="div-btn">遥感数据对比<button class="btn-1">×</button></div>
+      <div class="div-btn"><span class="first-text">遥感数据对比</span><span class="btn-1">×</span></div>
       <div id="main-left-5" style="width:320px;height:200px;position:absolute;top:-10px;right:0px"></div>
 
 
     </div>
     <!-- 右面第三个图表 -->
     <div class="right-3">
-      <div class="div-btn">浮标数据对比<button class="btn-1">×</button></div>
+      <div class="div-btn"><span class="first-text">浮标数据对比</span><span class="btn-1">×</span></div>
       <div id="main-left-6" style="width:320px;height:200px;position:absolute;top:-10px;right:0px"></div>
 
 
@@ -306,6 +306,7 @@ window.onload=load;
 .left-1,.left-2,.left-3,.right-1,.right-2,.right-3{
   border:1px solid #0B1B7A;
   /* border-left:3px solid red;  */
+  background:rgba(0,3,44,.5) ;
 
   width: 340px;
   height: 170px;
@@ -342,12 +343,22 @@ window.onload=load;
 }
 .div-btn{
   color: white;
-  background-color: #092F7A;
+  background:rgba(4,38,125,.5);
 }
 .btn-1{
-  background-color: #092F7A;
+  /* background-color: #092F7A; */
+  font-size: 20px;
   color: #03DEE4;
   float:right;
+  margin-top:-5px;
 }
-
+.first-text{
+  /* color:#00C4E0 ; */
+  margin-left: 15px;
+  /* background: linear-gradient(90deg,#0459D3,#04BFEA,#0459D3); */
+  background: linear-gradient(90deg,#0459D3,#84E6F7,#0459D3);
+  -webkit-background-clip: text;
+  color: transparent;
+  
+}
 </style>

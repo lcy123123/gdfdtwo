@@ -1,10 +1,10 @@
 <template>
   <div>
     <!-- 右侧六个小按钮 -->
-    <div class="tog-six" v-if="(this.$route.path=='/tb'||this.$route.path=='/first')?false:true">
-      <div @click="tog" ><img class="tog" src="../assets/down.jpg" alt="" /></div>
+    <div class="tog-six" v-if="(this.$route.path=='/tb'||this.$route.path=='/yggc')?false:true">
+      <div @click="tog" ><img class="tog" src="../assets/up.png" alt="" /></div>
       <ul>
-        <li @click="first"><img src="../assets/01.png" alt="" /></li>
+        <li><img src="../assets/01.png" alt="" /></li>
         <li @click="second"><img src="../assets/02.png" alt="" /></li>
         <li><img src="../assets/03.png" alt="" /></li>
         <li><img src="../assets/04.png" alt="" /></li>
@@ -52,15 +52,11 @@ export default {
   methods: {
     tog: function() {
       $("ul").slideToggle(200);
-       if($('.tog').attr('src')==down){
-        $('.tog').attr('src',up)
-      }else{
+       if($('.tog').attr('src')==up){
         $('.tog').attr('src',down)
+      }else{
+        $('.tog').attr('src',up)
       }
-    },
-    first: function() {
-      // 跳转页面
-      this.$router.push("/first");
     },
     second: function() {
       // 跳转页面

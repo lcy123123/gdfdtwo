@@ -20,8 +20,9 @@ export default {
  
   components: {
     cesium,
+     headerimg,
     shouye,
-    headerimg,
+   
 
   }
 }
