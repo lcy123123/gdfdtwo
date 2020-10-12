@@ -305,8 +305,13 @@ window.onload=load;
 /* 图表样式 */
 .left-1,.left-2,.left-3,.right-1,.right-2,.right-3{
   border:1px solid #0B1B7A;
-  /* border-left:3px solid red;  */
-  background:rgba(0,3,44,.5) ;
+ 
+  /* background:rgba(0,3,44,.5) ; */
+    background: linear-gradient(to left,#01A2FE,#01A2FE) left bottom no-repeat,
+                linear-gradient(to bottom,#01A2FE,#01A2FE) left bottom no-repeat,
+                linear-gradient(to left,#01A2FE,#01A2FE) right bottom no-repeat,
+                linear-gradient(to bottom,#01A2FE,#01A2FE) right bottom no-repeat;
+   background-size: 2px 23px,23px 2px,2px 23px,23px 2px;
 
   width: 340px;
   height: 170px;
@@ -314,32 +319,47 @@ window.onload=load;
 .left-1{
   position: absolute;
   top:50px;
-  left:20px
+  left:20px;
+  background-color:rgba(0,3,44,.5) ;
+
+
+
+
 }
 .left-2{
   position: absolute;
   top:235px;
-  left:20px
+  left:20px;
+  background-color:rgba(0,3,44,.5) ;
+
 }
 .left-3{
   position: absolute;
   top:420px;
-  left:20px
+  left:20px;
+  background-color:rgba(0,3,44,.5) ;
+
 }
 .right-1{
   position: absolute;
   top:50px;
-  right:20px
+  right:20px;
+  background-color:rgba(0,3,44,.5) ;
+
 }
 .right-2{
   position: absolute;
   top:235px;
-  right:20px
+  right:20px;
+  background-color:rgba(0,3,44,.5) ;
+
 }
 .right-3{
   position: absolute;
   top:420px;
-  right:20px
+  right:20px;
+  background-color:rgba(0,3,44,.5) ;
+
 }
 .div-btn{
   color: white;

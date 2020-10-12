@@ -5,6 +5,7 @@ import Tubiao from './components/tubiao.vue'
 import Yggc from './components/yggc.vue'
 import Second from './components/second.vue'
 import Three from './components/three.vue'
+import Szyb from './components/szyb.vue'
 // import Cesium from './components/cesium'
 
 
@@ -35,6 +36,10 @@ export default new Router({
         {
             path:'/three',
             component:Three
-        }
+        },
+        {
+            path:'/szyb',
+            component:Szyb
+        },
     ]
 })

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 右侧六个小按钮 -->
-    <div class="tog-six" v-if="(this.$route.path=='/tb'||this.$route.path=='/yggc')?false:true">
+    <div class="tog-six" v-if="(this.$route.path=='/tb'||this.$route.path=='/yggc'||this.$route.path=='/szyb')?false:true">
       <div @click="tog" ><img class="tog" src="../assets/up.png" alt="" /></div>
       <ul>
         <li><img src="../assets/01.png" alt="" /></li>

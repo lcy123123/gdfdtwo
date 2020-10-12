@@ -32,23 +32,19 @@
     <!-- 下拉框 -->
     <div class="xlk-z">
       <div class="nav xlk-1">
-        <div style="margin:10px 0;text-align:center" @click="jgld">
-          激光雷达
-        </div>
-        <div style="margin:10px 0;text-align:center" @click="yggc">
-          遥感观测
-        </div>
-        <div style="margin:10px 0;text-align:center">数值预报</div>
+        <div style="margin:10px 0;text-align:center;font-size:13px" @click="jgld">激光雷达</div>
+        <div style="margin:10px 0;text-align:center;font-size:13px" @click="yggc">遥感观测</div>
+        <div style="margin:10px 0;text-align:center;font-size:13px" @click="szyb">数值预报</div>
       </div>
       <div class="nav xlk-2">
-        <div style="margin:10px 0;text-align:center">激光雷达</div>
-        <div style="margin:10px 0;text-align:center">遥感观测</div>
-        <div style="margin:10px 0;text-align:center">数值预报</div>
+        <div style="margin:10px 0;text-align:center;font-size:13px">激光雷达</div>
+        <div style="margin:10px 0;text-align:center;font-size:13px">遥感观测</div>
+        <div style="margin:10px 0;text-align:center;font-size:13px">数值预报</div>
       </div>
       <div class="nav xlk-3">
-        <div style="margin:10px 0;text-align:center">激光雷达</div>
-        <div style="margin:10px 0;text-align:center">遥感观测</div>
-        <div style="margin:10px 0;text-align:center">数值预报</div>
+        <div style="margin:10px 0;text-align:center;font-size:13px">激光雷达</div>
+        <div style="margin:10px 0;text-align:center;font-size:13px">遥感观测</div>
+        <div style="margin:10px 0;text-align:center;font-size:13px">数值预报</div>
       </div>
     </div>
   </div>
@@ -113,6 +109,11 @@ export default {
       this.$router.push("/yggc");
       this.$router.go(0);
 
+    },
+    szyb() {
+      this.$router.push("/szyb");
+      this.$router.go(0);
+
     }
   }
 };
@@ -142,6 +143,15 @@ export default {
   height: 13px;
   margin-right: 4px;
 }
+.fnzy{
+  font-size: 13px;
+}
+.zhtq{
+  font-size: 13px;
+}
+.pgjc{
+  font-size: 13px;
+}
 /* 头部导航 */
 .header-right {
   width: 300px;
@@ -154,10 +164,13 @@ export default {
 .xtsz {
   color: white;
   margin-right: 10px;
+  font-size: 13px;
+
 }
 .yhm {
   color: white;
   margin-left: 10px;
+  font-size: 13px;
 }
 .nav-z {
   position: relative;
@@ -193,8 +206,8 @@ export default {
   /* border: 1px solid red; */
 }
 .xlk-1 {
-  width: 84px;
-  height: 100px;
+  width: 70px;
+  height: 90px;
   position: absolute;
   top: 50px;
   left: 35px;
@@ -203,8 +216,8 @@ export default {
   display: none;
 }
 .xlk-2 {
-  width: 84px;
-  height: 100px;
+  width: 70px;
+  height: 90px;
   position: absolute;
   top: 50px;
   left: 128px;
@@ -213,12 +226,11 @@ export default {
   display: none;
 }
 .xlk-3 {
-  width: 84px;
-  height: 100px;
+  width: 70px;
+  height: 90px;
   position: absolute;
   top: 50px;
   left: 228px;
-  /* border: 1px solid red; */
   background: rgba(22, 28, 87, 0.7);
   display: none;
 }
