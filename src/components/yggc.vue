@@ -12,7 +12,7 @@
       </ul>
     </div>
     <!-- 上边的 -->
-    <div class="right">
+    <div class="right bottom-line">
       <div class="right-top">
         <img class="y1" src='../assets/y2.png' alt="">
         <span class="y1-text">遥感观测</span>
@@ -161,10 +161,17 @@ export default {
 .right{
   width: 360px;
   /* height: 300px; */
-  border: 2px solid rgba(8,26,127,.5);
+  border: 1px solid rgba(8,26,127,.5);
   position: absolute;
   right:15px;
   top:65px
+}
+.bottom-line{
+  background: linear-gradient(to left,#01A2FE,#01A2FE) left bottom no-repeat,
+                linear-gradient(to bottom,#01A2FE,#01A2FE) left bottom no-repeat,
+                linear-gradient(to left,#01A2FE,#01A2FE) right bottom no-repeat,
+                linear-gradient(to bottom,#01A2FE,#01A2FE) right bottom no-repeat;
+   background-size: 2px 23px,23px 2px,2px 23px,23px 2px;
 }
 .fivebtn{
   position: absolute;
@@ -206,16 +213,21 @@ border: 2px solid rgba(8,26,127,.5);
 .top-11{
   color: white;
   font-size: 14px;
-  margin: 20px;
-  /* display: flex; */
+  padding: 20px;
 }
 .top-11>input{
-  /* flex: 1; */
   margin: 10px;
 }
+.top-1{
+  background-color:rgba(0,3,44,.5) ;
+
+}
 .top-2{
+  height: 190px;
 color: white;
 display: none;
+background-color:rgba(0,3,44,.5) ;
+
 }
 .b1{
 margin-left: 10px;

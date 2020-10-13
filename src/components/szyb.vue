@@ -12,7 +12,7 @@
       </ul>
     </div>
     <!-- 上边的 -->
-    <div class="right">
+    <div class="right bottom-line">
       <div class="right-top">
         <img class="y1" src='../assets/y1.png' alt="">
         <span class="y1-text">遥感观测</span>
@@ -49,7 +49,7 @@
            <el-checkbox class="b10">格点风参</el-checkbox>
            <!-- 右面的时间轴 -->
             <!-- <div>  <el-slider  class="sli1" v-model="a" min="0" max="200" step="40" range  :marks="marks"></el-slider></div> -->
-            <div>  <el-slider  class="sli1" v-model="a"  max="200" step="40" range  :marks="marks"></el-slider></div>
+            <div>  <el-slider  class="sli1" v-model="a" max="200"  step="40" range=""  :marks="marks"></el-slider></div>
         </div>
     </div>
   </div>
@@ -153,10 +153,17 @@ export default {
 .right{
   width: 360px;
   /* height: 300px; */
-  border: 2px solid rgba(8,26,127,.5);
+  border: 1px solid rgba(8,26,127,.5);
   position: absolute;
   right:15px;
   top:65px
+}
+.bottom-line{
+  background: linear-gradient(to left,#01A2FE,#01A2FE) left bottom no-repeat,
+                linear-gradient(to bottom,#01A2FE,#01A2FE) left bottom no-repeat,
+                linear-gradient(to left,#01A2FE,#01A2FE) right bottom no-repeat,
+                linear-gradient(to bottom,#01A2FE,#01A2FE) right bottom no-repeat;
+   background-size: 2px 23px,23px 2px,2px 23px,23px 2px;
 }
 .fivebtn{
   position: absolute;
@@ -197,11 +204,9 @@ border: 2px solid rgba(8,26,127,.5);
 .top-11{
   color: white;
   font-size: 14px;
-  margin: 20px;
-  /* display: flex; */
+  padding: 20px;
 }
 .top-11>input{
-  /* flex: 1; */
   margin: 10px;
 }
 .top-1{

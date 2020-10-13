@@ -1,27 +1,27 @@
 <template>
   <div>
     <!-- 左面第一个图表 -->
-    <div class="left-1">
+    <div class="left-1 bottom-line">
       <div class="div-btn"><span class="first-text">风速月变化</span><span class="btn-1">×</span></div>
       <!-- 折线统计图 -->
       <div id="main-left-1" style="width:320px;height:200px;position:absolute;top:-20px;left:20px"></div>
     </div>
     <!-- 左面第二个图表 -->
-    <div class="left-2">
+    <div class="left-2 bottom-line">
       <div class="div-btn"><span class="first-text">风功率密度统计</span><span class="btn-1">×</span></div>
       <div id="main-left-2" style="width:320px;height:200px;position:absolute;top:-10px;left:20px"></div>
 
 
     </div>
     <!-- 左面第三个图表 -->
-    <div class="left-3">
+    <div class="left-3 bottom-line">
       <div class="div-btn"><span class="first-text">有效风速</span><span class="btn-1">×</span></div>
       <div id="main-left-3" style="width:320px;height:200px;position:absolute;top:-10px;left:20px"></div>
 
 
     </div>
     <!-- 右面第一个图表 -->
-    <div class="right-1">
+    <div class="right-1 bottom-line">
            <div class="div-btn"><span class="first-text">风向统计</span><span class="btn-1">×</span></div>
            <div id="main-left-4" style="width:300px;height:140px;position:absolute;top:22px;right:0px"></div>
           
@@ -29,14 +29,14 @@
 
     </div>
     <!-- 右面第二个图表 -->
-    <div class="right-2">
+    <div class="right-2 bottom-line">
       <div class="div-btn"><span class="first-text">遥感数据对比</span><span class="btn-1">×</span></div>
       <div id="main-left-5" style="width:320px;height:200px;position:absolute;top:-10px;right:0px"></div>
 
 
     </div>
     <!-- 右面第三个图表 -->
-    <div class="right-3">
+    <div class="right-3 bottom-line">
       <div class="div-btn"><span class="first-text">浮标数据对比</span><span class="btn-1">×</span></div>
       <div id="main-left-6" style="width:320px;height:200px;position:absolute;top:-10px;right:0px"></div>
 
@@ -60,6 +60,7 @@ function load(){
   // 折线统计图
 var mychartsLeft1=echarts.init(document.getElementById("main-left-1"))
 var optionLeft1={
+    //  x轴数据
     xAxis: {
         type: 'category',
         data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
@@ -67,6 +68,7 @@ var optionLeft1={
           color:'white'
         }
     },
+    // y轴数据
     yAxis: {
         type: 'value',
         axisLabel:{
@@ -76,16 +78,27 @@ var optionLeft1={
           }
         }
     },
-    series: [{
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
+    // 线的数据
+    series: [
+      // 第一条折线数据
+      {
+        data: [820, 932, 901, 934, 1290, 1330, 1320,420,344,678,243,671],
         type: 'line'
-    }]
+    },
+    // 第二条折线的数据
+    {
+        data: [20, 1932, 701, 34, 120, 1330, 320,4532,1654,908,23,456],
+        type: 'line'
+    },
+    ]
 };
 mychartsLeft1.setOption(optionLeft1)
 //柱状图1
 var mychartsLeft2=echarts.init(document.getElementById("main-left-2"))
 var optionLeft2={
+  //  柱状图颜色
    color:['#54A8F1'],
+  //  图例相关
     legend: {
         orient: 'horizontal',
         x:'center',      //可设定图例在左、右、居中
@@ -97,6 +110,7 @@ var optionLeft2={
                         },
         data: ['平均风功率密度'],
     },
+    //x轴数据
     xAxis: [
         {
             type: 'category',
@@ -114,6 +128,7 @@ var optionLeft2={
             }
         }
     ],
+    // y轴数据
     yAxis: [
         {
             type: 'value',
@@ -132,7 +147,9 @@ var optionLeft2={
             }
         },
     ],
+
     series: [
+      // 柱状图数据
         {
             name: '平均风功率密度',
             type: 'bar',
@@ -146,7 +163,9 @@ mychartsLeft2.setOption(optionLeft2)
 //柱状图2
 var mychartsLeft3=echarts.init(document.getElementById("main-left-3"))
 var optionLeft3={
+  // 柱状图颜色
    color:['#54A8F1'],
+  //  图例相关
     legend: {
         orient: 'horizontal',
         x:'center',      //可设定图例在左、右、居中
@@ -158,6 +177,7 @@ var optionLeft3={
          },
         data: ['有效风速频率'],
     },
+    // x轴数据
     xAxis: [
         {
             type: 'category',
@@ -175,6 +195,7 @@ var optionLeft3={
             }
         }
     ],
+    // y轴数据
     yAxis: [
         {
             type: 'value',
@@ -192,11 +213,8 @@ var optionLeft3={
                 }
             }
         },
-        {
-           
-            
-        }
     ],
+    // 柱状图数据
     series: [
         {
             name: '有效风速频率',
@@ -211,6 +229,7 @@ mychartsLeft3.setOption(optionLeft3)
 //玫瑰图
 var mychartsLeft4=echarts.init(document.getElementById("main-left-4"))
 var optionLeft4= {
+  //玫瑰图颜色
     color:'green',
     angleAxis: {
         type: 'category',
@@ -307,14 +326,17 @@ window.onload=load;
   border:1px solid #0B1B7A;
  
   /* background:rgba(0,3,44,.5) ; */
-    background: linear-gradient(to left,#01A2FE,#01A2FE) left bottom no-repeat,
+    
+
+  width: 340px;
+  height: 170px;
+}
+.bottom-line{
+  background: linear-gradient(to left,#01A2FE,#01A2FE) left bottom no-repeat,
                 linear-gradient(to bottom,#01A2FE,#01A2FE) left bottom no-repeat,
                 linear-gradient(to left,#01A2FE,#01A2FE) right bottom no-repeat,
                 linear-gradient(to bottom,#01A2FE,#01A2FE) right bottom no-repeat;
    background-size: 2px 23px,23px 2px,2px 23px,23px 2px;
-
-  width: 340px;
-  height: 170px;
 }
 .left-1{
   position: absolute;
@@ -376,6 +398,8 @@ window.onload=load;
   /* color:#00C4E0 ; */
   margin-left: 15px;
   /* background: linear-gradient(90deg,#0459D3,#04BFEA,#0459D3); */
+
+  /* 文字颜色渐变 */
   background: linear-gradient(90deg,#0459D3,#84E6F7,#0459D3);
   -webkit-background-clip: text;
   color: transparent;
