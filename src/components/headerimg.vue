@@ -211,7 +211,6 @@ export default {
   position: absolute;
   top: 50px;
   left: 35px;
-  /* border: 1px solid red; */
   background: rgba(22, 28, 87, 0.7);
   display: none;
 }
@@ -221,7 +220,6 @@ export default {
   position: absolute;
   top: 50px;
   left: 128px;
-  /* border: 1px solid red; */
   background: rgba(22, 28, 87, 0.7);
   display: none;
 }
@@ -253,8 +251,5 @@ export default {
 .three-xlk {
   width: 100%;
   margin: 0;
-  /* padding: 0; */
-  /* text-align: center; */
-  /* margin-top: 8px; */
 }
 </style>

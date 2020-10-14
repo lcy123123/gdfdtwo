@@ -21,8 +21,8 @@
           <el-checkbox>第一风向</el-checkbox>
           <el-checkbox>平均风速</el-checkbox>
         </el-form-item>
+        
         <el-form-item class="item2" label="影像要素:">
-          
           <el-checkbox>海洋生态保护</el-checkbox>
           <el-checkbox>港口通航</el-checkbox>
           <el-checkbox>海底油气管道</el-checkbox>
@@ -63,12 +63,8 @@
             <el-form-item>
               <el-button type="primary">开始评估</el-button>
             </el-form-item>
-
       </el-form>
-       
-       <!-- 两个下拉框 -->
-       
-         
+  
    </div>
   </div>
 </template>
@@ -84,8 +80,6 @@ export default {
         },
         // value1: '',
       }
-    
-
   },
   methods: {
  

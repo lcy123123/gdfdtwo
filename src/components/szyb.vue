@@ -85,7 +85,6 @@ export default {
   Cli1(){
     // 点击按钮  判断第一个小图标（如果是亮的 则将小图标变不亮  背景以及文字变不亮）  默认是展开的 （小图标和文字背景是亮的）
       
-      
       if($('.y1').attr('src')==y1){
         //将小图标变成亮的
         $('.y1').attr('src',y2)
@@ -110,7 +109,6 @@ export default {
       //top1上滑
       $('.top-1').slideToggle(200)
      
-  
     },
     //点击第二个
     Cli2(){
@@ -238,8 +236,6 @@ margin-right: 108px;
   margin-right: 12px;
 
 }
-
- 
 .el-checkbox__label {
   color: white;
   font-size: 12px;

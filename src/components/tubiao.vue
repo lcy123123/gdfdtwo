@@ -73,9 +73,9 @@ var optionLeft1={
         type: 'value',
         axisLabel:{
           color:'white',
-          textStyle:{
-            color:'white'
-          }
+          // textStyle:{
+          //   color:'white'
+          // }
         }
     },
     // 线的数据
@@ -250,7 +250,7 @@ var optionLeft4= {
     },
     series: [{
         type: 'bar',
-        data: [1, 2, 3, 4, 3, 5, 1,3,4,5,6,7,8,9,9,2],
+        data: [1, 2, 3, 4, 3, 5, 1,3,4,5,6,7,8,9,9],
         coordinateSystem: 'polar',
         stack: 'a'
     }],
@@ -283,7 +283,9 @@ var optionLeft5={
     },
     series: [{
         data: [820, 932, 901, 934, 1290, 1330, 1320],
-        type: 'line'
+        type: 'line',
+        // 折现下面的样式
+        areaStyle: {}
     }]
 };
 mychartsLeft5.setOption(optionLeft5)
@@ -324,10 +326,6 @@ window.onload=load;
 /* 图表样式 */
 .left-1,.left-2,.left-3,.right-1,.right-2,.right-3{
   border:1px solid #0B1B7A;
- 
-  /* background:rgba(0,3,44,.5) ; */
-    
-
   width: 340px;
   height: 170px;
 }
@@ -343,10 +341,6 @@ window.onload=load;
   top:50px;
   left:20px;
   background-color:rgba(0,3,44,.5) ;
-
-
-
-
 }
 .left-2{
   position: absolute;
@@ -360,28 +354,24 @@ window.onload=load;
   top:420px;
   left:20px;
   background-color:rgba(0,3,44,.5) ;
-
 }
 .right-1{
   position: absolute;
   top:50px;
   right:20px;
   background-color:rgba(0,3,44,.5) ;
-
 }
 .right-2{
   position: absolute;
   top:235px;
   right:20px;
   background-color:rgba(0,3,44,.5) ;
-
 }
 .right-3{
   position: absolute;
   top:420px;
   right:20px;
   background-color:rgba(0,3,44,.5) ;
-
 }
 .div-btn{
   color: white;
@@ -397,8 +387,6 @@ window.onload=load;
 .first-text{
   /* color:#00C4E0 ; */
   margin-left: 15px;
-  /* background: linear-gradient(90deg,#0459D3,#04BFEA,#0459D3); */
-
   /* 文字颜色渐变 */
   background: linear-gradient(90deg,#0459D3,#84E6F7,#0459D3);
   -webkit-background-clip: text;

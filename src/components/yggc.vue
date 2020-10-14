@@ -160,7 +160,6 @@ export default {
 <style>
 .right{
   width: 360px;
-  /* height: 300px; */
   border: 1px solid rgba(8,26,127,.5);
   position: absolute;
   right:15px;
@@ -191,7 +190,6 @@ background: rgba(3,37,127,.5);
 border: 2px solid rgba(8,26,127,.5);
 }
 .right-bottom{
-/* background: rgba(3,37,127,.5); */
 border: 2px solid rgba(8,26,127,.5);
 }
 .y1,.y2{
@@ -204,11 +202,9 @@ border: 2px solid rgba(8,26,127,.5);
   color: white;
   margin-left: 5px;
   vertical-align: middle;
-  /* color: #04BFEA; */
 }
 .y1-text{
   color: #04BFEA;
-
 }
 .top-11{
   color: white;
@@ -220,7 +216,6 @@ border: 2px solid rgba(8,26,127,.5);
 }
 .top-1{
   background-color:rgba(0,3,44,.5) ;
-
 }
 .top-2{
   height: 190px;
@@ -249,15 +244,11 @@ margin-right: 108px;
 .b9{
   margin-left: 10px;
   margin-right: 12px;
-
-}
-
- 
+} 
 .el-checkbox__label {
   color: white;
   font-size: 12px;
   margin-left: -3px;
-
 }
 .sli1{
   width: 280px;
