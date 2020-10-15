@@ -63,9 +63,15 @@
             <div>风玫瑰图</div>
             <div @click="wbe">韦布尔分布图</div>
           </div>
+          
           <!-- 统计图 -->
           <!-- <div id="main-1" style="width:330px;height:250px;border:1px solid red"></div> -->
-          <div id="main-1" style="width:330px;height:250px;"></div>
+          <!-- 两个小文字 -->
+          <div class="small-text">
+            <span>A=8.16</span>
+            <span>K=2.00</span>
+          </div>
+          <div id="main-1" style="width:330px;height:230px;position:absolute;right:-4px;top:100px"></div>
         </div>
        </div>
         </div>
@@ -113,13 +119,22 @@ export default {
     },
     yAxis: {
         type: 'value',
+        name:'风频率',
+        nameTextStyle:{color:'white'},
+        min:0,
+        max:0.08,
+        interval:0.02,
         //改变y轴文字颜色
         axisLabel:{
-          color:'white'
-        }
+          color:'white',
+          // textStyle:{
+          //   color:'red'
+          // }
+        },
+        // data:[0,0.02,0.04,0.06,0.08]
     },
     series: [{
-        data: [820, 932, 901, 934, 1290, 1330, 1320,1033,1144,1055,1166,2277,188],
+        data: [0, 0.02, 0.01, 0.04, 0.05, 0.06, 0.05,0.03,0.04,0.05,0.06,0.07,0.08],
         type: 'line',
         areaStyle: {},
         smooth:true
@@ -357,5 +372,14 @@ margin: 10px;
   border:1px solid #0B1B7A;
   text-align: center;
   background: rgba(0,164,253,.5);
+}
+.small-text{
+color: white;
+margin-left: 100px;
+margin-top: 30px;
+}
+.small-text span{
+  margin-right: 5px;
+  font-size: 13px;
 }
 </style> 

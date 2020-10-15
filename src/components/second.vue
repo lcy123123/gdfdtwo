@@ -47,8 +47,8 @@
           <div class="second-xlk">
           <el-form-item label="选择模型：">
             <el-select>
-              <!-- <el-option label="风资源评估模型一"></el-option>
-              <el-option label="风资源评估模型二"></el-option> -->
+              <el-option label="风资源评估模型一" value=""></el-option>
+              <el-option label="风资源评估模型二" value=""></el-option>
             </el-select>
           </el-form-item>
           <!-- 第二个下拉框 -->
