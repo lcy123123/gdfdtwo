@@ -71,7 +71,7 @@
             <span>A=8.16</span>
             <span>K=2.00</span>
           </div>
-          <div id="main-1" style="width:330px;height:230px;position:absolute;right:-4px;top:100px"></div>
+          <div id="main-1" style="width:330px;height:230px;position:absolute;left:200px;top:100px"></div>
         </div>
        </div>
         </div>
@@ -109,18 +109,40 @@ export default {
    var mychart1=echarts.init(document.getElementById("main-1"))
 
    var option={
+        grid: {
+                left: '0%',
+                right: '18%',
+                bottom: '10%',
+                containLabel: true
+            },
+       color:'#3A97DB',
     xAxis: {
+        name:"风速(m/s)",
+        // nameTextStyle:{color:"white",fontSize:10,padding:[0,0,0,0]},
+        nameTextStyle:{color:"white",fontSize:10,margin:[0,0,0,40]},
+        nameRotate:"0.1",
         type: 'category',
         boundaryGap: false,
         data: ['0', '2', '4', '6', '8', '10', '12','14','16','18','20','22','24'],
         axisLabel:{
-          color:'white'
+          color:'white',
+        },
+                 
+
+         axisLine: {
+        lineStyle: {
+          color: "#215496"
         }
+      },
+        //去掉坐标轴刻度线
+        axisTick: {
+        show: false
+      },
     },
     yAxis: {
         type: 'value',
         name:'风频率',
-        nameTextStyle:{color:'white'},
+        nameTextStyle:{color:'white',fontSize:10},
         min:0,
         max:0.08,
         interval:0.02,
@@ -132,11 +154,36 @@ export default {
           // }
         },
         // data:[0,0.02,0.04,0.06,0.08]
+        //改变坐标轴线的颜色
+         axisLine: {
+        lineStyle: {
+          color: "#215496"
+        }
+      },
+      //改变网格线样式
+        splitLine: {
+          show: true,
+          lineStyle: { color: ["#215496"] }
+        },
+          //去掉坐标轴刻度线
+        axisTick: {
+        show: false
+      },
     },
     series: [{
         data: [0, 0.02, 0.01, 0.04, 0.05, 0.06, 0.05,0.03,0.04,0.05,0.06,0.07,0.08],
         type: 'line',
-        areaStyle: {},
+        //折现下面区域颜色的渐变
+        areaStyle: {
+          normal: {
+             color: new echarts.graphic.LinearGradient(0, 0, 0, 1,[
+                         {offset: 0, color: 'rgba(9,109,221,1)'},
+                        {offset: 0.5, color: 'rgba(9,109,221,.8)'},
+                         {offset: 1, color: 'rgba(9,109,221,.2)'}
+                        ]  )
+                  }
+        },
+        //折线是否圆滑
         smooth:true
     }]
 };

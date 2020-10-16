@@ -96,6 +96,7 @@ function load() {
       axisLabel: {
         color: "white",
         interval: 0, //坐标轴全部显示
+        //x轴文字样式（大小）
         textStyle: {
           fontSize: 11
         }
@@ -121,8 +122,8 @@ function load() {
         min: 0,
         max: 20,
         interval: 4,
+        //坐标轴文字样式
         axisLabel: {
-          color: "white",
           textStyle: {
             color: "white",
             fontSize: 10
@@ -152,8 +153,8 @@ function load() {
         min: 0,
         max: 10,
         interval: 2,
+        //坐标轴文字颜色
         axisLabel: {
-          color: "white",
           textStyle: {
             color: "white",
             fontSize: 11
@@ -221,6 +222,7 @@ function load() {
         axisPointer: {
           type: "shadow"
         },
+        //坐标轴文字颜色
         axisLabel: {
           color: "white",
           interval: 0, //坐标轴全部显示
@@ -228,6 +230,7 @@ function load() {
             fontSize: 11
           }
         },
+        //坐标轴线颜色
         axisLine: {
           lineStyle: {
             color: "#215496"
@@ -323,6 +326,7 @@ function load() {
         axisPointer: {
           type: "shadow"
         },
+        //坐标轴文字颜色
         axisLabel: {
           color: "white",
           interval: 0, //坐标轴全部显示
@@ -352,6 +356,7 @@ function load() {
         min: 0,
         max: 1000,
         interval: 200,
+        //坐标轴文字颜色
         axisLabel: {
           formatter: "{value}",
           color: "white",
@@ -403,36 +408,55 @@ function load() {
   var mychartsLeft4 = echarts.init(document.getElementById("main-left-4"));
   var optionLeft4 = {
     //玫瑰图颜色
-    color: "green",
+    color: "#01BA45",
+    //圆圈相关
     angleAxis: {
       type: "category",
       data: ["NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"],
-      min: 0,
-      max: 14,
+      //外边圆圈上的刻度值
       axisTick: { show: false },
-      axisLabel: { margin: 2, color: "white" }
+      //外面圆圈文字的颜色
+      axisLabel: { margin: 1, color: "white",fontSize:10,lineStyle:{color:'#020172'} },
+      axisLine:{
+            lineStyle:{color:'#020172'}
+        },
+      //网格线的颜色
+      splitLine:{
+        show:true,
+        lineStyle:{color:['#020172']}
+      }
     },
+    //数轴相关
     radiusAxis: {
       name: "N",
       nameTextStyle: {
         color: "red" //坐标轴文字颜色
+      },
+      min:0,
+      max:18,
+      interval:3,
+      axisLabel:{
+        color:'white'
+      },
+      //网格线的颜色
+      splitLine:{
+        show:true,
+        lineStyle:{color:['#020172']}
       }
     },
     polar: {
       center: ["50%", "50%"]
     },
+    //数据
     series: [
       {
         type: "bar",
-        data: [1, 2, 3, 4, 3, 5, 1, 3, 4, 5, 6, 7, 8, 9, 9],
+        data: [1, 2, 3, 4, 3, 5, 1, 3, 4, 5, 6, 7, 8, 9, 1],
         coordinateSystem: "polar",
         stack: "a"
       }
     ],
-    legend: {
-      show: true,
-      data: ["A", "B", "C"]
-    }
+
   };
 
   mychartsLeft4.setOption(optionLeft4);
@@ -451,6 +475,7 @@ function load() {
       },
       data: ["风速",'风功率密度']
     },
+    //x轴数据
     xAxis: {
       type: "category",
       data: ['0','1','2','3',"4","5","6","7","8","9","10","11","12",'13','14','15','16','17','18','19','20','21','22','23'],
@@ -472,6 +497,7 @@ function load() {
         show: false
       },
     },
+    //y轴数据
     yAxis: [
       {
         name:'风速m/s',
@@ -480,6 +506,7 @@ function load() {
         min:0,
         max:30,
         interval:10,
+        //坐标轴文字颜色
         axisLabel: {
           color: "white",
           textStyle: {
@@ -522,8 +549,16 @@ function load() {
         data: [20, 12, 10, 14, 19, 13, 20,19,9,12,10,19,22,14,19,24,19,26,16,23,18,19,20,30],
         type: "line",
         color:'#7E01DB',
-        // 折现下面的样式
-        areaStyle: {color:'#7E01DB'}
+        // 折现下面的区域样式
+        areaStyle: {
+          normal: {
+             color: new echarts.graphic.LinearGradient(0, 0, 0, 1,[
+                         {offset: 0, color: 'rgba(116,1,194,1)'},
+                         {offset: 0.5, color: 'rgba(116,1,194,.7)'},
+                         {offset: 1, color: 'rgba(116,1,194,.2)'}
+                        ]  )
+                  }
+        }
       },
       {
         name:'风功率密度',
@@ -531,7 +566,15 @@ function load() {
         type: "line",
         color:'#42CF74',
         // 折现下面的样式
-        areaStyle: {color:'rgba(66,207,116,0.5)'}
+        areaStyle: {
+               normal: {
+             color: new echarts.graphic.LinearGradient(0, 0, 0, 1,[
+                         {offset: 0, color: 'rgba(69,201,130,1)'},
+                         {offset: 0.5, color: 'rgba(69,201,130,.7)'},
+                         {offset: 1, color: 'rgba(69,201,130,.2)'}
+                        ]  )
+                  }
+        }
       }
     ]
   };
@@ -539,9 +582,11 @@ function load() {
   //右侧折线图2
   var mychartsLeft6 = echarts.init(document.getElementById("main-left-6"));
   var optionLeft6 = {
+    //x轴数据
     xAxis: {
       type: "category",
       data: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],
+      //坐标轴文字颜色
       axisLabel: {
         color: "white",
         interval: 0, //坐标轴全部显示
@@ -558,16 +603,18 @@ function load() {
         show: false
       },
     },
+    //y轴数据
     yAxis: [
       {
         name:'风速m/s',
+        //坐标轴名称文字颜色（样式）
         nameTextStyle:{color:'white',fontSize:10},
         type: "value",
         min:0,
         max:30,
         interval:10,
+        //坐标轴文字颜色
         axisLabel: {
-          color: "white",
           textStyle: {
             color: "white",
             fontSize: "11"
@@ -602,6 +649,7 @@ function load() {
       },
       }
     ],
+    //数据
     series: [
       {
         data: [20, 12, 10, 14, 12, 8, 20,15,10,12,5,20],
