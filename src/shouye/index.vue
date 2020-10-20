@@ -40,7 +40,7 @@
         <!-- 中间组件  风参数信息 -->
         <div class="fcsxx">
           <!-- 上面标题 -->
-      <div class="div-btn"><span class="first-text">风参数信息</span><span class="btn-1">×</span></div>
+      <div class="div-btn"><span class="first-text">风参数信息</span><span class="btn-1" @click="Gb">×</span></div>
        <div class="fcsxx-z">
         <!-- 左面 -->
         <div class="fcsxx-left">
@@ -60,8 +60,8 @@
         <!-- 右面 -->
         <div class="fcsxx-right">
           <div class="fcsxx-right-text">
-            <div>风玫瑰图</div>
-            <div @click="wbe">韦布尔分布图</div>
+            <div class="fmgtext" @click="Fmg">风玫瑰图</div>
+            <div class="wbetext" @click="Wbe">韦布尔分布图</div>
           </div>
           
           <!-- 统计图 -->
@@ -87,10 +87,13 @@ import echarts from 'echarts'
 export default {
   data() {
     return {
-      value1: 0
+      value1: 0,
+      fmgflag:false,
+      wbeflag:true
     };
   },
   methods: {
+    //点击切换五个li的按钮的背景图片
     tog: function() {
       $("ul").slideToggle(200);
        if($('.tog').attr('src')==up){
@@ -99,13 +102,63 @@ export default {
         $('.tog').attr('src',up)
       }
     },
+    //点击跳转其他页面
     second: function() {
       // 跳转页面
       this.$router.push("/second");
     },
-      wbe:function(){
-  console.log(123)
+    //点击关闭风参数(收起风参数)
+    Gb:function(){
+      //上滑风参数元素
+      $('.fcsxx').slideToggle(400)
+    },
 
+    //点击出现风玫瑰图
+    Fmg:function(){
+      //判断flag的值 改变背景以及文字颜色
+      if(this.fmgflag==false){
+        $('.fmgtext').css('color','#01DFDF')
+        $('.fmgtext').css('background','rgba(0,164,253,.5)')
+        this.fmgflag=!this.fmgflag
+
+        //改变兄弟文字 白颜色 背景深颜色
+        $('.fmgtext').siblings().css('background','rgba(3,8,90,.5)')
+        $('.fmgtext').siblings().css('color','white')
+      }else{
+        $('.fmgtext').css('color','white')
+        this.fmgflag=!this.fmgflag
+        $('.fmgtext').css('background','rgba(3,8,90,.5)')
+
+        $('.fmgtext').siblings().css('background','rgba(0,164,253,.5)')
+        $('.fmgtext').siblings().css('color','#01DFDF')
+        
+        }
+    },
+    //点击出现韦布尔分布图
+      Wbe:function(){
+        //判断自己的flag
+    if(this.wbeflag==true){
+        $('.wbetext').css('color','white')
+        $('.wbetext').css('background','rgba(3,8,90,.5)')
+        this.wbeflag=!this.wbeflag
+
+        $('.wbetext').siblings().css('background','rgba(0,164,253,.5)')
+        $('.wbetext').siblings().css('color','#01DFDF')
+       
+    }else{
+        $('.wbetext').css('color','#01DFDF')
+        this.wbeflag=!this.wbeflag
+        $('.wbetext').css('background','rgba(0,164,253,.5)')
+
+        //改变文字变白 颜色变深
+        $('.wbetext').siblings().css('background','rgba(3,8,90,.5)')
+        $('.wbetext').siblings().css('color','white')
+    } 
+
+  },
+  //加载图表方法
+  Wbetb:function(){
+    
    var mychart1=echarts.init(document.getElementById("main-1"))
 
    var option={
@@ -190,6 +243,9 @@ export default {
 
   mychart1.setOption(option)
   }
+  },
+  mounted(){
+   this.Wbetb()
   }
 }
 
@@ -364,6 +420,8 @@ img {
   color: #03DEE4;
   float:right;
   margin-top:-5px;
+  /* 变小手 */
+  cursor: pointer;
 }
 .fcsxx-z{
   width: 100%;
@@ -412,14 +470,24 @@ margin: 10px;
 }
 .fcsxx-right-text div{
   display: inline-block;
-  color: white;
+  /* color: white; */
   width: 110px;
   height: 34px;
   line-height: 34px;
   border:1px solid #0B1B7A;
   text-align: center;
-  background: rgba(0,164,253,.5);
 }
+.fmgtext{
+  background: rgba(3,8,90,.5);
+  color: white;
+}
+.wbetext{
+  background: rgba(0,164,253,.5);
+  color: #01DFDF;
+}
+/* .wbetext{
+  background: rgba(0,164,253,.5);
+} */
 .small-text{
 color: white;
 margin-left: 100px;

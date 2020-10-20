@@ -46,16 +46,25 @@
           <!-- 第一个下拉框 -->
           <div class="second-xlk">
           <el-form-item label="选择模型：">
-            <el-select>
-              <el-option label="风资源评估模型一" value=""></el-option>
-              <el-option label="风资源评估模型二" value=""></el-option>
+            <el-select v-model="value" placeholder="请选择">
+              <!-- <el-option 
+              v-for="item in options" 
+              :key="item.value" 
+              :label="item.label"
+              :value="item.value"></el-option> -->
+              <!-- <el-option label="风资源评估模型二" value=""></el-option> -->
             </el-select>
           </el-form-item>
           <!-- 第二个下拉框 -->
           <el-form-item label="评估名称：">
-            <el-select>
+            <el-select v-model="value">
               <!-- <el-option label="风资源评估模型一"></el-option>
               <el-option label="风资源评估模型二"></el-option> -->
+              <el-option 
+              v-for="item in options" 
+              :key="item.value" 
+              :label="item.label"
+              :value="item.value"></el-option>
             </el-select>
           </el-form-item>
           </div>
@@ -72,7 +81,17 @@
 export default {
   data() {
   return {
-    
+    //下拉框
+    options:[{
+      value:'选项1',
+      label:'黄金糕'
+      },{
+      value:'选项2',
+      label:'黄金糕1'
+      },
+      ],
+    value:'',
+    //时间选择
         pickerOptions: {
           disabledDate(time) {
             return time.getTime() > Date.now();
@@ -87,6 +106,10 @@ export default {
 };
 </script>
 <style>
+/* 下拉框样式 */
+/* .el-select-dropdown {
+  height: 40px;
+} */
 .right-second {
   width: 350px;
   height: 480px;
@@ -153,7 +176,7 @@ color: white;
 .second-xlk .el-input__inner{
 width: 120px;
 margin-left: -10px;
-/* margin-bottom: 0px; */
+margin-bottom: 0px;
 }
 .second-xlk .el-form-item__label {
   margin: 0px 10px;

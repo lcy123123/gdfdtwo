@@ -247,7 +247,7 @@ function load() {
     yAxis: [
       {
         type: "value",
-        name: "平均风功率密度统计W/m²",
+        name: "平均风功率密度W/m²",
         nameRotate: "0.1",
         nameTextStyle: { color: "white", fontSize: 10, marginLeft: "20" },
         min: 0,
@@ -409,14 +409,14 @@ function load() {
   var optionLeft4 = {
     //玫瑰图颜色
     color: "#01BA45",
-    //圆圈相关
+    //圆圈相关(角度轴)
     angleAxis: {
       type: "category",
       data: ["NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"],
       //外边圆圈上的刻度值
       axisTick: { show: false },
       //外面圆圈文字的颜色
-      axisLabel: { margin: 1, color: "white",fontSize:10,lineStyle:{color:'#020172'} },
+      axisLabel: { margin: 2, color: "white",fontSize:10,lineStyle:{color:'#020172'} },
       axisLine:{
             lineStyle:{color:'#020172'}
         },
@@ -430,13 +430,19 @@ function load() {
     radiusAxis: {
       name: "N",
       nameTextStyle: {
-        color: "red" //坐标轴文字颜色
+        // color: "red" //坐标轴文字颜色
       },
       min:0,
       max:18,
       interval:3,
       axisLabel:{
         color:'white'
+      },
+      //去掉刻度线
+      axisTick:{show:false},
+      //坐标轴颜色
+      axisLine:{
+        lineStyle:{color:'#020172'}
       },
       //网格线的颜色
       splitLine:{
@@ -733,6 +739,8 @@ window.onload = load;
   margin-top: -5px;
 }
 .first-text {
+  /* 字体 */
+  /* font-family: 黑体; */
   /* color:#00C4E0 ; */
   margin-left: 15px;
   /* 文字颜色渐变 */

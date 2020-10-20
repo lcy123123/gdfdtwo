@@ -13,20 +13,28 @@
     <!-- 左侧 -->
     <div class="nac-z">
       <!-- <div class="nav nav1" @click="fn"><img class="i1" src="../assets/i1.png" alt=""><span>风能资源</span></div> -->
+      
       <div class="nav nav1" @click="fn">
-        <img class="i1" src="../assets/i1.png" alt="" /><span class="fnzy"
-          >风能资源</span
-        >
+        <img class="i1" src="../assets/i1.png" alt="" /><span class="fnzy">风能资源</span>
+        <!-- 下边框(下拉框下面的长div) -->
+        <div class="long-div1" style="height:2px;background-color:#0f53fd;display:none"></div>
+        <!-- i标签（小三角） -->
+      <i class="el-icon-caret-bottom small-1" style="position:absolute;top:21px;left:26px;color:#3F9FEA;display:none"></i>
       </div>
+      
       <div class="nav nav2" @click="zh">
-        <img class="i2" src="../assets/i2.png" alt="" /><span class="zhtq"
-          >灾害天气</span
-        >
+        <img class="i2" src="../assets/i2.png" alt="" /><span class="zhtq">灾害天气</span>
+          <!-- 下边框(下拉框下面的长div) -->
+        <div class="long-div2" style="height:2px;background-color:#0f53fd;display:none"></div>
+           <!-- i标签（小三角） -->
+      <i class="el-icon-caret-bottom small-2" style="position:absolute;top:21px;left:26px;color:#3F9FEA;display:none"></i>
       </div>
       <div class="nav nav3" @click="pg">
-        <img class="i3" src="../assets/i3.png" alt="" /><span class="pgjc"
-          >评估决策</span
-        >
+        <img class="i3" src="../assets/i3.png" alt="" /><span class="pgjc">评估决策</span>
+        <!-- 下边框(下拉框下面的长div) -->
+        <div class="long-div3" style="height:2px;background-color:#0f53fd;display:none"></div>
+           <!-- i标签（小三角） -->
+      <i class="el-icon-caret-bottom small-3" style="position:absolute;top:21px;left:26px;color:#3F9FEA;display:none"></i>
       </div>
     </div>
     <!-- 下拉框 -->
@@ -63,9 +71,14 @@ export default {
     return {};
   },
   methods: {
+    //第一个下拉框（点击事件）
     fn: function() {
       $(".xlk-1").css("display:block");
       $(".xlk-1").slideToggle(200);
+      //点击切换下边框
+      $('.long-div1').slideToggle(100)
+      //点击上滑下滑小三角
+      $('.small-1').slideToggle(200)
       //点击切换图标
       if ($(".i1").attr("src") == i1) {
         $(".i1").attr("src", i11);
@@ -76,9 +89,14 @@ export default {
         console.log($(".fnzy"));
       }
     },
+    //第二个下拉框（点击事件）
     zh: function() {
       $(".xlk-2").css("display:block");
       $(".xlk-2").slideToggle(200);
+      //点击切换下边框
+      $('.long-div2').slideToggle(100)
+      //点击上滑下滑小三角
+      $('.small-2').slideToggle(200)
       //点击切换图标
       if ($(".i2").attr("src") == i2) {
         $(".i2").attr("src", i22);
@@ -88,9 +106,15 @@ export default {
         $(".zhtq").css("color", "white");
       }
     },
+    //第三个下拉框（点击事件）
     pg: function() {
       $(".xlk-3").css("display:block");
       $(".xlk-3").slideToggle(200);
+      //点击上滑下滑小三角
+      $('.small-3').slideToggle(200)
+      //点击显示隐藏下边框
+      $('.long-div3').slideToggle(100)
+      // $()
       //点击切换图标
       if ($(".i3").attr("src") == i3) {
         $(".i3").attr("src", i33);
@@ -100,16 +124,19 @@ export default {
         $(".pgjc").css("color", "white");
       }
     },
+    //点击跳转激光雷达
     jgld() {
       this.$router.push("/tb");
       //刷新页面
       this.$router.go(0);
     },
+    //点击跳转遥感观测
     yggc() {
       this.$router.push("/yggc");
       this.$router.go(0);
 
     },
+    //点击跳转数值预报
     szyb() {
       this.$router.push("/szyb");
       this.$router.go(0);
@@ -185,19 +212,20 @@ export default {
   position: absolute;
   top: 19px;
   left: 35px;
-  border-bottom: 2px solid #0f53fd;
+  /* border-bottom: 2px solid #0f53fd; */
 }
 .nav2 {
   position: absolute;
   top: 19px;
   left: 130px;
-  border-bottom: 2px solid #0f53fd;
+  /* border-bottom: 2px solid #0f53fd; */
 }
 .nav3 {
   position: absolute;
   top: 19px;
   left: 230px;
-  border-bottom: 2px solid #0f53fd;
+  /* border-bottom: 2px solid #0f53fd; */
+  /* display: none; */
 }
 /* 导航下拉框 */
 .xlk-z {
@@ -209,7 +237,7 @@ export default {
   width: 70px;
   height: 90px;
   position: absolute;
-  top: 50px;
+  top: 54px;
   left: 35px;
   background: rgba(22, 28, 87, 0.7);
   display: none;
@@ -218,7 +246,7 @@ export default {
   width: 70px;
   height: 90px;
   position: absolute;
-  top: 50px;
+  top: 54px;
   left: 128px;
   background: rgba(22, 28, 87, 0.7);
   display: none;
@@ -227,7 +255,7 @@ export default {
   width: 70px;
   height: 90px;
   position: absolute;
-  top: 50px;
+  top: 54px;
   left: 228px;
   background: rgba(22, 28, 87, 0.7);
   display: none;
