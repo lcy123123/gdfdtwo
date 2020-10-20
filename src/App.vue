@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <cesium></cesium>
-    <shouye></shouye>
     <headerimg></headerimg>
+    <shouye></shouye>
        <router-view></router-view>
              
 
@@ -20,8 +20,9 @@ export default {
  
   components: {
     cesium,
+     headerimg,
     shouye,
-    headerimg,
+   
 
   }
 }
