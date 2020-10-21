@@ -241,6 +241,7 @@ export default {
   left: 35px;
   background: rgba(22, 28, 87, 0.7);
   display: none;
+  z-index: 9;
 }
 .xlk-2 {
   width: 70px;
@@ -250,6 +251,7 @@ export default {
   left: 128px;
   background: rgba(22, 28, 87, 0.7);
   display: none;
+  z-index: 9;
 }
 .xlk-3 {
   width: 70px;
@@ -259,6 +261,7 @@ export default {
   left: 228px;
   background: rgba(22, 28, 87, 0.7);
   display: none;
+  z-index: 9;
 }
 
 .xlk-1 div,

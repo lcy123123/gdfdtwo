@@ -20,10 +20,8 @@ export default {
  
   components: {
     cesium,
-     headerimg,
+    headerimg,
     shouye,
-   
-
   }
 }
 </script>

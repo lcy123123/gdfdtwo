@@ -61,17 +61,17 @@
         <div class="fcsxx-right">
           <div class="fcsxx-right-text">
             <div class="fmgtext" @click="Fmg">风玫瑰图</div>
-            <div class="wbetext" @click="Wbe">韦布尔分布图</div>
+            <div class="wbetext" @click="Wbetb">韦布尔分布图</div>
           </div>
           
           <!-- 统计图 -->
-          <!-- <div id="main-1" style="width:330px;height:250px;border:1px solid red"></div> -->
           <!-- 两个小文字 -->
           <div class="small-text">
             <span>A=8.16</span>
             <span>K=2.00</span>
           </div>
-          <div id="main-1" style="width:330px;height:230px;position:absolute;left:200px;top:100px"></div>
+          <div id="main-1" v-show="!wbeflag"  style="width:330px;height:230px;position:absolute;left:200px;top:100px;display:none"></div>
+          <div id="main-2"  v-show="fmgflag" style="width:330px;height:230px;position:absolute;left:200px;top:100px;display:none"></div>
         </div>
        </div>
         </div>
@@ -88,7 +88,9 @@ export default {
   data() {
     return {
       value1: 0,
+      //风玫瑰状态值
       fmgflag:false,
+      // 韦布尔状态值
       wbeflag:true
     };
   },
@@ -124,6 +126,9 @@ export default {
         //改变兄弟文字 白颜色 背景深颜色
         $('.fmgtext').siblings().css('background','rgba(3,8,90,.5)')
         $('.fmgtext').siblings().css('color','white')
+        //改变其兄弟的状态值
+        this.wbeflag=!this.wbeflag
+
       }else{
         $('.fmgtext').css('color','white')
         this.fmgflag=!this.fmgflag
@@ -131,36 +136,63 @@ export default {
 
         $('.fmgtext').siblings().css('background','rgba(0,164,253,.5)')
         $('.fmgtext').siblings().css('color','#01DFDF')
-        
-        }
-    },
-    //点击出现韦布尔分布图
-      Wbe:function(){
-        //判断自己的flag
-    if(this.wbeflag==true){
-        $('.wbetext').css('color','white')
-        $('.wbetext').css('background','rgba(3,8,90,.5)')
+        //改变其兄弟的状态值
         this.wbeflag=!this.wbeflag
 
-        $('.wbetext').siblings().css('background','rgba(0,164,253,.5)')
-        $('.wbetext').siblings().css('color','#01DFDF')
+      }
+        //渲染图表
+        var mychart2=echarts.init(document.getElementById("main-2"));
+        var options2={
+                xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                 },
+                yAxis: {
+                type: 'value'
+                 },
+               series: [{
+                     data: [820, 932, 901, 934, 1290, 1330, 1320],
+                     type: 'line',
+                     smooth: true
+                 }]
+              }
+        mychart2.setOption(options2)
+        
+        
+    },
+  
+  //加载图表方法(已在mounted中调用)
+  Wbetb:function(){
+       //判断自己的flag
+    if(this.wbeflag==true){
+      //如果为真（代表亮着的） 将文字背景变亮
+        $('.wbetext').css({background:'rgba(0,164,253,.5)',color:'#01DFDF'})
+        //改变自己的状态值
+        this.wbeflag=!this.wbeflag
+        //改变兄弟的文字和背景颜色
+        $('.wbetext').siblings().css({background:'rgba(3,8,90,0.5)',color:'white'})
+        //改变其兄弟的状态值
+        this.fmgflag=false
+
+        //
+        // $('#main-1').show()
+        // $('#main-2').hide()
        
     }else{
-        $('.wbetext').css('color','#01DFDF')
+        $('.wbetext').css({background:'rgba(3,8,90,.5)',color:'white'})
+        //改变自己的状态值
         this.wbeflag=!this.wbeflag
-        $('.wbetext').css('background','rgba(0,164,253,.5)')
 
         //改变文字变白 颜色变深
-        $('.wbetext').siblings().css('background','rgba(3,8,90,.5)')
-        $('.wbetext').siblings().css('color','white')
+        $('.wbetext').siblings().css({background:'rgba(0,164,253,.5)',color:'#01DFDF'})
+        //改变其兄弟状态值
+        this.fmgflag=!this.fmgflag
+
     } 
-
-  },
-  //加载图表方法
-  Wbetb:function(){
     
+   //为图表设定容器
    var mychart1=echarts.init(document.getElementById("main-1"))
-
+   //设置图表属性（图表配置项）
    var option={
         grid: {
                 left: '0%',
@@ -206,7 +238,6 @@ export default {
           //   color:'red'
           // }
         },
-        // data:[0,0.02,0.04,0.06,0.08]
         //改变坐标轴线的颜色
          axisLine: {
         lineStyle: {
@@ -240,11 +271,14 @@ export default {
         smooth:true
     }]
 };
-
+   //将设置好的图表配置项添加到容器中
   mychart1.setOption(option)
   }
   },
+
+  //钩子函数（加载完dom后调用加载图表方法）
   mounted(){
+    //调用加载韦布尔图表方法
    this.Wbetb()
   }
 }
