@@ -212,20 +212,22 @@ export default {
   position: absolute;
   top: 19px;
   left: 35px;
-  /* border-bottom: 2px solid #0f53fd; */
+  cursor:pointer
+
 }
 .nav2 {
   position: absolute;
   top: 19px;
   left: 130px;
-  /* border-bottom: 2px solid #0f53fd; */
+  cursor:pointer
+
 }
 .nav3 {
   position: absolute;
   top: 19px;
   left: 230px;
-  /* border-bottom: 2px solid #0f53fd; */
-  /* display: none; */
+  cursor:pointer
+
 }
 /* 导航下拉框 */
 .xlk-z {
@@ -241,7 +243,10 @@ export default {
   left: 35px;
   background: rgba(22, 28, 87, 0.7);
   display: none;
+  /* 解决页面中定位用的次数多时的层次问题 */
   z-index: 9;
+  cursor:pointer
+
 }
 .xlk-2 {
   width: 70px;
@@ -251,7 +256,10 @@ export default {
   left: 128px;
   background: rgba(22, 28, 87, 0.7);
   display: none;
+  /* 解决页面中定位用的次数多时的层次问题 */
   z-index: 9;
+  cursor:pointer
+
 }
 .xlk-3 {
   width: 70px;
@@ -261,7 +269,10 @@ export default {
   left: 228px;
   background: rgba(22, 28, 87, 0.7);
   display: none;
+  /* 解决页面中定位用的次数多时的层次问题 */
   z-index: 9;
+  cursor:pointer
+
 }
 
 .xlk-1 div,

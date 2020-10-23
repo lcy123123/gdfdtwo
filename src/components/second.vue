@@ -83,13 +83,12 @@ export default {
   return {
     //下拉框
     options:[{
-      value:'选项1',
+      value:'选项11',
       label:'黄金糕'
       },{
-      value:'选项2',
+      value:'选项22',
       label:'黄金糕1'
-      },
-      ],
+      }],
     value:'',
     //时间选择
         pickerOptions: {
@@ -107,9 +106,10 @@ export default {
 </script>
 <style>
 /* 下拉框样式 */
-/* .el-select-dropdown {
-  height: 40px;
-} */
+.el-select-dropdown {
+  /* height: 40px; */
+  /* overflow: scroll!important; */
+}
 .right-second {
   width: 350px;
   height: 480px;

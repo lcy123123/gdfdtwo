@@ -4,8 +4,8 @@
     <div class="fivebtn">
        <div class="tog"><img  @click="tog" id="t" src="../assets/up.png" alt="" /></div>
       <ul>
-        <li @click="first"><img src="../assets/01.png" alt="" /></li>
-        <li @click="second"><img src="../assets/02.png" alt="" /></li>
+        <li><img src="../assets/01.png" alt="" /></li>
+        <li><img src="../assets/02.png" alt="" /></li>
         <li><img src="../assets/03.png" alt="" /></li>
         <li><img src="../assets/04.png" alt="" /></li>
         <li><img src="../assets/05.png" alt="" /></li>
@@ -33,7 +33,7 @@
       <div class="right-bottom">
         <img class="y2" src="../assets/s2.png" alt="">
         <span class="y2-text">数值预报</span>
-        <span @click="Cli2"  class="c2" :v-model="flag" style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-bottom"></i></span>
+        <span @click="Cli2"  class="c2"  style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-bottom"></i></span>
       </div>
          <div class="top-2">
         
@@ -49,7 +49,7 @@
            <el-checkbox class="b10">格点风参</el-checkbox>
            <!-- 右面的时间轴 -->
             <!-- <div>  <el-slider  class="sli1" v-model="a" min="0" max="200" step="40" range  :marks="marks"></el-slider></div> -->
-            <div>  <el-slider  class="sli1" v-model="a" max="200"  step="40" range=""  :marks="marks"></el-slider></div>
+            <div>  <el-slider  class="sli1" v-model="this.a" :max='200'  :step='40'   :marks="marks"></el-slider></div>
         </div>
     </div>
   </div>
@@ -69,14 +69,14 @@ import s2 from '../assets/s2.png'
 export default {
  data () {
      return {
-        //  a: 0,   //问题：加双向数据绑定时复选框点击不了
+         a: [''],   //问题：加双向数据绑定时复选框点击不了
          marks: {
-          0: '地面',
-          40: '40',
-          80: '80',
-          120: '120',
-          160:'160',
-          200:'200'
+          '0': '地面',
+          '40': '40',
+          '80': '80',
+          '120': '120',
+          '160':'160',
+          '200':'200'
         }
 
      }

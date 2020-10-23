@@ -11,6 +11,24 @@
         <li><img src="../assets/05.png" alt="" /></li>
       </ul>
     </div>
+      <!-- 下面时间轴和输入框总div -->
+    <div class="sjz-srk-z">
+      <!-- 时间轴上面的输入框 -->
+      <div class="sjz-srk">
+        <el-form>
+          <el-form-item>
+           <el-select v-model="value" placeholder="请选择">
+         <el-option
+         v-for="item in options"
+         :key="item.value"
+         :label="item.label"
+         :value="item.value">
+         </el-option>
+         </el-select>
+          </el-form-item>
+        </el-form>
+        
+      </div>
     <!-- 时间轴 -->
     <div class="sjz-z" v-if="this.$route.path!='/tb'?true:false">
       <div>
@@ -29,6 +47,7 @@
         <span class="btn-6"><img src="../assets/006.png" alt=""/></span>
         <span class="btn-7"><img src="../assets/007.png" alt=""/></span>
       </div>
+    </div>
     </div>
     <div class="zy-b" v-if="(this.$route.path=='/'||this.$route.path=='/first')?true:false">
             <div class="tu">图例</div>
@@ -87,11 +106,28 @@ import echarts from 'echarts'
 export default {
   data() {
     return {
-      value1: 0,
+      // value1: 0,
       //风玫瑰状态值
       fmgflag:false,
       // 韦布尔状态值
-      wbeflag:true
+      wbeflag:true,
+     options: [{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }],
+        value: ''
     };
   },
   methods: {
@@ -286,6 +322,20 @@ export default {
 
 </script>
 <style>
+.sjz-srk-z{
+  /* border: 2px solid red; */
+  position: relative;
+  bottom: 240px;
+  left:200px;
+  height: 190px;
+  width: 900px;
+}
+.sjz-srk{
+  border: 2px solid rgb(0, 140, 255);
+  height: 120px;
+  width: 150px;
+  margin-left: 120px;
+}
 .tog-six{
    position: absolute;
    top:70px;
@@ -329,8 +379,8 @@ img {
   width: 610px;
   height: 50px;
   position: absolute;
-  bottom: 20px;
-  left: 25%;
+  bottom: 15px;
+  left: 15%;
   border: 1px solid #091673;
   border-radius: 30px;
 }
@@ -514,10 +564,13 @@ margin: 10px;
 .fmgtext{
   background: rgba(3,8,90,.5);
   color: white;
+  cursor:pointer
 }
 .wbetext{
   background: rgba(0,164,253,.5);
   color: #01DFDF;
+  cursor:pointer
+
 }
 /* .wbetext{
   background: rgba(0,164,253,.5);
