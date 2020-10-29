@@ -106,9 +106,8 @@ export default {
 </script>
 <style>
 /* 下拉框样式 */
-.el-select-dropdown {
-  /* height: 40px; */
-  /* overflow: scroll!important; */
+ul{
+  display: block;
 }
 .right-second {
   width: 350px;
@@ -181,11 +180,11 @@ margin-bottom: 0px;
 .second-xlk .el-form-item__label {
   margin: 0px 10px;
 }
-.el-button--primary{
+/* .el-button--primary{
   width: 97px;
   height: 37px;
   background-color: #027A9D;
   margin-top: 28px;
   margin-left: 126px;
-}
+} */
 </style>

@@ -6,7 +6,8 @@ import Yggc from './components/yggc.vue'
 import Second from './components/second.vue'
 import Three from './components/three.vue'
 import Szyb from './components/szyb.vue'
-// import Cesium from './components/cesium'
+import Index from './shouye/index'
+
 
 
 //使用路由
@@ -14,9 +15,14 @@ Vue.use(Router)
 
 export default new Router({
     routes:[
-        // {
-        //     path:'*'
-        // },
+        {
+            path:'/',
+            redirect:'/index'
+        },
+        {
+            path:'/index',
+            component:Index
+        },
         {
             path:'/zi',
             component:Zi

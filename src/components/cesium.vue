@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div id="cesiumContainer">
-      <!-- <button class="aaa">矢量标记</button> -->
-    </div>
+    <div id="cesiumContainer"></div>
   </div>
 </template>
 
@@ -11,30 +9,37 @@
 let Cesium = require("cesium/Source/Cesium");
 // import widget from 'cesium/Build/Cesium/Widgets/widgets.css'
 
-
+import TooltipDiv from "../utils/toolTip";
 
 export default {
-  // name: "CesiumScene",
+  name: "CesiumScene",
   data() {
     return {
-      dataList:[]
+      //站点数据
+      dataList: [],
+      viewer: null
     };
   },
   mounted() {
-    // 调用初始化方法
+    // 调用请求json数据方法
+    this.getdataList();
+    //调用初始化地球方法
     this.init();
-    this.getdataList()
   },
-  beforeDestroy() {},
+
   methods: {
     //请求本地json方法
-    getdataList(){
-      this.$axios.get('./station.json').then((res)=>{
-        // console.log(res)
-       this.dataList=res.data
-       console.log(this.dataList)
-
-      })
+    getdataList() {
+      this.$axios.get("./station.json").then(res => {
+        // 将请求到的数据赋值
+        this.dataList = res.data;
+        //对请求的数据遍历
+        res.data.forEach(params => {
+          //调用添加点方法
+          this.AddPoint(params);
+          //调用鼠标移入方法
+        }, this.mouseMove());
+      });
     },
     //初始化方法
     init() {
@@ -64,17 +69,6 @@ export default {
       };
       var viewer = new Cesium.Viewer("cesiumContainer", viewerOption);
 
-      // 添加图层
-      viewer.imageryLayers.addImageryProvider(
-        new Cesium.WebMapTileServiceImageryProvider({
-          url:
-            "http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=e33757cdce9295f804cb6c77aa22afe3",
-          layer: "tdtAnnoLayer",
-          style: "default",
-          format: "image/jpeg",
-          tileMatrixSetID: "GoogleMapsCompatible"
-        })
-      );
       // 将位置定位到中国 通过给xyz的坐标控制在广东位置
       viewer.camera.flyTo({
         destination: Cesium.Cartesian3.fromDegrees(112, 23, 1785000),
@@ -100,60 +94,100 @@ export default {
       viewer.dataSources.add(promise);
       viewer._cesiumWidget._creditContainer.style.display = "none"; // 隐藏版权
 
-      //在地图上添加标记（点）
-        //调用添加点的方法需要的参数
-        let params = {
-          id: "测试" + 567,
-          name: "text",
-          lon: 112, //经度
-          lat: 23 //纬度
-        };
-        //声明添加点的方法
-        let AddPoint = function(params) {
-          //判断参数中经纬度是否为有效值
-          if (params.lon === undefined || params.lat === undefined) {
-            alert("请提供经纬度!");
-            return;
-          }
-          let entity = new Cesium.Entity({
-            // 点的唯一标识
-            id: params.id || `${params.lon}点`,
-            // 点的名字
-            name: params.name || "点",
-            // 是否显示
-            show: true,
-            //点的定位
-            position: Cesium.Cartesian3.fromDegrees(params.lon, params.lat),
-            //创建出新的点的实例
-            point: new Cesium.PointGraphics({
-              //是否显示
-              show: true,
-              //点的大小
-              pixelSize: params.pixelSize || 10,
-              //相对于地面的位置
-              heightReference: params.pixelSize || Cesium.HeightReference.NONE,
-              //点的颜色
-              color: params.color || new Cesium.Color(255, 255, 0, 1),
-              //外边框颜色
-              outlineColor: params.color || new Cesium.Color(0, 0, 0, 0),
-              //外边框大小
-              outlineWidth: params.outlineWidth || 0,
-              //不同距离缩放比
-              scaleByDistance:params.scaleByDistance ||new Cesium.NearFarScalar(0, 1, 5e10, 1),
-              //不同距离透明度
-              translucencyByDistance:params.translucencyByDistance ||new Cesium.NearFarScalar(0, 1, 5e10, 1),
-              //显示的范围
-              distanceDisplayCondition:params.translucencyByDistance ||new Cesium.DistanceDisplayCondition(0, 4.8e10)
-            })
-          });
-          viewer.entities.add(entity);
-          console.log(entity,viewer);
-          return {entity,viewer};
-        };
-        //调用添加点的方法
-        AddPoint(params);
-      }
+      this.viewer = viewer;
 
+      // 在地图中添加矢量数据（左下角图）---可执行
+      // var colorList = [[120, 0, 136],[90, 0, 184],[70, 0, 245],[0, 170, 225],[0, 200, 200],[0, 200, 125],[195, 255, 0],[255, 255, 0],[255, 155, 0],[255, 0, 0]];
+      // var promise1 = Cesium.GeoJsonDataSource.load("./1.json");
+      // promise1.then(function(dataSource) {
+      //   viewer.dataSources.add(dataSource);
+
+      //   var entities = dataSource.entities.values;
+      //   for (var i = 0; i < entities.length; i++) {
+      //     var entity = entities[i];
+      //     // console.log(entity.properties.value.valueOf());
+      //     let colorIndex = entity.properties.value.valueOf();
+      //     entity.polygon.material = new Cesium.Color(
+      //       colorList[colorIndex][0] / 255,
+      //       colorList[colorIndex][1] / 255,
+      //       colorList[colorIndex][2] / 255,
+      //       0.7
+      //     );
+      //     entity.polygon.outline = true;
+      //     // entity.polygon.extrudedHeight =5000.0;
+      //   }
+      // });
+      //是否以此矢量数据定位至中心
+      // viewer.flyTo(promise1);
+
+      // viewer._cesiumWidget._creditContainer.style.display="none";
+    },
+
+    //声明添加点的方法
+    AddPoint(params) {
+      console.log(params)
+      if (params.lon === undefined || params.lat === undefined) {
+        alert("请提供经纬度!");
+        return;
+      }
+      let entity = new Cesium.Entity({
+        id: params.dataId || `${params.lon}点`,
+        name: params.stationName || "点",
+        show: true,
+        position: Cesium.Cartesian3.fromDegrees(params.lon, params.lat),
+        point: new Cesium.PointGraphics({
+          show: true,
+          pixelSize: params.pixelSize || 5,
+          heightReference: params.pixelSize || Cesium.HeightReference.NONE,
+          color: params.color || new Cesium.Color(255, 255, 0, 1),
+          outlineColor: params.color || new Cesium.Color(0, 0, 0, 0),
+          outlineWidth: params.outlineWidth || 0,
+          scaleByDistance:
+            params.scaleByDistance || new Cesium.NearFarScalar(0, 1, 5e10, 1),
+          translucencyByDistance:
+            params.translucencyByDistance ||
+            new Cesium.NearFarScalar(0, 1, 5e10, 1),
+          distanceDisplayCondition:
+            params.translucencyByDistance ||
+            new Cesium.DistanceDisplayCondition(0, 4.8e10)
+        }),
+        //框
+        description:
+          "<div>位置：" +
+          params.stationName +
+          "</div><div>经度：" +
+          params.lon +
+          "</div><div>纬度：" +
+          params.lat +
+          "</div>"
+      });
+      this.viewer.entities.add(entity);
+      return entity;
+    },
+    //鼠标移入事件
+    mouseMove() {
+      var scene = this.viewer.scene;
+      var handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
+      TooltipDiv.initTool(this.viewer.cesiumWidget.container);
+      // 鼠标移入自定义弹出框
+      handler.setInputAction(function(movement) {
+        if (scene.mode !== Cesium.SceneMode.MORPHING) {
+          var pickedObject = scene.pick(movement.endPosition);
+          // console.log(pickedObject, 'gggggg')
+          if (scene.pickPositionSupported && Cesium.defined(pickedObject)) {
+            // console.log(pickedObject.id.description.valueOf());
+            TooltipDiv.showAt(
+              movement.endPosition,
+              '<div style="color: white;border:1px solid #008CFF;font-size:14px;padding:5px;background:rgba(8,26,127,.5)">' +
+                pickedObject.id.description +
+                "</div>"
+            );
+          } else {
+            TooltipDiv.setVisible(false);
+          }
+        }
+      }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+    }
   }
 };
 </script>
@@ -172,4 +206,33 @@ export default {
   left: 50px;
   color: white;
 } */
+
+.tooltipdiv-inner {
+  padding: 3px 8px;
+}
+/* 向左 */
+.toolTip-left {
+  position: absolute;
+  width: 300px;
+  min-height: 80px;
+  border: 4px solid rgba(19, 159, 255, 1);
+  border-radius: 20px;
+  background-color: rgba(30, 49, 74, 0.6);
+}
+.toolTip-left:before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-right: 20px solid rgba(19, 159, 255, 1);
+}
+.con {
+  font-size: 28px;
+  color: #ffff;
+  line-height: 80px;
+}
 </style>

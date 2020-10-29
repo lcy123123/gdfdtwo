@@ -1,22 +1,13 @@
 <template>
   <div>
     <!-- 五个小按钮 -->
-    <div class="fivebtn">
-       <div class="tog"><img  @click="tog" id="t" src="../assets/up.png" alt="" /></div>
-      <ul>
-        <li @click="first"><img src="../assets/01.png" alt="" /></li>
-        <li @click="second"><img src="../assets/02.png" alt="" /></li>
-        <li><img src="../assets/03.png" alt="" /></li>
-        <li><img src="../assets/04.png" alt="" /></li>
-        <li><img src="../assets/05.png" alt="" /></li>
-      </ul>
-    </div>
+    <Fiveli></Fiveli>
     <!-- 上边的 -->
     <div class="right bottom-line">
-      <div class="right-top">
+      <div class="right-top" @click="Cli1">
         <img class="y1" src='../assets/y2.png' alt="">
         <span class="y1-text">遥感观测</span>
-        <span @click="Cli1" class="c1" style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-bottom"></i></span>
+        <span  class="c1" style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-bottom"></i></span>
       </div>
       <!-- 右边第一个下拉框 -->
       <div class="top-1">
@@ -30,23 +21,28 @@
         </div>
       </div>
       <!-- 下边的 -->
-      <div class="right-bottom">
+      <div class="right-bottom" @click="Cli2">
         <img class="y2" src="../assets/s1.png" alt="">
         <span class="y2-text">数值预报</span>
-        <span @click="Cli2"  class="c2" :v-model="flag" style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-right"></i></span>
+        <span  class="c2" :v-model="flag" style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-right"></i></span>
       </div>
          <div class="top-2">
         
-           <el-checkbox class="b1">平均风速</el-checkbox>
-           <el-checkbox class="b2">平均风功率</el-checkbox>
-           <el-checkbox class="b3">有效风速时数 </el-checkbox>
-           <el-checkbox class="b4">威布尔分布形状参数</el-checkbox>
-           <el-checkbox class="b5">威布尔分布尺度系数 </el-checkbox>
-           <el-checkbox class="b6">风向频率分布</el-checkbox>
-           <el-checkbox class="b7">各项风功率密度分布频率</el-checkbox>
-           <el-checkbox class="b8">各风速区间频率分布</el-checkbox>
-           <el-checkbox class="b9">各风速区间风功率密度频率</el-checkbox>
-           <el-checkbox class="b10">格点风参</el-checkbox>
+            <el-checkbox class="b1">年平均风速</el-checkbox>
+           <el-checkbox class="b2">月平均风速</el-checkbox>
+           <el-checkbox class="b3">逐小时年平均风速 </el-checkbox>
+           <el-checkbox class="b4">逐小时月平均风速</el-checkbox>
+           <el-checkbox class="b5">年平均风功率密度 </el-checkbox>
+           <el-checkbox class="b6">月平均风功率密度</el-checkbox>
+           <el-checkbox class="b7">有效风速时数</el-checkbox>
+           <el-checkbox class="b8">风切变系数</el-checkbox>
+           <el-checkbox class="b9">威布尔分布形状参数</el-checkbox>
+           <el-checkbox class="b10">威布尔分布尺度参数</el-checkbox>
+           <el-checkbox class="b11">风向分布频率</el-checkbox>
+           <el-checkbox class="b12">各向风功率密度分布频率</el-checkbox>
+           <el-checkbox class="b13">各区间风速分布频率</el-checkbox>
+           <el-checkbox class="b14">各区间风功率密度分布频率</el-checkbox>
+           <el-checkbox class="b15">格点风参</el-checkbox>
            <!-- 右面的时间轴 -->
             <!-- <div>  <el-slider  class="sli1" v-model="value" min="0" max="200" step="40" range  :marks="marks"></el-slider></div> -->
             <div>  <el-slider  class="sli1" v-model="value"  max="200" step="40" range  :marks="marks"></el-slider></div>
@@ -55,6 +51,7 @@
   </div>
 </template>
 <script>
+import Fiveli from './fiveli'
 import $ from 'jquery'
 // 箭头朝下图片
 import up from '../assets/up.png'
@@ -67,12 +64,12 @@ import y2 from '../assets/y2.png'
 import s1 from '../assets/s1.png'
 import s2 from '../assets/s2.png'
 export default {
+  components: {
+    Fiveli
+  },
   data() {
     return {
       flag:true,
-      // y1: require('../assets/y1.png'),
-      // y2: require('../assets/y2.png'),
-
       // value: 0,   //问题：加双向绑定数据时复选框点不了
         marks: {
           0: '地面',
@@ -188,9 +185,11 @@ ul{
 .right-top{
 background: rgba(3,37,127,.5);
 border: 2px solid rgba(8,26,127,.5);
+cursor: pointer;
 }
 .right-bottom{
 border: 2px solid rgba(8,26,127,.5);
+cursor: pointer;
 }
 .y1,.y2{
   width: 15px;
@@ -218,7 +217,7 @@ border: 2px solid rgba(8,26,127,.5);
   background-color:rgba(0,3,44,.5) ;
 }
 .top-2{
-  height: 190px;
+  height: 250px;
 color: white;
 display: none;
 background-color:rgba(0,3,44,.5) ;
@@ -227,24 +226,40 @@ background-color:rgba(0,3,44,.5) ;
 .b1{
 margin-left: 10px;
 margin-top: 15px;
-margin-right: 108px;
+margin-right: 65px;
 }
 .b3{
   margin-left: 10px;
-  margin-right: 84px;
+  margin-right: 29px;
 }
 .b5{
   margin-left: 10px;
-  margin-right: 48px;
+  margin-right: 29px;
 }
 .b7{
   margin-left: 10px;
-  margin-right: 24px;
+  margin-right: 53px;
 }
 .b9{
   margin-left: 10px;
-  margin-right: 12px;
-} 
+  margin-right: 17px;
+
+}
+.b11{
+  margin-left: 10px;
+  margin-right: 53px;
+
+}
+.b13{
+  margin-left: 10px;
+  margin-right: 17px;
+
+}
+.b15{
+  margin-left: 10px;
+  margin-right: 17px;
+
+}
 .el-checkbox__label {
   color: white;
   font-size: 12px;

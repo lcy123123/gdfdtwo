@@ -2,7 +2,7 @@
   <div id="app">
     <cesium></cesium>
     <headerimg></headerimg>
-    <shouye></shouye>
+    <!-- <shouye></shouye> -->
        <router-view></router-view>
              
 
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import shouye from './shouye/index.vue'
+// import shouye from './shouye/index.vue'
 import cesium from './components/cesium'
 import headerimg from './components/headerimg'
 
@@ -21,7 +21,7 @@ export default {
   components: {
     cesium,
     headerimg,
-    shouye,
+    // shouye,
   }
 }
 </script>

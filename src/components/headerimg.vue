@@ -152,7 +152,8 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
+  height: 50px;
 }
 .header-img {
   height: 45px;
