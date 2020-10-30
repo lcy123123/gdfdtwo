@@ -62,13 +62,62 @@
         style="width:340px;height:200px;position:absolute;top:-10px;right:-12px"
       ></div>
     </div>
+    <!-- 高度下拉框 -->
+  <div class="gdxlk">
+      <el-form>
+      <el-form-item label="高度:">
+        <el-select v-model="value" >
+           <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+  </div>
   </div>
 </template>
 
 <script>
 export default {
+  created(){
+    //调用请求高度方法
+    this.gaodu()
+    //调用请求风速月变化方法
+    this.fengSuYueBianHua()
+  },
   data() {
-    return {};
+    return {
+      options: [],
+        value: '10.0',
+        gdList:[],
+        fsybhList:[],
+    };
+  },
+  methods:{
+    //请求高度数据方法
+    gaodu(){
+      this.$axios.post('/api/show/level').then(res=>{
+        for(var i=0;i<res.data.length;i++){
+          // console.log(res.data[i])
+          //实际高（数值）
+           this.gdList=(res.data[i])
+           console.log(this.gdList.vLev)
+           this.options.push({label:this.gdList.vLev,value:this.gdList.vLev,key:this.gdList.vLev})
+        }
+      })
+        
+  },
+  //风速月变化方法
+  fengSuYueBianHua(){
+    this.$axios.post('/api/show/MonthlyVariationWindSpeed',{"local":3, "level":10}).then(res=>{
+      // console.log(res.data)
+      this.fsybhList=res.data
+      console.log(this.fsybhList)
+    })
+  }
   }
 };
 import echarts from "echarts";
@@ -747,5 +796,11 @@ window.onload = load;
   background: linear-gradient(90deg, #0459d3, #84e6f7, #0459d3);
   -webkit-background-clip: text;
   color: transparent;
+}
+.gdxlk{
+  position: absolute;
+  bottom:30px;
+  right:378px;
+  width: 150px;
 }
 </style>

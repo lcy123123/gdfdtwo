@@ -33,8 +33,8 @@
             <span>A=8.16</span>
             <span>K=2.00</span>
           </div>
-          <div id="main-1" v-show="!wbeflag"  style="width:330px;height:230px;position:absolute;left:200px;top:100px;display:none"></div>
-          <div id="main-2"  v-show="fmgflag" style="width:330px;height:230px;position:absolute;left:200px;top:100px;display:none"></div>
+          <div id="main-1" v-show="wbeflag"  style="width:330px;height:230px;position:absolute;left:200px;top:100px;"></div>
+          <div id="main-2"  v-show="!fmgflag" style="width:330px;height:230px;position:absolute;left:200px;top:100px;display:none"></div>
         </div>
        </div>
         </div>
@@ -47,7 +47,10 @@ import echarts from 'echarts'
 export default {
     data(){
         return{
-
+      //风玫瑰状态值
+      fmgflag:false,
+      // 韦布尔状态值
+      wbeflag:true,
         }
     },
     //钩子函数（加载完dom后调用加载图表方法）
@@ -65,27 +68,18 @@ export default {
 
      //点击出现风玫瑰图
     Fmg:function(){
-      //判断flag的值 改变背景以及文字颜色  flag为
+      console.log(123)
+      //判断flag的值 改变背景以及文字颜色  初始为false
       if(this.fmgflag==false){
         $('.fmgtext').css('color','#01DFDF')
         $('.fmgtext').css('background','rgba(0,164,253,.5)')
-        this.fmgflag=!this.fmgflag
 
         //改变兄弟文字 白颜色 背景深颜色
         $('.fmgtext').siblings().css('background','rgba(3,8,90,.5)')
         $('.fmgtext').siblings().css('color','white')
-        //改变其兄弟的状态值
-        this.wbeflag=!this.wbeflag
-
-      }else{
-        $('.fmgtext').css('color','white')
-        this.fmgflag=!this.fmgflag
-        $('.fmgtext').css('background','rgba(3,8,90,.5)')
-
-        $('.fmgtext').siblings().css('background','rgba(0,164,253,.5)')
-        $('.fmgtext').siblings().css('color','#01DFDF')
-        //改变其兄弟的状态值
-        this.wbeflag=!this.wbeflag
+        //隐藏另一个 显示自己的
+        $('#main-1').hide()
+        $('#main-2').show()
 
       }
         //渲染图表
@@ -110,32 +104,15 @@ export default {
     },
 //加载图表方法(已在mounted中调用)
   Wbetb:function(){
-       //判断自己的flag
+       //判断自己的flag  初始为true
     if(this.wbeflag==true){
       //如果为真（代表亮着的） 将文字背景变亮
         $('.wbetext').css({background:'rgba(0,164,253,.5)',color:'#01DFDF'})
-        //改变自己的状态值
-        this.wbeflag=!this.wbeflag
-        //改变兄弟的文字和背景颜色
         $('.wbetext').siblings().css({background:'rgba(3,8,90,0.5)',color:'white'})
-        //改变其兄弟的状态值
-        this.fmgflag=false
-
-        //
-        // $('#main-1').show()
-        // $('#main-2').hide()
-       
-    }else{
-        $('.wbetext').css({background:'rgba(3,8,90,.5)',color:'white'})
-        //改变自己的状态值
-        this.wbeflag=!this.wbeflag
-
-        //改变文字变白 颜色变深
-        $('.wbetext').siblings().css({background:'rgba(0,164,253,.5)',color:'#01DFDF'})
-        //改变其兄弟状态值
-        this.fmgflag=!this.fmgflag
-
-    } 
+       //隐藏另一个显示自己的
+       $('#main-1').show()
+       $('#main-2').hide()
+    }
     
    //为图表设定容器
    var mychart1=echarts.init(document.getElementById("main-1"))

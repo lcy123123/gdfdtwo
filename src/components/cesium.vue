@@ -9,7 +9,7 @@
 let Cesium = require("cesium/Source/Cesium");
 // import widget from 'cesium/Build/Cesium/Widgets/widgets.css'
 
-import TooltipDiv from "../utils/toolTip";
+// import TooltipDiv from "../utils/toolTip";
 
 export default {
   name: "CesiumScene",
@@ -83,20 +83,20 @@ export default {
         }
       });
       //在地图上添加矢量数据
-      var promise = Cesium.GeoJsonDataSource.load("./zsc.json", {
-        stroke: new Cesium.Color(0.019, 0.156, 0.639, 0), //多边形轮廓线的颜色
-        // fill: Cesium.Color.CORNFLOWERBLUE.withAlpha(.7),       //多边形中间的颜色
-        // fill: new Cesium.Color(0.019,0.156,0.639,0.7),       //多边形中间的颜色
-        fill: new Cesium.Color(0.047, 0.588, 0.807, 0.5), //多边形中间的颜色
-        strokeWidth: 5, //多边形的厚度
-        markerSymbol: "?" //多边形
-      });
-      viewer.dataSources.add(promise);
-      viewer._cesiumWidget._creditContainer.style.display = "none"; // 隐藏版权
+      // var promise = Cesium.GeoJsonDataSource.load("./zsc.json", {
+      //   stroke: new Cesium.Color(0.019, 0.156, 0.639, 0), //多边形轮廓线的颜色
+      //   // fill: Cesium.Color.CORNFLOWERBLUE.withAlpha(.7),       //多边形中间的颜色
+      //   // fill: new Cesium.Color(0.019,0.156,0.639,0.7),       //多边形中间的颜色
+      //   fill: new Cesium.Color(0.047, 0.588, 0.807, 0.5), //多边形中间的颜色
+      //   strokeWidth: 5, //多边形的厚度
+      //   markerSymbol: "?" //多边形
+      // });
+      // viewer.dataSources.add(promise);
+      // viewer._cesiumWidget._creditContainer.style.display = "none"; // 隐藏版权
 
-      this.viewer = viewer;
+      // this.viewer = viewer;
 
-      // 在地图中添加矢量数据（左下角图）---可执行
+      // // 在地图中添加矢量数据（左下角图）---可执行
       // var colorList = [[120, 0, 136],[90, 0, 184],[70, 0, 245],[0, 170, 225],[0, 200, 200],[0, 200, 125],[195, 255, 0],[255, 255, 0],[255, 155, 0],[255, 0, 0]];
       // var promise1 = Cesium.GeoJsonDataSource.load("./1.json");
       // promise1.then(function(dataSource) {
@@ -105,7 +105,7 @@ export default {
       //   var entities = dataSource.entities.values;
       //   for (var i = 0; i < entities.length; i++) {
       //     var entity = entities[i];
-      //     // console.log(entity.properties.value.valueOf());
+      //     console.log(entity.properties.value.valueOf());
       //     let colorIndex = entity.properties.value.valueOf();
       //     entity.polygon.material = new Cesium.Color(
       //       colorList[colorIndex][0] / 255,
@@ -117,77 +117,77 @@ export default {
       //     // entity.polygon.extrudedHeight =5000.0;
       //   }
       // });
-      //是否以此矢量数据定位至中心
+      // 是否以此矢量数据定位至中心
       // viewer.flyTo(promise1);
 
       // viewer._cesiumWidget._creditContainer.style.display="none";
     },
 
     //声明添加点的方法
-    AddPoint(params) {
-      console.log(params)
-      if (params.lon === undefined || params.lat === undefined) {
-        alert("请提供经纬度!");
-        return;
-      }
-      let entity = new Cesium.Entity({
-        id: params.dataId || `${params.lon}点`,
-        name: params.stationName || "点",
-        show: true,
-        position: Cesium.Cartesian3.fromDegrees(params.lon, params.lat),
-        point: new Cesium.PointGraphics({
-          show: true,
-          pixelSize: params.pixelSize || 5,
-          heightReference: params.pixelSize || Cesium.HeightReference.NONE,
-          color: params.color || new Cesium.Color(255, 255, 0, 1),
-          outlineColor: params.color || new Cesium.Color(0, 0, 0, 0),
-          outlineWidth: params.outlineWidth || 0,
-          scaleByDistance:
-            params.scaleByDistance || new Cesium.NearFarScalar(0, 1, 5e10, 1),
-          translucencyByDistance:
-            params.translucencyByDistance ||
-            new Cesium.NearFarScalar(0, 1, 5e10, 1),
-          distanceDisplayCondition:
-            params.translucencyByDistance ||
-            new Cesium.DistanceDisplayCondition(0, 4.8e10)
-        }),
-        //框
-        description:
-          "<div>位置：" +
-          params.stationName +
-          "</div><div>经度：" +
-          params.lon +
-          "</div><div>纬度：" +
-          params.lat +
-          "</div>"
-      });
-      this.viewer.entities.add(entity);
-      return entity;
-    },
+    // AddPoint(params) {
+    //   console.log(params)
+    //   if (params.lon === undefined || params.lat === undefined) {
+    //     alert("请提供经纬度!");
+    //     return;
+    //   }
+    //   let entity = new Cesium.Entity({
+    //     id: params.dataId || `${params.lon}点`,
+    //     name: params.stationName || "点",
+    //     show: true,
+    //     position: Cesium.Cartesian3.fromDegrees(params.lon, params.lat),
+    //     point: new Cesium.PointGraphics({
+    //       show: true,
+    //       pixelSize: params.pixelSize || 5,
+    //       heightReference: params.pixelSize || Cesium.HeightReference.NONE,
+    //       color: params.color || new Cesium.Color(255, 255, 0, 1),
+    //       outlineColor: params.color || new Cesium.Color(0, 0, 0, 0),
+    //       outlineWidth: params.outlineWidth || 0,
+    //       scaleByDistance:
+    //         params.scaleByDistance || new Cesium.NearFarScalar(0, 1, 5e10, 1),
+    //       translucencyByDistance:
+    //         params.translucencyByDistance ||
+    //         new Cesium.NearFarScalar(0, 1, 5e10, 1),
+    //       distanceDisplayCondition:
+    //         params.translucencyByDistance ||
+    //         new Cesium.DistanceDisplayCondition(0, 4.8e10)
+    //     }),
+    //     //框
+    //     description:
+    //       "<div>位置：" +
+    //       params.stationName +
+    //       "</div><div>经度：" +
+    //       params.lon +
+    //       "</div><div>纬度：" +
+    //       params.lat +
+    //       "</div>"
+    //   });
+    //   this.viewer.entities.add(entity);
+    //   return entity;
+    // },
     //鼠标移入事件
-    mouseMove() {
-      var scene = this.viewer.scene;
-      var handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
-      TooltipDiv.initTool(this.viewer.cesiumWidget.container);
-      // 鼠标移入自定义弹出框
-      handler.setInputAction(function(movement) {
-        if (scene.mode !== Cesium.SceneMode.MORPHING) {
-          var pickedObject = scene.pick(movement.endPosition);
-          // console.log(pickedObject, 'gggggg')
-          if (scene.pickPositionSupported && Cesium.defined(pickedObject)) {
-            // console.log(pickedObject.id.description.valueOf());
-            TooltipDiv.showAt(
-              movement.endPosition,
-              '<div style="color: white;border:1px solid #008CFF;font-size:14px;padding:5px;background:rgba(8,26,127,.5)">' +
-                pickedObject.id.description +
-                "</div>"
-            );
-          } else {
-            TooltipDiv.setVisible(false);
-          }
-        }
-      }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-    }
+    // mouseMove() {
+    //   var scene = this.viewer.scene;
+    //   var handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
+    //   TooltipDiv.initTool(this.viewer.cesiumWidget.container);
+    // //   // 鼠标移入自定义弹出框
+    //   handler.setInputAction(function(movement) {
+    //     if (scene.mode !== Cesium.SceneMode.MORPHING) {
+    //       var pickedObject = scene.pick(movement.endPosition);
+    //       // console.log(pickedObject, 'gggggg')
+    //       if (scene.pickPositionSupported && Cesium.defined(pickedObject)) {
+    //         // console.log(pickedObject.id.description.valueOf());
+    //         TooltipDiv.showAt(
+    //           movement.endPosition,
+    //           '<div style="color: white;border:1px solid #008CFF;font-size:14px;padding:5px;background:rgba(8,26,127,.5)">' +
+    //             pickedObject.id.description +
+    //             "</div>"
+    //         );
+    //       } else {
+    //         TooltipDiv.setVisible(false);
+    //       }
+    //     }
+    //   }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+    // }
   }
 };
 </script>

@@ -5,7 +5,7 @@
       <div @click="tog" ><img class="tog" src="../assets/up.png" alt="" /></div>
      <div class="ul-five">
         <li><img src="../assets/01.png" alt="" /></li>
-        <li @click="second"><img src="../assets/02.png" alt="" /></li>
+        <li><img src="../assets/02.png" alt="" /></li>
         <li><img src="../assets/03.png" alt="" /></li>
         <li><img src="../assets/04.png" alt="" /></li>
         <li><img src="../assets/05.png" alt="" /></li>
