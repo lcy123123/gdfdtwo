@@ -66,7 +66,7 @@
     <div class="gdxlk">
       <el-form>
         <el-form-item label="高度:">
-          <el-select v-model="value">
+          <el-select v-model="value" @change="changeValue($event)">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -90,7 +90,7 @@ export default {
     //调用请求高度方法
     this.gaodu();
     //调用请求风速月变化方法
-    this.getfengSuYueBianHua();
+    this.getfengSuYueBianHua(this.gdyxValue);
     //调用请求风功率密度统计方法
     this.getfengGongLvMiDuTongJi();
     //调用请求有效风速方法
@@ -127,19 +127,41 @@ export default {
       //浮标雷达风速数据对比数据
       fbldList:[],
       //浮标风速数据
-      fbfsList:[]
+      fbfsList:[],
+      //高度选中值
+      gdyxValue:''
     };
   },
   methods: {
+    //高度下拉框 获取选中值
+    changeValue(e){
+    this.gdyxValue=e
+    //调用 请求风速月变化方法
+    this.getfengSuYueBianHua(this.gdyxValue)
+    //调用 请求风功率密度统计方法
+    this.getfengGongLvMiDuTongJi(this.gdyxValue)
+    //调用 请求有效风速方法
+    this.getyouXiaoFengSu(this.gdyxValue)
+    //调用 请求风向统计方法
+    this.getfengXiangTongJi(this.gdyxValue)
+    //调用 请求遥感数据对比方法
+    this.getyaoGanShuJuDuiBi()
+    //调用 请求浮标数据对比方法
+    this.getfuBiaoShuJuDuiBi()
+    },
     
+
+
+
+
     //请求高度数据方法
     gaodu() {
       this.$axios.post("/api/show/level").then(res => {
+        //遍历数据
         for (var i = 0; i < res.data.length; i++) {
-          // console.log(res.data[i])
           //取高（数值）
           this.gdList = res.data[i];
-          //  console.log(this.gdList.vLev)
+          //获取想要的数据 赋值到options
           this.options.push({
             label: this.gdList.vLev,
             value: this.gdList.vLev,
@@ -149,9 +171,13 @@ export default {
       });
     },
     //请求风速月变化方法
-    async getfengSuYueBianHua() {
+    async getfengSuYueBianHua(gdyxValue) {
+      //将储存平均风速数组至为空,(以便再次发起请求时，将新请求的数据储存在此数组中)
+      this.pjfsList=[]
+      //将储存风速标准差数组至为空
+      this.fsbzcList=[]
       //请求接口 获取数据
-     await this.$axios.post("/api/show/MonthlyVariationWindSpeed", { local: 3, level: 10 }).then(res => {
+     await this.$axios.post("/api/show/MonthlyVariationWindSpeed", { "local": 3, "level": gdyxValue||10 }).then(res => {
           //遍历 得到vAvg(平均风速值)
           res.data.forEach((item) => {
           this.pjfsList.push(item.vAvg);
@@ -289,9 +315,12 @@ export default {
       mychartsLeft1.setOption(optionLeft1);
     },
     //请求 风功率密度统计
-    async getfengGongLvMiDuTongJi() {
+    async getfengGongLvMiDuTongJi(gdyxValue) {
+      //清空储存风功率密度数组
+      this.fglmdtjList=[]
+
       //请求接口 获取数据
-     await  this.$axios.post("/api/show/WindPowerDensity",{ local: 3, level: 10 }).then(res=>{
+     await  this.$axios.post("/api/show/WindPowerDensity",{ "local": 3, "level": gdyxValue||10 }).then(res=>{
         res.data.forEach(item=>{
           this.fglmdtjList.push(item.vWe);
         })
@@ -426,9 +455,12 @@ export default {
       mychartsLeft2.setOption(optionLeft2);
     },
     //请求有效风速
-   async getyouXiaoFengSu() {
+   async getyouXiaoFengSu(gdyxValue) {
+     //将储存有效风速数组至为空
+     this.yxfsList=[]
       //请求接口 获取数据
-    await this.$axios.post('/api/show/EffectiveWindSpeed',{"local":3,"level":10}).then(res=>{
+    await this.$axios.post('/api/show/EffectiveWindSpeed',{"local":3,"level":gdyxValue||10}).then(res=>{
+      //遍历数据 获取有效风速数据
         res.data.forEach(item=>{
           this.yxfsList.push(item.vFValid)
         })
@@ -495,7 +527,7 @@ export default {
             interval: 2,
             //坐标轴文字颜色
             axisLabel: {
-              formatter: "{value}",
+              // formatter: "{value}",
               color: "white",
               textStyle: {
                 fontSize: 11
@@ -561,12 +593,29 @@ export default {
       mychartsLeft3.setOption(optionLeft3);
     },
     //请求风向统计方法
-    getfengXiangTongJi() {
+   async getfengXiangTongJi(gdyxValue) {
+     this.fxtjList=[]
+      //请求接口 获取数据
+      await this.$axios.post('/api/show/WindDirection',{"local":3,"level":gdyxValue||10}).then(res=>{
+        // console.log(res)
+        let a=[];
+        res.data.forEach(item=>{
+          a.push(item)
+        })
+        let b=[]
+        a.forEach(item=>{
+          b.push(item.vFreE,item.vFreEne,item.vFreEse,item.vFreN,item.vFreNe,item.vFreNne,item.vFreNnw,item.vFreNw,
+          item.vFreS,item.vFreSe,item.vFreSse,item.vFreSsw,item.vFreSw,item.vFreW,item.vFreWnw,item.vFreWsw)
+        })
+        console.log(b,'------------')
+        this.fxtjList=b
+      })
+        
       //调用 加载风向统计方法（玫瑰图）
-      this.fengXiangTongJi();
+      this.fengXiangTongJi(this.fxtjList);
     },
     //加载风向统计（玫瑰图）
-    fengXiangTongJi() {
+    fengXiangTongJi(fxtjList) {
       //玫瑰图
       var mychartsLeft4 = echarts.init(document.getElementById("main-left-4"));
       var optionLeft4 = {
@@ -600,9 +649,9 @@ export default {
           nameTextStyle: {
             // color: "red" //坐标轴文字颜色
           },
-          min: 0,
-          max: 18,
-          interval: 3,
+          min: 0,            //0
+          max: 18,         //0.3
+          interval: 3,    //0.1
           axisLabel: {
             color: "white"
           },
@@ -625,7 +674,8 @@ export default {
         series: [
           {
             type: "bar",
-            data: [1, 2, 3, 4, 3, 5, 1, 3, 4, 5, 6, 7, 8, 9, 1],
+            // data: [1, 2, 3, 4, 3, 5, 1, 3, 4, 5, 6, 7, 8, 9, 1],
+            data: fxtjList,
             coordinateSystem: "polar",
             stack: "a"
           }
@@ -638,13 +688,16 @@ export default {
     async getyaoGanShuJuDuiBi() {
       //请求接口 获取数据
       await this.$axios.post('/api/show/RemoteSensingData',{"id":3}).then(res=>{
+        //遍历数据 获取雷达风速数据
        res.data.forEach(item=>{
          this.ldfsList.push(item.wsLidar)
        })
+       //遍历数据 获取遥感风速数据
        res.data.forEach(item=>{
          this.ygfsList.push(item.wsAscat)
        })
       })
+      console.log(this.ygfsList,'遥感风速数据')
       //调用 加载遥感数据对比（折现图）
       this.yaoGanShuJuDuiBi(this.ldfsList,this.ygfsList);
     },
@@ -793,14 +846,27 @@ export default {
       //右侧折线图2
       var mychartsLeft6 = echarts.init(document.getElementById("main-left-6"));
       var optionLeft6 = {
+        //图例相关
+       legend: {
+          orient: "horizontal",
+          x: "center", //可设定图例在左、右、居中
+          y: "bottom",
+          // color:['white'],
+          padding: [0, 50, 20, 0],
+          textStyle: {
+            color: "white"
+          },
+          data: ["雷达风速", "浮标风速"]
+        },
+
         //x轴数据
         xAxis: {
           type: "category",
-          data: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],
+          data: ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],
           //坐标轴文字颜色
           axisLabel: {
             color: "white",
-            interval: 0, //坐标轴全部显示
+            // interval: 0, //坐标轴全部显示
             fontSize: "11"
           },
           //改变坐标轴线颜色（样式）

@@ -7,12 +7,11 @@
 <script>
 // import Cesium from 'cesium'
 let Cesium = require("cesium/Source/Cesium");
-// import widget from 'cesium/Build/Cesium/Widgets/widgets.css'
 
 // import TooltipDiv from "../utils/toolTip";
 
 export default {
-  name: "CesiumScene",
+  // name: "CesiumScene",
   data() {
     return {
       //站点数据
@@ -56,10 +55,8 @@ export default {
         // 初始化天地图
         imageryProvider: new Cesium.WebMapTileServiceImageryProvider({
           
-            url: "http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=ebf64362215c081f8317203220f133eb",
-            //  url: "http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=5c2a6cd803455375b33a76d6fabf1029",
-
-          
+            // url: "http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=ebf64362215c081f8317203220f133eb",
+             url: "http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=0d330c6c4d21dd7d90082a89bc1e7cab",
           layer: "tdtBasicLayer",
           style: "default",
           subdomains: ["0", "1", "2", "3", "4", "5", "6", "7"],
@@ -71,6 +68,7 @@ export default {
       var viewer = new Cesium.Viewer("cesiumContainer", viewerOption);
 
 
+
      //加载png图片
       viewer.imageryLayers.addImageryProvider(
         new Cesium.SingleTileImageryProvider({
@@ -78,7 +76,7 @@ export default {
           rectangle: Cesium.Rectangle.fromDegrees(107.98,17.80 ,118.39,24.57)
         })
       );
-      // var layers = viewer.imageryLayers;
+      
 
       // 将位置定位到中国 通过给xyz的坐标控制在广东位置
       viewer.camera.flyTo({

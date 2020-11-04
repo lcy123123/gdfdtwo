@@ -8,10 +8,6 @@ import router from './router'
 import axios from 'axios'
 Vue.prototype.$axios = axios
 
-// import Cesium from '../public/Cesium/Cesium'
-// Vue.prototype.Cesium=Cesium;
-
-// Vue.prototype.widgets = widgets
 
 // import 'element-ui/lib/theme-chalk/index.css';
 
