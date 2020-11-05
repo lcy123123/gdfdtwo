@@ -23,7 +23,7 @@
       </div>
       
       <div class="nav nav2" @click="zh">
-        <img class="i2" src="../assets/i2.png" alt="" /><span class="zhtq">灾害天气</span>
+        <img class="i2" src="../assets/i2.png" alt="" /><span class="zhtq">风险评估</span>
           <!-- 下边框(下拉框下面的长div) -->
         <div class="long-div2" style="height:2px;background-color:#0f53fd;display:none"></div>
            <!-- i标签（小三角） -->
@@ -45,14 +45,14 @@
         <div style="margin:10px 0;text-align:center;font-size:13px" @click="szyb">数值预报</div>
       </div>
       <div class="nav xlk-2">
-        <div style="margin:10px 0;text-align:center;font-size:13px">激光雷达</div>
-        <div style="margin:10px 0;text-align:center;font-size:13px">遥感观测</div>
-        <div style="margin:10px 0;text-align:center;font-size:13px">数值预报</div>
+        <div style="margin:10px 0;text-align:center;font-size:13px">有效波高</div>
+        <div style="margin:10px 0;text-align:center;font-size:13px">灾害天气</div>
+        <!-- <div style="margin:10px 0;text-align:center;font-size:13px">数值预报</div> -->
       </div>
       <div class="nav xlk-3">
         <div style="margin:10px 0;text-align:center;font-size:13px">激光雷达</div>
         <div style="margin:10px 0;text-align:center;font-size:13px">遥感观测</div>
-        <div style="margin:10px 0;text-align:center;font-size:13px">数值预报</div>
+        <!-- <div style="margin:10px 0;text-align:center;font-size:13px">数值预报</div> -->
       </div>
     </div>
   </div>
@@ -251,7 +251,7 @@ export default {
 }
 .xlk-2 {
   width: 70px;
-  height: 90px;
+  height: 65px;
   position: absolute;
   top: 54px;
   left: 128px;
@@ -264,7 +264,7 @@ export default {
 }
 .xlk-3 {
   width: 70px;
-  height: 90px;
+  height: 65px;
   position: absolute;
   top: 54px;
   left: 228px;

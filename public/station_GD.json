@@ -1,0 +1,46 @@
+[
+    {
+        "dataId": 1,
+        "lon": 111.32,
+        "lat": 21.45,
+        "stationName": "茂名",
+        "subject": null,
+        "subordinateArea": null,
+        "stationType": null,
+        "stationCode": null,
+        "stationCodeName": null
+    },
+    {
+        "dataId": 2,
+        "lon": 110.62,
+        "lat": 20.58,
+        "stationName": "湛江",
+        "subject": null,
+        "subordinateArea": null,
+        "stationType": null,
+        "stationCode": null,
+        "stationCodeName": null
+    },
+    {
+        "dataId": 3,
+        "lon": 113.45,
+        "lat": 22.47,
+        "stationName":null,
+        "subject":null,
+        "subordinateArea": null,
+        "stationType": 2,
+        "stationCode": null,
+        "stationCodeName": null
+    },
+    {
+        "dataId": 4,
+        "lon": 21.50,
+        "lat": 113.99,
+        "stationName":null,
+        "subject": null,
+        "subordinateArea": null,
+        "stationType": 2,
+        "stationCode": null,
+        "stationCodeName": null
+    }
+]

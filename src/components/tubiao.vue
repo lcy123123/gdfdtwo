@@ -83,7 +83,6 @@
 
 <script>
 import echarts from "echarts";
-// import { combine } from 'cesium';
 
 export default {
   mounted() {
@@ -124,17 +123,23 @@ export default {
       ldfsList:[],
       //遥感风速数据
       ygfsList:[],
+      //遥感时间
+      ygTime:[],
       //浮标雷达风速数据对比数据
-      fbldList:[],
+      fbldfsList:[],
       //浮标风速数据
       fbfsList:[],
+      //浮标时间
+      fbTime:[],
       //高度选中值
-      gdyxValue:''
+      gdyxValue:'',
+      fsybhLenth:[]
     };
   },
   methods: {
     //高度下拉框 获取选中值
     changeValue(e){
+      //获取选中值 并赋值
     this.gdyxValue=e
     //调用 请求风速月变化方法
     this.getfengSuYueBianHua(this.gdyxValue)
@@ -149,10 +154,6 @@ export default {
     //调用 请求浮标数据对比方法
     this.getfuBiaoShuJuDuiBi()
     },
-    
-
-
-
 
     //请求高度数据方法
     gaodu() {
@@ -176,23 +177,26 @@ export default {
       this.pjfsList=[]
       //将储存风速标准差数组至为空
       this.fsbzcList=[]
+      //清空数组原有数据
+      this.fsybhLenth=[]
       //请求接口 获取数据
      await this.$axios.post("/api/show/MonthlyVariationWindSpeed", { "local": 3, "level": gdyxValue||10 }).then(res => {
-          //遍历 得到vAvg(平均风速值)
+          //遍历
           res.data.forEach((item) => {
+            //获取平均风速数据
           this.pjfsList.push(item.vAvg);
+          //获取风速标准差数据
+          this.fsbzcList.push(item.vStd)
+          // console.log(index+1+'月')
+          this.fsybhLenth.push(item.vDate.substring(6,4)+'月')
           });
-          //遍历获取风速标准差（vStd）
-          res.data.forEach(item=>{
-            this.fsbzcList.push(item.vStd)
-          })
         });
-
-      this.fengSuYueBianHua(this.pjfsList,this.fsbzcList);
+      
+      this.fengSuYueBianHua(this.pjfsList,this.fsbzcList,this.fsybhLenth);
     },
     //加载 风速月变化图表（折现图）
     //接收参数  渲染数据
-    fengSuYueBianHua(pjfsList,fsbzcList) {
+    fengSuYueBianHua(pjfsList,fsbzcList,fsybhLenth) {
       var mychartsLeft1 = echarts.init(document.getElementById("main-left-1"));
       var optionLeft1 = {
         //图例
@@ -211,7 +215,7 @@ export default {
         //  x轴数据
         xAxis: {
           type: "category",
-          data: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],
+          data: fsybhLenth,
           axisLabel: {
             color: "white",
             interval: 0, //坐标轴全部显示
@@ -597,18 +601,14 @@ export default {
      this.fxtjList=[]
       //请求接口 获取数据
       await this.$axios.post('/api/show/WindDirection',{"local":3,"level":gdyxValue||10}).then(res=>{
-        // console.log(res)
-        let a=[];
-        res.data.forEach(item=>{
-          a.push(item)
-        })
-        let b=[]
+        let a=[]
+        a.push(res.data[0])
         a.forEach(item=>{
-          b.push(item.vFreE,item.vFreEne,item.vFreEse,item.vFreN,item.vFreNe,item.vFreNne,item.vFreNnw,item.vFreNw,
-          item.vFreS,item.vFreSe,item.vFreSse,item.vFreSsw,item.vFreSw,item.vFreW,item.vFreWnw,item.vFreWsw)
+          this.fxtjList.push(item.vFreE*100,item.vFreEne*100,item.vFreEse*100,item.vFreN*100,item.vFreNe*100,item.vFreNne*100,
+                 item.vFreNnw*100,item.vFreNw*100,item.vFreS*100,item.vFreSe*100,item.vFreSse*100,item.vFreSsw*100,
+                 item.vFreSw*100,item.vFreW*100,item.vFreWnw*100,item.vFreWsw*100)
         })
-        console.log(b,'------------')
-        this.fxtjList=b
+        // console.log(a,'风向统计数据')
       })
         
       //调用 加载风向统计方法（玫瑰图）
@@ -650,8 +650,8 @@ export default {
             // color: "red" //坐标轴文字颜色
           },
           min: 0,            //0
-          max: 18,         //0.3
-          interval: 3,    //0.1
+          max: 24,         //0.3
+          interval: 4,    //0.1
           axisLabel: {
             color: "white"
           },
@@ -686,23 +686,28 @@ export default {
     },
     //请求遥感数据对比
     async getyaoGanShuJuDuiBi() {
+      //清楚数组中上一次的值
+      this.ldfsList=[]
+      this.ygfsList=[]
+      this.ygTime=[]
       //请求接口 获取数据
       await this.$axios.post('/api/show/RemoteSensingData',{"id":3}).then(res=>{
-        //遍历数据 获取雷达风速数据
+        //遍历数据 
        res.data.forEach(item=>{
+         //获取雷达风速数据
          this.ldfsList.push(item.wsLidar)
-       })
-       //遍历数据 获取遥感风速数据
-       res.data.forEach(item=>{
-         this.ygfsList.push(item.wsAscat)
+         //获取x轴时间
+         this.ygTime.push(item.time.substring(0,10))
+         //获取遥感数据
+          this.ygfsList.push(item.wsAscat)
        })
       })
-      console.log(this.ygfsList,'遥感风速数据')
+      // console.log(this.ygfsList,'遥感风速数据')
       //调用 加载遥感数据对比（折现图）
-      this.yaoGanShuJuDuiBi(this.ldfsList,this.ygfsList);
+      this.yaoGanShuJuDuiBi(this.ldfsList,this.ygfsList,this.ygTime);
     },
     //加载遥感数据对比
-    yaoGanShuJuDuiBi(ldfsList,ygfsList) {
+    yaoGanShuJuDuiBi(ldfsList,ygfsList,ygTime) {
       //右侧折线图1
       // console.log(ygsjdbList)
       var mychartsLeft5 = echarts.init(document.getElementById("main-left-5"));
@@ -712,7 +717,6 @@ export default {
           orient: "horizontal",
           x: "center", //可设定图例在左、右、居中
           y: "bottom",
-          // color:['white'],
           padding: [0, 50, 20, 0],
           textStyle: {
             color: "white"
@@ -722,10 +726,11 @@ export default {
         //x轴数据
         xAxis: {
           type: "category",
-          data: ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],
+          data: ygTime,
           axisLabel: {
+            interval:18,      //坐标轴是否全部显示
+            // rotate:8,        //坐标轴文字倾斜
             color: "white",
-            // interval: 0, //坐标轴全部显示
             textStyle: {
               fontSize: 11
             }
@@ -738,7 +743,8 @@ export default {
           },
           //去掉坐标轴刻度线
           axisTick: {
-            show: false
+            show: false,
+            alignWithLabel:true
           }
         },
         //y轴数据
@@ -789,6 +795,7 @@ export default {
         ],
         series: [
           {
+            showAllSymbol: true,    //是否全部显示数据
             name: "雷达风速",
             data: ldfsList,
             type: "line",
@@ -805,6 +812,7 @@ export default {
             }
           },
           {
+            showAllSymbol: true,    //是否全部显示数据
             name: "遥感风速",
             data: ygfsList,
             type: "line",
@@ -827,22 +835,31 @@ export default {
 
     // 请求 浮标数据对比
    async getfuBiaoShuJuDuiBi() {
+     //清空数组之前的值
+     this.fbldfsList=[]
+     this.fbfsList=[]
       //请求接口 获取数据
     await  this.$axios.post('/api/show/BuoyData',{"id":3}).then(res=>{
+       //清空数组中原有数据
+       this.fbTime=[]
+       this.fbldfsList=[]
+       this.fbfsList=[]
        //遍历数据 获取雷达风速数据
         res.data.forEach(item=>{
-          this.fbldList.push(item.wsLidar)
-        })
-        //遍历数据 获取浮标风速
-        res.data.forEach(item=>{
+          this.fbldfsList.push(item.wsLidar)
+          //获取浮标时间
+          this.fbTime.push(item.time.substring(0,10))
+          //获取浮标数据
           this.fbfsList.push(item.wsBuoy)
+
         })
+
       })
       //调用 加载浮标数据对比方法
-      this.fuBiaiShuJuDuiBi(this.fbldList,this.fbfsList);
+      this.fuBiaiShuJuDuiBi(this.fbldfsList,this.fbfsList,this.fbTime);
     },
     //加载浮标数据对比
-    fuBiaiShuJuDuiBi(fbldList,fbfsList) {
+    fuBiaiShuJuDuiBi(fbldfsList,fbfsList,fbTime) {
       //右侧折线图2
       var mychartsLeft6 = echarts.init(document.getElementById("main-left-6"));
       var optionLeft6 = {
@@ -851,7 +868,6 @@ export default {
           orient: "horizontal",
           x: "center", //可设定图例在左、右、居中
           y: "bottom",
-          // color:['white'],
           padding: [0, 50, 20, 0],
           textStyle: {
             color: "white"
@@ -862,9 +878,13 @@ export default {
         //x轴数据
         xAxis: {
           type: "category",
-          data: ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],
+          data: fbTime,
           //坐标轴文字颜色
           axisLabel: {
+            // showMinLabel: true,
+            // showMaxLabel: true,
+            interval:400,      //坐标轴是否全部显示
+            // rotate:8,         //坐标轴文字是否倾斜
             color: "white",
             // interval: 0, //坐标轴全部显示
             fontSize: "11"
@@ -929,15 +949,20 @@ export default {
         //数据
         series: [
           {
+            showAllSymbol: true,    //是否全部显示数据（点）
             name:'雷达风速',
-            data: fbldList,
-            type: "line"
+            data: fbldfsList,
+            type: "line",
+            symbol: "none",
+            color:'#01CCF1'
             
           },
           {
+            showAllSymbol:true,    //是否全部显示数据（点）
             name:'浮标风速',
             data: fbfsList,
-            type: "line"
+            type: "line",
+            symbol: "none",
           }
         ]
       };

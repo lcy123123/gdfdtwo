@@ -28,16 +28,19 @@ export default {
 
   methods: {
     //请求本地json方法
-    getdataList() {
-      this.$axios.get("./station.json").then(res => {
+   async getdataList() {
+      await this.$axios.get("./station_GD.json").then(res => {
         // 将请求到的数据赋值
+        console.log(res.data)
         this.dataList = res.data;
+        // console.log(this.dataList,'-------')
         //对请求的数据遍历
         res.data.forEach(params => {
           //调用添加点方法
           this.AddPoint(params);
           //调用鼠标移入方法
         }, this.mouseMove());
+        // });
       });
     },
     //初始化方法
@@ -55,8 +58,8 @@ export default {
         // 初始化天地图
         imageryProvider: new Cesium.WebMapTileServiceImageryProvider({
           
-            // url: "http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=ebf64362215c081f8317203220f133eb",
-             url: "http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=0d330c6c4d21dd7d90082a89bc1e7cab",
+            url: "http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=ebf64362215c081f8317203220f133eb",
+            //  url: "http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=0d330c6c4d21dd7d90082a89bc1e7cab",
           layer: "tdtBasicLayer",
           style: "default",
           subdomains: ["0", "1", "2", "3", "4", "5", "6", "7"],
@@ -130,11 +133,10 @@ export default {
       // viewer.flyTo(promise1);
 
       viewer._cesiumWidget._creditContainer.style.display = "none";
-    }
+    },
 
-    //声明添加点的方法
+    // 声明添加点的方法
     // AddPoint(params) {
-    //   console.log(params)
     //   if (params.lon === undefined || params.lat === undefined) {
     //     alert("请提供经纬度!");
     //     return;
