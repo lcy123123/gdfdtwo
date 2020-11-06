@@ -1,54 +1,48 @@
 <template>
-      <!-- 遥感观测与数值预报组件 -->
-         <!-- 上边的 -->
-    <div class="right bottom-line">
+    <div>
+        <!-- 评估背景和评估决策组件 -->
+        <div class="right bottom-line">
       <div class="right-top" @click="Cli1">
         <img class="y1" src='../assets/y2.png' alt="">
-        <span class="y1-text">遥感观测</span>
+        <span class="y1-text">评估背景</span>
         <span  class="c1" style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-bottom"></i></span>
       </div>
       <!-- 右边第一个下拉框 -->
       <div class="top-1">
         <div class="top-11">
           <el-form>
-         <el-radio-group v-model="a">
-          <el-radio label="平均风速"></el-radio>
-          <el-radio label="平均风功率密度"></el-radio>
-         </el-radio-group>
+          
+          <el-radio-group v-model="v">
+          <el-radio label="海洋行政功能区划"></el-radio>
+          <el-radio class="p2" label="海洋生态保护"></el-radio>
+          <el-radio class="p3" label="港口通航"></el-radio>
+          <el-radio class="p4" label="海底油气管道"></el-radio>
+          <el-radio class="p5" label="海底光/电缆"></el-radio>
+          <el-radio class="p6" label="逐年最小值"></el-radio>
+          <el-radio class="p7" label="自然保护区"></el-radio>
+          <el-radio class="p8" label="生态红线"></el-radio>
+          <el-radio class="p9" label="已规划风电场"></el-radio>
+          <!-- <el-radio label="十年一遇"></el-radio>
+          <el-radio class="radio-san" label="三十年一遇"></el-radio> -->
+          </el-radio-group>
           </el-form>
         </div>
       </div>
       <!-- 下边的 -->
       <div class="right-bottom" @click="Cli2">
         <img class="y2" src="../assets/s1.png" alt="">
-        <span class="y2-text">数值预报</span>
+        <span class="y2-text">评估决策</span>
         <span  class="c2" :v-model="flag" style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-right"></i></span>
       </div>
          <div class="top-2">
-           <el-form>
-        <el-radio-group v-model="b">
-           <el-radio class="b1" label="年平均风速"></el-radio>
-           <el-radio class="b2" label="月平均风速"></el-radio>
-           <el-radio class="b3" label="逐小时年平均风速"> </el-radio>
-           <el-radio class="b4" label="逐小时月平均风速"></el-radio>
-           <el-radio class="b5" label="年平均风功率密度"> </el-radio>
-           <el-radio class="b6" label="月平均风功率密度"></el-radio>
-           <el-radio class="b7" label="有效风速时数"></el-radio>
-           <el-radio class="b8" label="风切变系数"></el-radio>
-           <el-radio class="b9" label="威布尔分布形状参数"></el-radio>
-           <el-radio class="b10" label="威布尔分布尺度参数"></el-radio>
-           <el-radio class="b11" label="风向分布频率"></el-radio>
-           <el-radio class="b12" label="各向风功率密度分布频率"></el-radio>
-           <el-radio class="b13" label="各区间风速分布频率"></el-radio>
-           <el-radio class="b14" label="各区间风功率密度分布频率"></el-radio>
-           <el-radio class="b15" label="格点风参"></el-radio>
-           </el-radio-group>
+        <el-form>
+          <el-form-item>
+            <el-radio class="radio-tfpc" v-model="tf" label="可开发厂址推荐"></el-radio>
+          </el-form-item>
+        </el-form>
            
-           </el-form>
-           <!-- 右面的时间轴 -->
-            <!-- <div>  <el-slider  class="sli1" v-model="value" min="0" max="200" step="40" range  :marks="marks"></el-slider></div> -->
-            <div>  <el-slider  class="sli1" v-model="value"  max="200" step="40" range  :marks="marks"></el-slider></div>
         </div>
+    </div>
     </div>
 </template>
 
@@ -62,14 +56,15 @@ import y2 from '../assets/y2.png'
 import s1 from '../assets/s1.png'
 import s2 from '../assets/s2.png'
 
+
 export default {
     data(){
-      return{
-        a:'',
-        b:''
-      }
-    },
-    methods:{
+    return{
+      v:'',
+      tf:'',
+    }
+  },
+     methods:{
           //显示此页面时 默认展开第一个（遥感观测）
     Cli1(){
     // 点击按钮  判断第一个小图标（如果是亮的 则将小图标变不亮  背景以及文字变不亮）  默认是展开的 （小图标和文字背景是亮的）
@@ -133,6 +128,25 @@ export default {
 }
 </script>
 <style  scoped>
+.el-radio{
+  margin-right: 13px;
+  margin-top:10px;
+  color: white;
+}
+.radio-tfpc{
+  margin-left: 24px;
+  margin-top:32px
+}
+.radio-san{
+  margin-left: 14px;
+}
+
+
+
+
+
+
+
 .right{
   width: 360px;
   border: 1px solid rgba(8,26,127,.5);
@@ -178,57 +192,15 @@ cursor: pointer;
   background-color:rgba(0,3,44,.5) ;
 }
 .top-2{
-  height: 250px;
+  height: 82px;
 color: white;
 display: none;
 background-color:rgba(0,3,44,.5) ;
 
 }
 
-.el-radio{
-  margin-top:5px;
-  color:white
-}
-.b1{
-margin-left: 10px;
-margin-top: 15px;
-margin-right: 62px;
-}
-.b3{
-  margin-left: 10px;
-  margin-right: 20px;
-}
-.b5{
-  margin-left: 10px;
-  margin-right: 20px;
-}
-.b7{
-  margin-left: 10px;
-  margin-right: 48px;
-}
-.b9{
-  margin-left: 10px;
-  margin-right: 6px;
-}
-.b11{
-  margin-left: 10px;
-  margin-right: 48px;
-}
-.b12{
-  margin-right: 0px;
-}
-.b13{
-  margin-left: 10px;
-  margin-right: 6px;
-}
-.b14{
-  margin-right: 0px;
-}
-.b15{
-  margin-left: 10px;
-  margin-right: 17px;
 
-}
+
 .right-bottom{
 background: rgba(3,37,127,.5);
 border: 2px solid rgba(8,26,127,.5);
@@ -237,5 +209,17 @@ cursor: pointer;
 .sli1{
   width: 280px;
   margin:10px 30px 30px 30px;
+}
+.p2{
+    margin-left: 10px;
+}
+.p4{
+    margin-left: 66px;
+}
+.p6{
+    margin-left: 46px;
+}
+.p8{
+    margin-left: 52px;
 }
 </style>

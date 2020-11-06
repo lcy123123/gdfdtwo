@@ -133,7 +133,12 @@ export default {
       fbTime:[],
       //高度选中值
       gdyxValue:'',
-      fsybhLenth:[]
+      //风速月变化的x轴数据
+      fsybhLenth:[],
+      //风功率密度统计的x轴数据
+      fglmdtjLength:[],
+      //有效风速x轴数据
+      yxfsLength:[]
     };
   },
   methods: {
@@ -322,18 +327,19 @@ export default {
     async getfengGongLvMiDuTongJi(gdyxValue) {
       //清空储存风功率密度数组
       this.fglmdtjList=[]
-
+      this.fglmdtjLength=[]
       //请求接口 获取数据
      await  this.$axios.post("/api/show/WindPowerDensity",{ "local": 3, "level": gdyxValue||10 }).then(res=>{
         res.data.forEach(item=>{
           this.fglmdtjList.push(item.vWe);
+          this.fglmdtjLength.push(item.vDate.substring(6,4)+'月')
         })
       })
       //调用 风功率密度统计图（柱状图）
-      this.fengGongLvMiDuTongJi(this.fglmdtjList);
+      this.fengGongLvMiDuTongJi(this.fglmdtjList,this.fglmdtjLength);
     },
     //加载 风功率密度
-    fengGongLvMiDuTongJi(fglmdtjList) {
+    fengGongLvMiDuTongJi(fglmdtjList,fglmdtjLength) {
       //加载风功率密度统计（柱状图）
       var mychartsLeft2 = echarts.init(document.getElementById("main-left-2"));
       //柱状图1
@@ -357,7 +363,7 @@ export default {
         xAxis: [
           {
             type: "category",
-            data: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],
+            data: fglmdtjLength,
             axisPointer: {
               type: "shadow"
             },
@@ -389,7 +395,7 @@ export default {
             nameRotate: "0.1",
             nameTextStyle: { color: "white", fontSize: 10, marginLeft: "20" },
             min: 0,
-            max: 1000,
+            max: 600,
             interval: 200,
             axisLabel: {
               // formatter: '{value}',
@@ -462,18 +468,20 @@ export default {
    async getyouXiaoFengSu(gdyxValue) {
      //将储存有效风速数组至为空
      this.yxfsList=[]
+     this.yxfsLength=[]
       //请求接口 获取数据
     await this.$axios.post('/api/show/EffectiveWindSpeed',{"local":3,"level":gdyxValue||10}).then(res=>{
       //遍历数据 获取有效风速数据
         res.data.forEach(item=>{
-          this.yxfsList.push(item.vFValid)
+          this.yxfsList.push(item.vFValid*100)
+          this.yxfsLength.push(item.vDate.substring(6,4)+'月')
         })
       })
       //调用 加载有效风速
-      this.youXiaoFengSu(this.yxfsList);
+      this.youXiaoFengSu(this.yxfsList,this.yxfsLength);
     },
     //加载有效风速
-    youXiaoFengSu(yxfsList) {
+    youXiaoFengSu(yxfsList,yxfsLength) {
       //柱状图2
       var mychartsLeft3 = echarts.init(document.getElementById("main-left-3"));
       var optionLeft3 = {
@@ -495,7 +503,7 @@ export default {
         xAxis: [
           {
             type: "category",
-            data: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],
+            data: yxfsLength,
             axisPointer: {
               type: "shadow"
             },
@@ -527,8 +535,8 @@ export default {
             nameTextStyle: { color: "white", fontSize: 10 }, //坐标轴单位样式
             // nameRotate:'0.1',
             min: 0,
-            max: 10,
-            interval: 2,
+            max: 100,
+            interval: 20,
             //坐标轴文字颜色
             axisLabel: {
               // formatter: "{value}",
@@ -1053,5 +1061,6 @@ export default {
   bottom: 30px;
   right: 378px;
   width: 150px;
+  border: 1px solid #0c96cd;
 }
 </style>

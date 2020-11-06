@@ -45,13 +45,13 @@
         <div style="margin:10px 0;text-align:center;font-size:13px" @click="szyb">数值预报</div>
       </div>
       <div class="nav xlk-2">
-        <div style="margin:10px 0;text-align:center;font-size:13px">有效波高</div>
-        <div style="margin:10px 0;text-align:center;font-size:13px">灾害天气</div>
+        <div @click="yxbgFn" style="margin:10px 0;text-align:center;font-size:13px">有效波高</div>
+        <div @click="zhtqFn" style="margin:10px 0;text-align:center;font-size:13px">灾害天气</div>
         <!-- <div style="margin:10px 0;text-align:center;font-size:13px">数值预报</div> -->
       </div>
       <div class="nav xlk-3">
-        <div style="margin:10px 0;text-align:center;font-size:13px">激光雷达</div>
-        <div style="margin:10px 0;text-align:center;font-size:13px">遥感观测</div>
+        <div @click="pgbjFn" style="margin:10px 0;text-align:center;font-size:13px">评估背景</div>
+        <div @click="pgjcFn" style="margin:10px 0;text-align:center;font-size:13px">评估决策</div>
         <!-- <div style="margin:10px 0;text-align:center;font-size:13px">数值预报</div> -->
       </div>
     </div>
@@ -128,20 +128,36 @@ export default {
     jgld() {
       this.$router.push("/tb");
       //刷新页面
-      this.$router.go(0);
+      // this.$router.go(0);
     },
     //点击跳转遥感观测
     yggc() {
       this.$router.push("/yggc");
-      this.$router.go(0);
+      //刷新页面
+      // this.$router.go(0);
 
     },
     //点击跳转数值预报
     szyb() {
       this.$router.push("/szyb");
-      this.$router.go(0);
+      //刷新页面
+      // this.$router.go(0);
 
-    }
+    },
+    //点击跳转有效波高
+    yxbgFn(){
+      this.$router.push('/yxbg')
+    },
+    zhtqFn(){
+      this.$router.push('/zhtq')
+    },
+    pgjcFn(){
+      this.$router.push('/pgjc')
+    },
+    pgbjFn(){
+      this.$router.push('/pgbj')
+
+    },
   }
 };
 </script>

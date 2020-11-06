@@ -3,10 +3,12 @@ import Router from 'vue-router'
 import Zi from './components/ziyuan.vue'
 import Tubiao from './components/tubiao.vue'
 import Yggc from './components/yggc.vue'
-import Second from './components/second.vue'
-import Three from './components/three.vue'
+import Yxbg from './components/yxbg.vue'
 import Szyb from './components/szyb.vue'
 import Index from './shouye/index'
+import Zhtq from './components/zhtq'
+import Pgbj from './components/pgbj'
+import Pgjc from './components/pgjc'
 
 
 
@@ -36,16 +38,24 @@ export default new Router({
             component:Yggc
         },
         {
-            path:'/second',
-            component:Second
+            path:'/yxbg',
+            component:Yxbg
         },
         {
-            path:'/three',
-            component:Three
+            path:'/zhtq',
+            component:Zhtq
         },
         {
             path:'/szyb',
             component:Szyb
+        },
+        {
+            path:'/pgjc',
+            component:Pgjc
+        },
+        {
+            path:'/pgbj',
+            component:Pgbj
         },
     ]
 })

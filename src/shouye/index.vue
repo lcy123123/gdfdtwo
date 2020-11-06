@@ -6,7 +6,7 @@
       <!-- 下面时间轴和输入框总div -->
       <Sjz></Sjz>
         <!-- 图例 -->
-    <div class="zy-b" v-if="(this.$route.path=='/'||this.$route.path=='/first')?true:false">
+    <div class="zy-b">
             <div class="tu">图例</div>
               <div class="zscdiv"></div>
               <div class="s1">中上层鱼类产卵场</div>
@@ -101,5 +101,14 @@ export default {
 }
 ul{
   display: block;
+}
+.el-radio__inner{
+  border-radius: 0;
+}
+.el-radio__inner{
+  background:rgba(1,58,181,0);
+  /* background-color: red; */
+  width: 13px;
+  height: 13px;
 }
 </style> 
