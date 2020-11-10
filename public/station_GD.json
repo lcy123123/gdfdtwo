@@ -34,8 +34,8 @@
     },
     {
         "dataId": 4,
-        "lon": 21.50,
-        "lat": 113.99,
+        "lon": 113.99,
+        "lat": 21.50,
         "stationName":null,
         "subject": null,
         "subordinateArea": null,

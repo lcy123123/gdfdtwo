@@ -11,11 +11,11 @@ module.exports = {
             '/api':{
               target: 'http://10.1.100.52:8088',
               changeOrigin: true,
-              ws: true,
+              ws: true, 
               pathRewrite: {
                 '^/api': ''
               }
-            }
+            },
           },
     },
 };

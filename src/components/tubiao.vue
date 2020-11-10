@@ -980,7 +980,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
 /* 图表样式 */
 .left-1,
 .left-2,
@@ -1062,5 +1062,10 @@ export default {
   right: 378px;
   width: 150px;
   border: 1px solid #0c96cd;
+  height: 46px;
+}
+.el-select .el-input__inner{
+  width: 100px;
+  height: 30px;
 }
 </style>

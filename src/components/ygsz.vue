@@ -27,7 +27,9 @@
          <div class="top-2">
            <el-form>
         <el-radio-group v-model="b">
-           <el-radio class="b1" label="年平均风速"></el-radio>
+          <!-- 子组件向父组件的传值 -->
+           <span @click="addimg"><el-radio class="b1" label="年平均风速"></el-radio></span>
+           <!-- <el-radio @click="addimg" class="b1" label="年平均风速"></el-radio> -->
            <el-radio class="b2" label="月平均风速"></el-radio>
            <el-radio class="b3" label="逐小时年平均风速"> </el-radio>
            <el-radio class="b4" label="逐小时月平均风速"></el-radio>
@@ -66,13 +68,20 @@ export default {
     data(){
       return{
         a:'',
-        b:''
+        b:'',
+        data1:'子组件中的数据'
       }
     },
     methods:{
-          //显示此页面时 默认展开第一个（遥感观测）
-    Cli1(){
-    // 点击按钮  判断第一个小图标（如果是亮的 则将小图标变不亮  背景以及文字变不亮）  默认是展开的 （小图标和文字背景是亮的）
+      //点击年平均风速 出图片（添加图片方法）
+      addimg(){
+        this.$emit('event1')
+      },
+
+
+       //显示此页面时 默认展开第一个（遥感观测）
+      Cli1(){
+      // 点击按钮  判断第一个小图标（如果是亮的 则将小图标变不亮  背景以及文字变不亮）  默认是展开的 （小图标和文字背景是亮的）
       if($('.y1').attr('src')==y2){
         //将小图标变成不亮的
         $('.y1').attr('src',y1)

@@ -89,7 +89,7 @@ export default {
 }
 .sjz-srk{
   border: 2px solid rgb(0, 140, 255);
-  /* height: 120px; */
+  height: 120px;
   width: 152px;
   margin-left: 120px;
   position: absolute;

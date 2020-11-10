@@ -5,13 +5,17 @@
     <!-- 五个小按钮 -->
     <Fiveli></Fiveli>
     <!-- 上边的 -->
-    <Ygsz ref="child"></Ygsz>
+    <!-- 父组件接收子组件的传值addimg -->
+    <Ygsz @event1='addimg' ref="child"></Ygsz>
+
   </div>
 </template>
 <script>
 import Fiveli from './fiveli'
 import Fcsxx from './fcsxx'
 import Ygsz from './ygsz'
+import bus from '../utils/eventBus'
+
 
 export default {
   components: {
@@ -19,6 +23,7 @@ export default {
      Fiveli,
      Ygsz
    },
+   
    mounted(){
      this.fn()
    },
@@ -41,7 +46,13 @@ export default {
    fn(){
      this.$refs.child.Cli1();
      this.$refs.child.Cli2();
-   }
+   },
+   //
+     addimg(){
+      console.log(1234)
+      //向兄弟传值
+      bus.$emit('addimg');
+    }
  }
   
 }

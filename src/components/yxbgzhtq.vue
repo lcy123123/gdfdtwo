@@ -3,7 +3,7 @@
          <!-- 上边的 -->
     <div class="right bottom-line">
       <div class="right-top" @click="Cli1">
-        <img class="y1" src='../assets/y2.png' alt="">
+        <img class="y1" src='../../public/y2.png' alt="">
         <span class="y1-text">有效波高</span>
         <span  class="c1" style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-bottom"></i></span>
       </div>
@@ -49,7 +49,8 @@ import $ from 'jquery'
 
 //遥感观测小图标
 import y1 from '../assets/y1.png'
-import y2 from '../assets/y2.png'
+// import y2 from '../assets/y2.png'
+import y2 from '../../public/y2.png'
 // 数值预报小图标
 import s1 from '../assets/s1.png'
 import s2 from '../assets/s2.png'

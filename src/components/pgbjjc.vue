@@ -11,17 +11,16 @@
       <div class="top-1">
         <div class="top-11">
           <el-form>
-          
-          <el-radio-group v-model="v">
+          <el-radio-group v-model="plist">
           <el-radio label="海洋行政功能区划"></el-radio>
-          <el-radio class="p2" label="海洋生态保护"></el-radio>
+          <!-- 点击实现子组件向父组件传值 -->
+          <span @click="addsl"><el-radio class="p2" label="鱼类产卵场"></el-radio></span>
           <el-radio class="p3" label="港口通航"></el-radio>
           <el-radio class="p4" label="海底油气管道"></el-radio>
           <el-radio class="p5" label="海底光/电缆"></el-radio>
-          <el-radio class="p6" label="逐年最小值"></el-radio>
-          <el-radio class="p7" label="自然保护区"></el-radio>
-          <el-radio class="p8" label="生态红线"></el-radio>
-          <el-radio class="p9" label="已规划风电场"></el-radio>
+          <el-radio class="p6" label="自然保护区"></el-radio>
+          <el-radio class="p7" label="生态红线"></el-radio>
+          <el-radio class="p8" label="已规划风电场"></el-radio>
           <!-- <el-radio label="十年一遇"></el-radio>
           <el-radio class="radio-san" label="三十年一遇"></el-radio> -->
           </el-radio-group>
@@ -60,11 +59,16 @@ import s2 from '../assets/s2.png'
 export default {
     data(){
     return{
-      v:'',
+      plist:'',
       tf:'',
     }
   },
      methods:{
+       //子组件向父组件传值
+       addsl(){
+         this.$emit('event2')
+       },
+
           //显示此页面时 默认展开第一个（遥感观测）
     Cli1(){
     // 点击按钮  判断第一个小图标（如果是亮的 则将小图标变不亮  背景以及文字变不亮）  默认是展开的 （小图标和文字背景是亮的）
@@ -142,11 +146,6 @@ export default {
 }
 
 
-
-
-
-
-
 .right{
   width: 360px;
   border: 1px solid rgba(8,26,127,.5);
@@ -220,6 +219,6 @@ cursor: pointer;
     margin-left: 46px;
 }
 .p8{
-    margin-left: 52px;
+    margin-left: 66px;
 }
 </style>

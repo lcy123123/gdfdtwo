@@ -2,6 +2,7 @@
   <div>
     <!-- 五个小按钮 -->
     <Fiveli></Fiveli>
+    
     <!-- 遥感数据 数值预报组件 -->
     <Ygsz></Ygsz>
   </div>
@@ -11,10 +12,14 @@ import Fiveli from './fiveli'
 // 箭头朝下图片
 
 import Ygsz from './ygsz'
+// import bus from '../utils/eventBus'
 export default {
   components: {
     Fiveli,
     Ygsz
+  },
+  methods:{
+    
   },
   data() {
     return {
