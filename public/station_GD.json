@@ -22,7 +22,7 @@
         "stationCodeName": null
     },
     {
-        "dataId": 3,
+        "dataId": 4,
         "lon": 113.45,
         "lat": 22.47,
         "stationName":null,
@@ -33,7 +33,7 @@
         "stationCodeName": null
     },
     {
-        "dataId": 4,
+        "dataId": 3,
         "lon": 113.99,
         "lat": 21.50,
         "stationName":null,

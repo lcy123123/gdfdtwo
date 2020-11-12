@@ -3,7 +3,7 @@
         <!-- 评估背景和评估决策组件 -->
         <div class="right bottom-line">
       <div class="right-top" @click="Cli1">
-        <img class="y1" src='../assets/y2.png' alt="">
+        <img class="y1" src='../assets/bj2.png' alt="">
         <span class="y1-text">评估背景</span>
         <span  class="c1" style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-bottom"></i></span>
       </div>
@@ -11,27 +11,25 @@
       <div class="top-1">
         <div class="top-11">
           <el-form>
-          <el-radio-group v-model="plist">
+          <el-radio-group v-model="pgbjvalue" @change="addsl">
           <el-radio label="海洋行政功能区划"></el-radio>
           <!-- 点击实现子组件向父组件传值 -->
-          <span @click="addsl"><el-radio class="p2" label="鱼类产卵场"></el-radio></span>
+          <el-radio class="p2" label="鱼类产卵场"></el-radio>
           <el-radio class="p3" label="港口通航"></el-radio>
           <el-radio class="p4" label="海底油气管道"></el-radio>
           <el-radio class="p5" label="海底光/电缆"></el-radio>
           <el-radio class="p6" label="自然保护区"></el-radio>
           <el-radio class="p7" label="生态红线"></el-radio>
           <el-radio class="p8" label="已规划风电场"></el-radio>
-          <!-- <el-radio label="十年一遇"></el-radio>
-          <el-radio class="radio-san" label="三十年一遇"></el-radio> -->
           </el-radio-group>
           </el-form>
         </div>
       </div>
       <!-- 下边的 -->
       <div class="right-bottom" @click="Cli2">
-        <img class="y2" src="../assets/s1.png" alt="">
+        <img class="y2" src="../assets/jc1.png" alt="">
         <span class="y2-text">评估决策</span>
-        <span  class="c2" :v-model="flag" style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-right"></i></span>
+        <span  class="c2" style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-right"></i></span>
       </div>
          <div class="top-2">
         <el-form>
@@ -49,32 +47,32 @@
 import $ from 'jquery'
 
 //遥感观测小图标
-import y1 from '../assets/y1.png'
-import y2 from '../assets/y2.png'
+import bj1 from '../assets/bj1.png'
+import bj2 from '../assets/bj2.png'
 // 数值预报小图标
-import s1 from '../assets/s1.png'
-import s2 from '../assets/s2.png'
+import jc1 from '../assets/jc1.png'
+import jc2 from '../assets/jc2.png'
 
-
+import bus from '../utils/eventBus'
 export default {
     data(){
     return{
-      plist:'',
+      pgbjvalue:'',
       tf:'',
     }
   },
      methods:{
        //子组件向父组件传值
        addsl(){
-         this.$emit('event2')
+        bus.$emit('event2',this.pgbjvalue)
        },
 
           //显示此页面时 默认展开第一个（遥感观测）
     Cli1(){
     // 点击按钮  判断第一个小图标（如果是亮的 则将小图标变不亮  背景以及文字变不亮）  默认是展开的 （小图标和文字背景是亮的）
-      if($('.y1').attr('src')==y2){
+      if($('.y1').attr('src')==bj2){
         //将小图标变成不亮的
-        $('.y1').attr('src',y1)
+        $('.y1').attr('src',bj1)
         //将背景变成没有
         $('.right-top').css({'background': ' rgba(8,26,127,0)'})
         //将文字变成不亮的
@@ -82,11 +80,11 @@ export default {
         //点击切换后面的小图标
         // $('.c1,.el-icon-caret-bottom').attr('class','el-icon-caret-right')
         $('.c1').find('i').attr('class','el-icon-caret-right')
-        console.log($('.c1').find('i'))
+        // console.log($('.c1').find('i'))
 
       }else{
         //将小图标变成亮的
-        $('.y1').attr('src',y2)
+        $('.y1').attr('src',bj2)
         //将背景变成蓝色
         $('.right-top').css({'background': 'rgba(3,37,127,.5)'})
         //将文字变成蓝色的
@@ -104,9 +102,9 @@ export default {
     //点击第二个
     Cli2(){
 
-        if($('.y2').attr('src')==s1){
+        if($('.y2').attr('src')==jc1){
         //将小图标变成亮的
-        $('.y2').attr('src',s2)
+        $('.y2').attr('src',jc2)
         //将背景变成有
         $('.right-bottom').css({'background': 'rgba(8,26,127,.5)'})
         //将文字变成亮的
@@ -116,7 +114,7 @@ export default {
 
       }else{
         //将小图标变成不亮的
-        $('.y2').attr('src',s1)
+        $('.y2').attr('src',jc1)
         //将背景变成无色
         $('.right-bottom').css({'background': 'rgba(3,37,127,0)'})
         //将文字变成白色的

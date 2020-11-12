@@ -5,6 +5,8 @@
     
     <!-- 遥感数据 数值预报组件 -->
     <Ygsz></Ygsz>
+    <!-- 时间轴 -->
+    <Sjz></Sjz>
   </div>
 </template>
 <script>
@@ -12,11 +14,13 @@ import Fiveli from './fiveli'
 // 箭头朝下图片
 
 import Ygsz from './ygsz'
+import Sjz from './sjz'
 // import bus from '../utils/eventBus'
 export default {
   components: {
     Fiveli,
-    Ygsz
+    Ygsz,
+    Sjz
   },
   methods:{
     

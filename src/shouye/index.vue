@@ -112,7 +112,7 @@ ul{
   height: 13px;
 }
 .el-select .el-input__inner{
-  width: 100px;
+  /* width: 100px; */
   height: 30px;
 }
 </style> 

@@ -6,7 +6,9 @@
     <Fiveli></Fiveli>
     <!-- 上边的 -->
     <!-- 父组件接收子组件的传值addimg -->
-    <Ygsz @event1='addimg' ref="child"></Ygsz>
+    <Ygsz ref="child"></Ygsz>
+    <!-- 时间轴 -->
+    <Sjz></Sjz>
 
   </div>
 </template>
@@ -14,14 +16,16 @@
 import Fiveli from './fiveli'
 import Fcsxx from './fcsxx'
 import Ygsz from './ygsz'
-import bus from '../utils/eventBus'
+import Sjz from './sjz'
+// import bus from '../utils/eventBus'
 
 
 export default {
   components: {
      Fcsxx,
      Fiveli,
-     Ygsz
+     Ygsz,
+     Sjz
    },
    
    mounted(){
@@ -47,12 +51,7 @@ export default {
      this.$refs.child.Cli1();
      this.$refs.child.Cli2();
    },
-   //
-     addimg(){
-      console.log(1234)
-      //向兄弟传值
-      bus.$emit('addimg');
-    }
+    
  }
   
 }

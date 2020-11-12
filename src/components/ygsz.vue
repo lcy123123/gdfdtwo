@@ -26,10 +26,9 @@
       </div>
          <div class="top-2">
            <el-form>
-        <el-radio-group v-model="b">
+        <el-radio-group v-model="szybvalue" @change="addimg">
           <!-- 子组件向父组件的传值 -->
-           <span @click="addimg"><el-radio class="b1" label="年平均风速"></el-radio></span>
-           <!-- <el-radio @click="addimg" class="b1" label="年平均风速"></el-radio> -->
+           <el-radio class="b1" label="年平均风速"></el-radio>
            <el-radio class="b2" label="月平均风速"></el-radio>
            <el-radio class="b3" label="逐小时年平均风速"> </el-radio>
            <el-radio class="b4" label="逐小时月平均风速"></el-radio>
@@ -49,7 +48,7 @@
            </el-form>
            <!-- 右面的时间轴 -->
             <!-- <div>  <el-slider  class="sli1" v-model="value" min="0" max="200" step="40" range  :marks="marks"></el-slider></div> -->
-            <div>  <el-slider  class="sli1" v-model="value"  max="200" step="40" range  :marks="marks"></el-slider></div>
+            <div>  <el-slider  class="sli1" v-model="value" :min="10" :max="200" step="20" show-stops ></el-slider></div>
         </div>
     </div>
 </template>
@@ -63,19 +62,21 @@ import y2 from '../assets/y2.png'
 // 数值预报小图标
 import s1 from '../assets/s1.png'
 import s2 from '../assets/s2.png'
+import bus from '../utils/eventBus'
 
 export default {
     data(){
       return{
-        a:'',
-        b:'',
+        // a:'',
+        value:10,
+        szybvalue:'',
         data1:'子组件中的数据'
       }
     },
     methods:{
       //点击年平均风速 出图片（添加图片方法）
       addimg(){
-        this.$emit('event1')
+        bus.$emit('addimg',this.szybvalue)
       },
 
 
@@ -92,7 +93,6 @@ export default {
         //点击切换后面的小图标
         // $('.c1,.el-icon-caret-bottom').attr('class','el-icon-caret-right')
         $('.c1').find('i').attr('class','el-icon-caret-right')
-        console.log($('.c1').find('i'))
 
       }else{
         //将小图标变成亮的

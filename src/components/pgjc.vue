@@ -1,6 +1,7 @@
 <template>
       <!-- 评估决策页面 -->
     <div>
+        <!-- <router-view></router-view> -->
         <!-- 评估决策组 -->
         <Pgbjjc ref='child'></Pgbjjc>
     </div>
