@@ -20,10 +20,23 @@ export default {
       viewer: null,
       ggpid: [],
       //其他组件传过来的值（鱼类产卵场）
-      ylclc:'',
+      ylclc: "",
       //其他组件传过来的值（年平均风速）
-      szybvalue:'',
-      img1:null
+      szybvalue: "",
+      // img1:null,
+      imgList: [
+        { img: "./fs1.jpg" },
+        { img: "./fs2.jpg" },
+        { img: "./fs3.jpg" },
+        { img: "./fs4.jpg" },
+        { img: "./fs5.jpg" },
+        { img: "./fs6.jpg" },
+        { img: "./fs7.jpg" },
+        { img: "./fs8.jpg" },
+        { img: "./fs9.jpg" },
+        { img: "./fs10.jpg" }
+      ],
+    
     
     };
   },
@@ -33,18 +46,29 @@ export default {
     //调用初始化地球方法
     this.init();
     //接收兄弟组件传过来的值
-    bus.$on("addimg", (szybvalue) => {
+    bus.$on("addimg", szybvalue => {
       // 调用加载图片方法
-      // console.log(szybvalue,'=======')
-      this.szybvalue=szybvalue
-      this.AddImg(this.viewer,szybvalue);
+      this.szybvalue = szybvalue;
+      // this.AddImg(this.viewer,szybvalue);
+
+      this.imgList.forEach(item => {
+      
+        // setInterval(()=>{
+  
+        this.AddImg(this.viewer, szybvalue,item);
+
+        // },2000)
+        // this.AddImg(this.viewer, szybvalue);
+        
+      });
+
+  
     });
     //加载矢量数据方法
-    bus.$on("event2", (pgbjvalue) => {
-      this.ylclc=pgbjvalue
-      this.AddSl(this.viewer,this.ylclc);
+    bus.$on("event2", pgbjvalue => {
+      this.ylclc = pgbjvalue;
+      this.AddSl(this.viewer, this.ylclc);
     });
-    // bus.$emit('params',this.dataList)
     this.Addggp();
   },
 
@@ -55,19 +79,16 @@ export default {
         // 将请求到的数据赋值
         console.log(res.data);
         this.dataList = res.data;
-        // console.log(this.dataList,'-------')
         //对请求的数据遍历
         res.data.forEach(
           params => {
             //调用添加点方法
-            // this.AddPoint(params);
             this.Addggp(params);
             //调用鼠标移入方法
           },
           this.mouseMove(),
           this.ChuanId()
         );
-        // });
       });
     },
     //初始化方法
@@ -82,7 +103,7 @@ export default {
         baseLayerPicker: false, // 底图切换控件
         animation: false, // 控制场景动画的播放速度控件
         // terrainProvider: Cesium.createWorldTerrain(),
-        
+
         // 初始化天地图
         imageryProvider: new Cesium.WebMapTileServiceImageryProvider({
           // url: "/web/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=ebf64362215c081f8317203220f133eb",
@@ -93,8 +114,7 @@ export default {
           subdomains: ["0", "1", "2", "3", "4", "5", "6", "7"],
           format: "image/jpeg",
           tileMatrixSetID: "GoogleMapsCompatible",
-          show: false,
-
+          show: false
         })
       };
       var viewer = new Cesium.Viewer("cesiumContainer", viewerOption);
@@ -116,9 +136,7 @@ export default {
           pitch: Cesium.Math.toRadians(-89.74026687972041),
           roll: Cesium.Math.toRadians(0)
         },
-        complete: function callback() {
-          // 定位完成之后的回调函数
-        }
+        complete: function callback() {}
       });
 
       this.viewer = viewer;
@@ -151,55 +169,125 @@ export default {
     },
 
     //添加矢量数据
-    AddSl(viewer,ylclc) {
-      
-        var promise = Cesium.GeoJsonDataSource.load("./zsc.json", {
+    AddSl(viewer, ylclc) {
+      var promise = Cesium.GeoJsonDataSource.load("./zsc.json", {
         stroke: new Cesium.Color(0.019, 0.156, 0.639, 0), //多边形轮廓线的颜色
         // fill: Cesium.Color.CORNFLOWERBLUE.withAlpha(.7),       //多边形中间的颜色
         // fill: new Cesium.Color(0.019,0.156,0.639,0.7),       //多边形中间的颜色
         fill: new Cesium.Color(0.047, 0.588, 0.807, 0.5), //多边形中间的颜色
         strokeWidth: 5, //多边形的厚度
-        markerSymbol: "?" ,//多边形
-        show:true
+        markerSymbol: "?", //多边形
+        show: true
       });
       //判断被点击是不是鱼类产卵场 是则将创建好的矢量是加载上 不是则判断是否有矢量数据 如果有则取消
-      if(ylclc==='鱼类产卵场'){
-      viewer.dataSources.add(promise);
-      viewer._cesiumWidget._creditContainer.style.display = "none"; // 隐藏版权
-      }else{
-      var len=viewer.dataSources.length;
-      //判断数量数据是否有
-      if(len>0){
-        for(var i=0;i<len;i++){
-          //获取到矢量数据
-          var dataSource=viewer.dataSources.get(i);
-          //移除矢量数据
-          viewer.dataSources.remove(dataSource)
+      if (ylclc === "鱼类产卵场") {
+        viewer.dataSources.add(promise);
+        viewer._cesiumWidget._creditContainer.style.display = "none"; // 隐藏版权
+      } else {
+        var len = viewer.dataSources.length;
+        //判断数量数据是否有
+        if (len > 0) {
+          for (var i = 0; i < len; i++) {
+            //获取到矢量数据
+            var dataSource = viewer.dataSources.get(i);
+            // console.log(dataSource)
+            //移除矢量数据
+            viewer.dataSources.remove(dataSource);
+          }
+        } else {
+          return;
         }
-      }else{
-        return
-      }
       }
     },
 
     //抽离加载图片方法
-    AddImg(viewer,szybvalue) {
-      var img1;
-      //  viewer.imageryLayers.remove(img1);
-      if(szybvalue==='年平均风速'){
-      // viewer.imageryLayers.remove(img1);
-       img1= viewer.imageryLayers.addImageryProvider(
-        new Cesium.SingleTileImageryProvider({
-          url: "./fs.png",
-          rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
-          show:false
-        })
-      );
-     }else{
-      viewer.imageryLayers.remove(img1);
-     }
-      
-     
+    AddImg(viewer, szybvalue,item) {
+        var img1;
+        img1 = new Cesium.SingleTileImageryProvider({
+        url: item.img,
+        rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
+        show: false
+      });
+      //对传过来的参数进行判断  符合则添加图层 不符合则移除图层
+        
+ if (szybvalue === "年平均风速") {
+        //将已经创建好的图层添加
+        viewer.imageryLayers.addImageryProvider(img1);
+        // viewer.imageryLayers.addImageryProvider(img2);
+      } else {
+        //获取所有图层的长度
+        var len = viewer.imageryLayers.length;
+        //如果有图层则则获取图层并移除
+        if (len > 0) {
+          //注意 i要从1开始取（因为，原本天地图图中有一层）
+          for (var i = 1; i < len; i++) {
+            //获取图层
+            var imageryLayer = viewer.imageryLayers.get(i);
+            // 移除（方法：viewer.imageryLayers.remove）
+            viewer.imageryLayers.remove(imageryLayer);
+          }
+          //没有则结束
+        } else {
+          return;
+        }
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      // var img1;
+      // //  viewer.imageryLayers.remove(img1);
+      // // if(szybvalue==='年平均风速'){
+      // // viewer.imageryLayers.remove(img1);
+      // //  img1= viewer.imageryLayers.addImageryProvider(
+      // //   new Cesium.SingleTileImageryProvider({
+      // //     url: item.img,
+      // //     rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
+      // //     show:false
+      // //   })
+      // // );
+      // img1 = new Cesium.SingleTileImageryProvider({
+      //   // url: item.img,
+      //   url: item.img,
+      //   rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
+      //   show: false
+      // });
+      // //对传过来的参数进行判断  符合则添加图层 不符合则移除图层
+      // if (szybvalue === "年平均风速") {
+      //   // setInterval(() => {
+      //   //将已经创建好的图层添加
+      //   // img1.url=item.img
+      //   viewer.imageryLayers.addImageryProvider(img1);
+
+      //   // }, 2000);
+      // } else {
+      //   //获取所有图层的长度
+      //   var len = viewer.imageryLayers.length;
+      //   //如果有图层则则获取图层并移除
+      //   if (len > 0) {
+      //     //注意 i要从1开始取（因为，原本天地图图中有一层）
+      //     for (var i = 1; i < len; i++) {
+      //       //获取图层
+      //       var imageryLayer = viewer.imageryLayers.get(i);
+      //       // 移除（方法：viewer.imageryLayers.remove）
+      //       viewer.imageryLayers.remove(imageryLayer);
+      //     }
+      //     //没有则结束
+      //   } else {
+      //     return;
+      //   }
+      // }
     },
 
     //添加广告牌
@@ -216,8 +304,8 @@ export default {
           horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
           verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
           scale: 1,
-          disableDepthTestDistance:0,//广告牌不进行深度检测
-          heightReference:Cesium.HeightReference.RELATIVE_TO_GROUND
+          disableDepthTestDistance: 0, //广告牌不进行深度检测
+          heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
         },
 
         //点击出现广告牌的框
@@ -259,7 +347,6 @@ export default {
       );
       handlerVideo.setInputAction(click => {
         var pick = this.viewer.scene.pick(click.position);
-        // console.log(pick.id.id)
         if (pick.id.id) {
           // 将原来数组置为空
           this.ggpid = [];

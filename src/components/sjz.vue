@@ -34,7 +34,7 @@
       <div class="sjz-sz" v-show="flagsz">
         <el-form>
           <el-form-item label="速度:">
-            <el-select v-model="sd" placeholder="请选择">
+            <el-select v-model="sd" placeholder="请选择" @change="changeSu($event)">
               <el-option
                 v-for="item in sdoption"
                 :key="item.value"
@@ -60,7 +60,7 @@
       </div>
     </div>
     <!-- 时间轴 -->
-    <div class="sjz-z" v-if="this.$route.path != '/tb' ? true : false">
+    <div class="sjz-z" >
       <div>
         <span @click="selectrq" class="btn-1"><img src="../assets/001.png" alt=""/></span>
         <span @click="selectsz" class="btn-2"><img src="../assets/002.png" alt=""/></span>
@@ -68,10 +68,8 @@
       <!-- 中间时间轴 -->
       <div class="sjz-middle">
         <img class="sjz-img" src="../assets/sjz.png" alt="" />
-        <el-slider v-model="value"></el-slider>
-        <span class="sjz-bottom-text1">时间</span>
-        <span class="sjz-bottom-text2">时间</span>
-        <span class="sjz-bottom-text3">时间</span>
+        <el-slider v-model="value" :marks="marks" :max="2019" :min="2010"></el-slider>
+        
       </div>
       <div>
         <span class="btn-3"><img src="../assets/003.png" alt=""/></span>
@@ -89,18 +87,31 @@ import bus from "../utils/eventBus";
 export default {
   data() {
     return {
-      value:10,
+     value: 2010,
+        marks: {
+          2010: '2010',
+          2011: '2011',
+          2012: '2012',
+          2013: '2013',
+          2014: '2014',
+          2015: '2015',
+          2016: '2016',
+          2017: '2017',
+          2018: '2018',
+          2019: '2019',
+          },
       value1: 2010,
       options1: [],
       value2: 2019,
       options2: [],
       flagrq: false,
       flagsz: false,
-      sd: 500,
+      sd: 1000,
       jg: 5,
       sdoption: [
-        { key: 1, value: 100, label: 100 },
-        { key: 2, value: 200, label: 200 }
+        { key: 1, value: 500, label: 500 },
+        { key: 2, value: 1000, label: 1000 },
+        { key: 3, value: 2000, label: 2000 }
       ],
       jgoption: [
         { key: 1, value: 5, label: 5 },
@@ -108,10 +119,24 @@ export default {
       ],
       rq1: "开始年份",
       rq2: "结束年份",
-      date: ""
+      date: "",
+      timer:null,
+      sjzFlag:true,
     };
   },
   methods: {
+    //改变速度的值
+    changeSu(sd){
+      this.sd=sd
+    },
+    //定时器执行的内容
+    dsq(){
+        if(this.value===2019){
+          this.value=2010
+        }else{
+        this.value=this.value+1
+        }
+    },
     //根据传递过来的参数 动态换时间轴上面框中的内容
     dongtaidate() {
       bus.$on("addimg", date => {
@@ -234,35 +259,31 @@ export default {
     },
     //点击暂停方法
     zt(){
-      console.log('点击了暂停')
+      //判断flag值 true为正在滑动 清除定时器 改变flag值
+      if(this.sjzFlag){
+      this.sjzFlag=!this.sjzFlag
+      clearInterval(this.timer)
+      }else{
+        //flag为false 添加定时器 改变flag值
+      this.sjzFlag=!this.sjzFlag
+      this.timer=setInterval(this.dsq,this.sd)
+      console.log(this.timer)
+      }
+      
     }
   },
   mounted() {
     // this.initOption()
     //根据选择不同框显示的不同
     this.dongtaidate();
+    //调用初始化option
     this.startOption()
+    // 定义时间轴定时器（初始）
+    this.timer=setInterval(this.dsq,this.sd)
   }
 };
 </script>
 <style>
-.sjz-bottom-text1,.sjz-bottom-text2,.sjz-bottom-text3{
-  color: white;
-  font-size: 12px;
-  position: absolute;
-  top:20px;
-  left:20px
-}
-.sjz-bottom-text2{
-  position: absolute;
-  top:20px;
-  left:140px
-}
-.sjz-bottom-text3{
-  position: absolute;
-  top:20px;
-  left:280px
-}
 .sjz-srk-z {
   position: relative;
   bottom: 240px;
@@ -366,5 +387,10 @@ export default {
 }
 .el-form-item {
   margin-bottom: 0px;
+}
+.el-slider__marks-text{
+  margin-top: 6px;
+  color: #4FAAAC;
+  font-size: 12px;
 }
 </style>

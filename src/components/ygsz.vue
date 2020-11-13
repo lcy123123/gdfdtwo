@@ -48,7 +48,7 @@
            </el-form>
            <!-- 右面的时间轴 -->
             <!-- <div>  <el-slider  class="sli1" v-model="value" min="0" max="200" step="40" range  :marks="marks"></el-slider></div> -->
-            <div>  <el-slider  class="sli1" v-model="value" :min="10" :max="200" step="20" show-stops ></el-slider></div>
+            <div>  <el-slider  class="sli1" v-model="value" :min="10" :max="200" step="20" show-stops :marks="marks"></el-slider></div>
         </div>
     </div>
 </template>
@@ -70,7 +70,20 @@ export default {
         // a:'',
         value:10,
         szybvalue:'',
-        data1:'子组件中的数据'
+        data1:'子组件中的数据',
+        marks:{
+          10:'10',
+          30:'30',
+          50:'50',
+          70:'70',
+          90:'90',
+          110:'110',
+          130:'130',
+          150:'150',
+          170:'170',
+          190:'',
+          200:'200',
+        }
       }
     },
     methods:{
