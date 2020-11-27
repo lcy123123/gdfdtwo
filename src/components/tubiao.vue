@@ -2,7 +2,7 @@
   <div>
     <!-- <router-view></router-view> -->
     <!-- 左面第一个图表 -->
-    <div class="left-1 bottom-line">
+    <div class="left-1 bottom-line" style="background-color:rgba(0, 3, 44, 0.5)">
       <div class="div-btn">
         <span class="first-text">风速月变化</span><span class="btn-1">×</span>
       </div>
@@ -13,7 +13,7 @@
       ></div>
     </div>
     <!-- 左面第二个图表 -->
-    <div class="left-2 bottom-line">
+    <div class="left-2 bottom-line" style="background-color:rgba(0, 3, 44, 0.5)">
       <div class="div-btn">
         <span class="first-text">风功率密度统计</span
         ><span class="btn-1">×</span>
@@ -24,7 +24,7 @@
       ></div>
     </div>
     <!-- 左面第三个图表 -->
-    <div class="left-3 bottom-line">
+    <div class="left-3 bottom-line" style="background-color:rgba(0, 3, 44, 0.5)">
       <div class="div-btn">
         <span class="first-text">有效风速</span><span class="btn-1">×</span>
       </div>
@@ -34,7 +34,7 @@
       ></div>
     </div>
     <!-- 右面第一个图表 -->
-    <div class="right-1 bottom-line">
+    <div class="right-1 bottom-line" style="background-color:rgba(0, 3, 44, 0.5)">
       <div class="div-btn">
         <span class="first-text">风向统计</span><span class="btn-1">×</span>
       </div>
@@ -44,7 +44,7 @@
       ></div>
     </div>
     <!-- 右面第二个图表 -->
-    <div class="right-2 bottom-line">
+    <div class="right-2 bottom-line" style="background-color:rgba(0, 3, 44, 0.5)">
       <div class="div-btn">
         <span class="first-text">遥感数据对比</span><span class="btn-1">×</span>
       </div>
@@ -54,7 +54,7 @@
       ></div>
     </div>
     <!-- 右面第三个图表 -->
-    <div class="right-3 bottom-line">
+    <div class="right-3 bottom-line" style="background-color:rgba(0, 3, 44, 0.5)">
       <div class="div-btn">
         <span class="first-text">浮标数据对比</span><span class="btn-1">×</span>
       </div>
@@ -124,7 +124,7 @@ export default {
       //高度下拉框数据
       options: [],
       //高度下拉框默认值
-      value: "10.0",
+      value: "10",
       //高度数据
       gdList: [],
       //平均风速数据
@@ -1010,6 +1010,7 @@ export default {
   border: 1px solid #0b1b7a;
   width: 340px;
   height: 170px;
+  
 }
 .bottom-line {
   background: linear-gradient(to left, #01a2fe, #01a2fe) left bottom no-repeat,

@@ -12,17 +12,17 @@ import Pgjc from './components/pgjc'
 
 
 
-//使用路由
-Vue.use(Router)
+
 
 export default new Router({
     routes:[
         {
             path:'/',
-            redirect:'/index'
+            redirect:'/index',
+            children:[]
         },
         {
-            path:'/index',
+            path:'/',
             component:Index
         },
         {
@@ -59,3 +59,6 @@ export default new Router({
         },
     ]
 })
+
+//使用路由
+Vue.use(Router)

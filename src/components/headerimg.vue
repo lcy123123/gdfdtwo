@@ -55,6 +55,7 @@
         <!-- <div style="margin:10px 0;text-align:center;font-size:13px">数值预报</div> -->
       </div>
     </div>
+    <!-- <router-view></router-view> -->
   </div>
 </template>
 

@@ -11,18 +11,29 @@
       <div class="top-1">
         <div class="top-11">
           <el-form>
-         <el-radio-group v-model="a">
-          <el-radio label="平均风速"></el-radio>
-          <el-radio label="平均风功率密度"></el-radio>
-         </el-radio-group>
-          </el-form>
+            <el-form-item>
+                 <el-radio-group v-model="Wxinit" size="small" @change='selectWx($event)'>
+                   <el-radio-button label="ASCAT"></el-radio-button>
+                   <el-radio-button label="WindSat"></el-radio-button>
+                   <el-radio-button label="CFOSAT"></el-radio-button>
+                   <el-radio-button label="HYA-2B"></el-radio-button>
+                   <el-radio-button label="HY-2A"></el-radio-button>
+                 </el-radio-group>
+            </el-form-item>
+             <el-radio-group v-model="Wxcsinit" @change="selectWxcs($event)">
+             <el-radio class="a1" label="月平均风速"></el-radio>
+             <el-radio class="a2" label="月平均风功率密度"></el-radio>
+             <el-radio class="a3" label="年平均风速"></el-radio>
+             <el-radio class="a4" label="年平均风功率密度"></el-radio>
+             </el-radio-group>
+            </el-form>
         </div>
       </div>
       <!-- 下边的 -->
       <div class="right-bottom" @click="Cli2">
         <img class="y2" src="../assets/s1.png" alt="">
         <span class="y2-text">数值预报</span>
-        <span  class="c2" :v-model="flag" style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-right"></i></span>
+        <span  class="c2"  style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-right"></i></span>
       </div>
          <div class="top-2">
            <el-form>
@@ -48,7 +59,7 @@
            </el-form>
            <!-- 右面的时间轴 -->
             <!-- <div>  <el-slider  class="sli1" v-model="value" min="0" max="200" step="40" range  :marks="marks"></el-slider></div> -->
-            <div>  <el-slider  class="sli1" v-model="value" :min="10" :max="200" step="20" show-stops :marks="marks"></el-slider></div>
+            <div>  <el-slider  class="sli1" v-model="gdvalue" :min="10" :max="150" :step="10" show-stops :marks="marks" @change="changeGdValue($event)"></el-slider></div>
         </div>
     </div>
 </template>
@@ -67,26 +78,66 @@ import bus from '../utils/eventBus'
 export default {
     data(){
       return{
-        // a:'',
-        value:10,
+        //卫星初始数据
+        Wxinit: '',
+        //卫星参数初始数据
+        Wxcsinit:'',
+        gdvalue:10,
         szybvalue:'',
-        data1:'子组件中的数据',
         marks:{
           10:'10',
           30:'30',
           50:'50',
           70:'70',
+          80:'80',
           90:'90',
+          100:'100',
           110:'110',
+          120:'120',
           130:'130',
           150:'150',
-          170:'170',
-          190:'',
-          200:'200',
-        }
+        },
+       
       }
     },
     methods:{
+      //选择高度值
+      changeGdValue(gdvalue){
+        this.gdvalue=gdvalue
+        //向其他组件传值
+        bus.$emit('gdvalue',gdvalue)
+      },
+      //选择卫星参数方法
+      selectWxcs(Wxcs){ 
+        bus.$emit('Wxcs',Wxcs)
+      },
+      //卫星选择方法
+      selectWx(Wx){
+        bus.$emit('Wx',Wx)
+
+      },
+      //根据卫星以及卫星参数判断前端输入数据方法
+      wxAndWxcs(){
+        if(this.Wzcs==='月平均风速'||this.Wzcs==='月平均风功率密度'){
+          if(this.Wx==='ASCAT'||this.Wx==='WindSat'||this.Wx==='HY-2B'||this.Wx==='CFOSAT'){
+            console.log('2019年的')
+            
+          }else{
+            console.log('2017年的')
+          }
+
+        }else if(this.Wzcs==='年平均风速'||this.Wzcs==='年平均风功率密度'){
+          if(this.Wx==='ASCAT'||this.Wx=='WindSat'){
+            console.log('2010-2019年的')
+          }else if(this.Wx==='HY-2A'){
+            console.log('2012-2018年的')
+          }else{
+            console.log('2019-2020年的')
+          }
+
+        }
+
+      },
       //点击年平均风速 出图片（添加图片方法）
       addimg(){
         bus.$emit('addimg',this.szybvalue)
@@ -154,7 +205,8 @@ export default {
   }
 }
 </script>
-<style  scoped>
+<style >
+
 .right{
   width: 360px;
   border: 1px solid rgba(8,26,127,.5);
@@ -257,7 +309,19 @@ border: 2px solid rgba(8,26,127,.5);
 cursor: pointer;
 }
 .sli1{
-  width: 280px;
+  width: 300px;
   margin:10px 30px 30px 30px;
+}
+.el-radio-button__inner{
+  background: none;
+  border: 1px solid #0c96cd;
+  color:white
+}
+.el-radio-button--small .el-radio-button__inner{
+  padding: 8px 8px;
+}
+/* HY-2A等样式 */
+.a1{
+  margin-right: 30px;
 }
 </style>

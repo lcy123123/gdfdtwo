@@ -15,6 +15,22 @@ module.exports = {
               pathRewrite: {
                 '^/api': ''
               }
+            }, 
+            '/static':{
+              target: 'http://10.1.100.52:8089',
+              changeOrigin: true,
+              ws: true, 
+              pathRewrite: {
+                '^/static': ''
+              }
+            },
+            '/windy':{
+              target: 'http://localhost:9010',
+              changeOrigin: true,
+              ws: true, 
+              pathRewrite: {
+                '^/windy': ''
+              }
             },
           },
     },

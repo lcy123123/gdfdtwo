@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="display:none">
         <!-- 中间组件  风参数信息 -->
         <div class="fcsxx">
           <!-- 上面标题 -->

@@ -11,8 +11,8 @@
       <div class="top-1">
         <div class="top-11">
           <el-form>
-          
-          <el-radio-group v-model="v">
+          <el-form-item>
+          <el-radio-group v-model="yxbgvalue" @change="addyxbgimg($event)">
           <el-radio label="逐月平均值"></el-radio>
           <el-radio label="逐月最大值"></el-radio>
           <el-radio label="逐月最小值"></el-radio>
@@ -24,7 +24,9 @@
           <el-radio label="十年最小值"></el-radio>
           <el-radio label="十年一遇"></el-radio>
           <el-radio class="radio-san" label="三十年一遇"></el-radio>
+          <el-radio class="radio-tfpc" label="台风频次"></el-radio>
           </el-radio-group>
+          </el-form-item>
           </el-form>
         </div>
       </div>
@@ -35,9 +37,10 @@
         <span  class="c2" :v-model="flag" style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-right"></i></span>
       </div>
          <div class="top-2">
+           <!-- <el-radio class="radio-tfpc2" @change="tfpc($event)" v-model="tf" label="台风频次"></el-radio> -->
         <el-form>
           <el-form-item>
-            <el-radio class="radio-tfpc" v-model="tf" label="台风频次"></el-radio>
+            <el-radio @change="tfpc($event)" class="radio-tfpc2" v-model="tf" label="台风频次" style="display:block"></el-radio>
           </el-form-item>
         </el-form>
            
@@ -53,18 +56,32 @@ import bg2 from '../assets/bg2.png'
 // 数值预报小图标
 import zh1 from '../assets/zh1.png'
 import zh2 from '../assets/zh2.png'
+import bus from '../utils/eventBus'
 
 
 export default {
     data(){
     return{
-      v:'',
+      tfpcvalue:'',
+      
+      //有效波高选中值
+      yxbgvalue:'qq',
       tf:'',
+      flag:''
     }
   },
      methods:{
+       //台风频次方法
+       tfpc(tfpcvalue){
+          bus.$emit('addzhtqimg',tfpcvalue)
+       },
+       //点击有效波高其中一个触发事件（向cesium传递参数）
+       addyxbgimg(yxbgvalue){
+         this.yxbgvalue=yxbgvalue
+         bus.$emit('addyxbgimg',yxbgvalue)
+       },
           //显示此页面时 默认展开第一个（遥感观测）
-    Cli1(){
+      Cli1(){
     // 点击按钮  判断第一个小图标（如果是亮的 则将小图标变不亮  背景以及文字变不亮）  默认是展开的 （小图标和文字背景是亮的）
       if($('.y1').attr('src')==bg2){
         //将小图标变成不亮的
@@ -76,10 +93,12 @@ export default {
         //点击切换后面的小图标
         // $('.c1,.el-icon-caret-bottom').attr('class','el-icon-caret-right')
         $('.c1').find('i').attr('class','el-icon-caret-right')
-        console.log($('.c1').find('i'))
+       
+        // $('.radio-tfpc').css('display','block')
 
       }else{
         //将小图标变成亮的
+        
         $('.y1').attr('src',bg2)
         //将背景变成蓝色
         $('.right-top').css({'background': 'rgba(3,37,127,.5)'})
@@ -87,6 +106,7 @@ export default {
         $('.y1-text').css({'color':'#04BFEA'})
         //点击切换后面小三角
         $('.c1').find('i').attr('class','el-icon-caret-bottom')
+        // $('.radio-tfpc').css('display','block')
 
       }
       //top1上滑
@@ -96,8 +116,7 @@ export default {
     },
 
     //点击第二个
-    Cli2(){
-
+    Cli2(){   
         if($('.y2').attr('src')==zh1){
         //将小图标变成亮的
         $('.y2').attr('src',zh2)
@@ -107,7 +126,8 @@ export default {
         $('.y2-text').css({'color':'#04BFEA'})
         //改变后面的小三角
         $('.c2').find('i').attr('class','el-icon-caret-bottom')
-
+        // $('.radio-tfpc').css('display','block')
+        // $('.radio-tfpc2').css('display','none')
       }else{
         //将小图标变成不亮的
         $('.y2').attr('src',zh1)
@@ -117,6 +137,9 @@ export default {
         $('.y2-text').css({'color':'white'})
         //改变后面的小三角
         $('.c2').find('i').attr('class','el-icon-caret-right')
+        // $('.radio-tfpc').css('display','none')
+        // $('.radio-tfpc2').css('display','block')
+
       }
       //点击上滑
       $('.top-2').slideToggle(200)
@@ -134,7 +157,17 @@ export default {
 }
 .radio-tfpc{
   margin-left: 24px;
-  margin-top:32px
+  margin-top:32px;
+  bottom: -42px;
+  left: -23px;
+  display: none;
+}
+.radio-tfpc2{
+  margin-left: 44px;
+  margin-top:32px;
+  bottom: 0px;
+  left: -23px;
+  /* display: none; */
 }
 .radio-san{
   margin-left: 14px;
@@ -183,12 +216,14 @@ cursor: pointer;
   color: white;
   font-size: 14px;
   padding: 20px;
+  
 }
 .top-11>input{
   margin: 10px;
 }
 .top-1{
   background-color:rgba(0,3,44,.5) ;
+  height: 140px;
 }
 .top-2{
   height: 82px;

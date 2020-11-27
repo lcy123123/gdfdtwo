@@ -2,15 +2,19 @@
     <div>
       <!-- 有效波高 -->
       <Yxbg></Yxbg>
+      <!-- 时间轴 -->
+      <Sjz style="display:none"></Sjz>
     </div>
 </template>
 
 <script>
 
 import Yxbg from './yxbgzhtq'
+import Sjz from './sjz'
 export default {
   components:{
-    Yxbg
+    Yxbg,
+    Sjz
   },
     methods:{
 
@@ -26,7 +30,10 @@ export default {
 }
 .radio-tfpc{
   margin-left: 24px;
-  margin-top:32px
+  margin-top:32px;
+  bottom: -42px;
+  left: -23px;
+  display: block;
 }
 .radio-san{
   margin-left: 14px;
