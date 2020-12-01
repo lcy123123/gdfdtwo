@@ -5,12 +5,15 @@
         <Zhtq ref="child"></Zhtq>
         <!-- 时间轴 -->
         <Sjz style='display:none'></Sjz>
+        <ColorBar/>
     </div>
 </template>
 
 <script>
 import Zhtq from './yxbgzhtq'
 import Sjz from './sjz'
+import ColorBar from './colorBar'
+
 export default {
     mounted(){
         //调用子组件中方法
@@ -18,7 +21,8 @@ export default {
     },
     components:{
         Zhtq,
-        Sjz
+        Sjz,
+        ColorBar
     },
     methods: {
         //使用子组件中的方法

@@ -16,7 +16,7 @@
                    <el-radio-button label="ASCAT"></el-radio-button>
                    <el-radio-button label="WindSat"></el-radio-button>
                    <el-radio-button label="CFOSAT"></el-radio-button>
-                   <el-radio-button label="HYA-2B"></el-radio-button>
+                   <el-radio-button label="HY-2B"></el-radio-button>
                    <el-radio-button label="HY-2A"></el-radio-button>
                  </el-radio-group>
             </el-form-item>

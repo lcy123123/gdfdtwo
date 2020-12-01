@@ -7,6 +7,7 @@
     <Ygsz></Ygsz>
     <!-- 时间轴 -->
     <Sjz></Sjz>
+    <ColorBar/>
   </div>
 </template>
 <script>
@@ -16,11 +17,15 @@ import Fiveli from './fiveli'
 import Ygsz from './ygsz'
 import Sjz from './sjz'
 // import bus from '../utils/eventBus'
+import ColorBar from './colorBar'
+
+
 export default {
   components: {
     Fiveli,
     Ygsz,
-    Sjz
+    Sjz,
+    ColorBar
   },
   methods:{
     

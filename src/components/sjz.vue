@@ -184,6 +184,7 @@ export default {
       //将index设置
       // this.index = this.options1.length - 1;
       // this.value = this.options1[this.seconddate].value;
+      this.zt();
       this.index = this.seconddate;
       this.value = this.max1;
       bus.$emit(this.element, this.index);
@@ -196,104 +197,24 @@ export default {
       //判断index的值 后退到0时 设置index为0
       if (this.index <= this.firstdate+1) {
         this.index = this.firstdate;
-      } else {
-        this.index -= 2;
+        this.value = this.min1;
+      }else{
+        this.index -=1;
+        this.value --;
       }
-      this.dsq();
+      bus.$emit(this.element, this.index);
     },
     //点击后一张图片
     afterImg() {
       this.zt();
-      if(this.index < this.seconddate){
-        this.dsq();
+      if(this.index <= this.seconddate){
+         this.index +=1;
+         this.value ++;
+         bus.$emit(this.element, this.index);
       }
       // this.play()
     },
-    //选择第一个日期
-    // date1(data1) {
-    //   // console.log(data1,'---')
-    //   // this.data1 = null;
-    //   // this.data1 = data1;
-    //   // this.zt();
-    //   // this.value = data1;
-    //   // this.min1 = data1;
-    //   // this.max1 = this.data2;
-    //   //选择日期时 根据不同的条件更新不同的marks1
-    //   if (this.rq1 === "开始年份" || this.rq2 === "结束年份") {
-    //     this.max1 = this.data2;
-    //     this.min1 = this.data1;
-    //     this.marks1[data1] = "" + data1 + "";
-    //   } else if (this.date == "月平均风速" ||this.date == "月平均风功率密度") {
-    //     this.max1 = 12;
-    //     this.min1 = 1;
-    //     for (let i = 1; i <= 12; i++) {
-    //       this.marks1[i] = "" + i + "";
-    //     }
-    //   } else if (this.date == "逐小时年平均风速" ||this.date == "逐小时月平均风速") {
-    //     this.marks1={}
-    //     this.max1 = 23;
-    //     this.min1 = 0;
-    //     for (let i = 0; i <= 23; i++) {
-    //       this.marks1[i] = "" + i + "";
-    //     }
-    //   } else if ( this.date == "各区间风速分布频率" ||this.date == "各区间风功率密度分布频率") {
-    //     this.max1 = 30;
-    //     this.min1 = 1;
-    //     for (let i = 0; i <= 30; i++) {
-    //       this.marks1[i] = "" + i + "";
-    //     }
-    //   }
-    //   // else if( this.Wx=='ASCAT'||this.Wx=='WindSat'||this.Wx=='HY-2A'||this.Wx=='HY-2B'||this.Wx=='CFOSAT'){
-    //   // //  this.marks1={}
-    //   //  this.max1=12
-    //   //   this.min1=1
-    //   //   for(let i=1;i<=12;i++){
-    //   //     this.marks1[i] = "" + i + "";
-    //   //   }
-    //   //   console.log(this.max1,'999')
-
-    //   // }
-
-    //   // console.log(this.value, "1111");
-    //   // let aa = "" + data1 + "";
-    //   // this.index = aa.substring(4, 3);
-    //   // this.firstdate = this.index;
-      
-    //   // this.play()
-    // },
-    //选择第二个日期
-    // date2(data2) {
-    //   // this.options1=[]
-    //   // this.value2 = data2;
-    //   // this.data2 = data2;
-    //   // this.marks1={}
-    //   // this.zt()
-    //   // this.value=data2
-    //   // this.min1 = this.data1;
-    //   // this.max1 = this.data2;
-    //   // let aa = "" + data2 + "";
-    //   // this.seconddate = aa.substring(4, 3);
-    //   //获取marks1的长度
-    //   // let sq=Object.keys(this.marks1)
-    //   // console.log(sq.length,'123456789098765432')
-    //   // this.seconddate=sq.length-1
-    //   //清空marks1中之前的数据
-    //   // this.marks1 = {};
-    //   // if (this.date == "逐小时月平均风速") {
-    //   //   this.max1 = 23;
-    //   //   this.min1 = 0;
-    //   //   for (let i = 0; i <= 23; i++) {
-    //   //     this.marks1[i] = "" + i + "";
-    //   //   }
-    //   // } 
-    //   // else {
-    //     // for (let f = this.value1; f <= this.data2; f++) {
-    //     //   this.marks1[f] = "" + f + "";
-    //     // }
-    //   // }
-
-    //   // this.play()
-    // },
+    
     //改变速度的值
     changeSu(sd) {
       this.sd = sd;
@@ -301,29 +222,25 @@ export default {
     },
     //定时器执行的内容
     dsq() {
-      console.log(this.index,'12121212121212')
-      if(this.value-2010>=0){
+      if(this.value-2009>=0){
         this.value = this.options1[this.index].value;
-        
       }else{
         // this.index=this.min1
         this.value = this.index;
-      
         // this.value=this.options1[this.index].value
         
-        console.log(this.value,'wwww')
-        
       }
-      console.log(this.index, "---");
+      // console.log(this.value1,'=====')
       //发起组件传值（index 默认为0）
-      bus.$emit(this.element, this.index);
+      bus.$emit(this.element, this.index,this.value1);
       //判断index
-      if (this.index == this.seconddate) {
+      if (this.index >= this.seconddate) {
         this.index = this.firstdate;
       }
-      else if (this.index == this.options1.length - 1) {
-        this.index = this.firstdate;
-      }  else {
+      // else if (this.index == this.options1.length - 1) {
+      //   this.index = this.firstdate;
+      // }  
+      else {
         this.index++;
       }
     },
@@ -331,7 +248,7 @@ export default {
     yxbgmethods() {
       bus.$on("addyxbgimg", yxbg => {
         //防止上一个执行一半时下一个继续执行
-        this.index = 0;
+        // this.index = 0;
         this.element = "yxbg";
         //防止点击单张图片时执行之前的图片加载
         this.zt();
@@ -363,7 +280,6 @@ export default {
         } else {
           $(".sjz-srk-z").css("display", "none");
         }
-        this.play()
         this.yxbgDate();
       });
     },
@@ -388,7 +304,6 @@ export default {
           this.rq1 = "年份";
           this.rq2 = "月份";
         }
-        this.play()
         //调用获取日期以及月份方法
         this.initOption();
       });
@@ -396,7 +311,7 @@ export default {
     //初始化option
     startOption() {
       let year = new Date().getFullYear();
-      console.log(year);
+      // console.log(year);
       for (var m = 2010; m < year; m++) {
         this.options1.push({ label: m, value: m, key: m });
         this.options2.push({ label: m, value: m, key: m });
@@ -549,44 +464,40 @@ export default {
 
     //根据有效波高渲染日期
     yxbgDate() {
+      this.options1 = [];
+      this.options2 = [];
+      this.marks1 = {};
       if (this.rq1 === "开始年份" && this.rq2 === "结束年份") {
         $(".rq1").css("margin-top", "0px");
-        this.options1 = [];
-        this.options2 = [];
+
         this.value=2009
-        this.value1 = 2009;
-        this.value2 = 2018;
-        this.max1 = 2018;
-        this.min1 = 2009;
-        this.value1 = 2009;
-        this.value2 = 2018;
-        this.marks1 = {};
+        this.value1 = this.min1 = 2009;
+        this.value2 = this.max1 = 2018;
+        this.firstdate = 0;
+        this.seconddate = 9;
         let startYear = new Date().getFullYear() - 1;
-        for (var f = 2009; f < startYear; f++) {
+        for (var f = this.min1; f < startYear; f++) {
           this.options1.push({ label: f, value: f, key: f });
           this.options2.push({ label: f, value: f, key: f });
           this.marks1[f] = "" + f + "";
         }
       } else if (this.rq1 == "开始月份" && this.rq2 == "结束月份") {
         $(".rq1").css("margin-top", "0px");
-        this.options1 = [];
-        this.options2 = [];
-        this.marks1 = {};
-        this.value=1
-        this.value1 = 1;
-        this.value2 = 12;
-        this.max1 = 12;
-        this.min1 = 1;
-        this.value1 = 1;
-        this.value2 = 12;
+        this.value = 1;
+        this.value1 = this.min1 = this.firstdate = 1;
+        this.value2 = this.max1 = this.seconddate = 12;
+
         let startMounth = new Date().getMonth() + 3;
-        for (var d = 1; d < startMounth; d++) {
+        for (var d =  this.min1 ; d < startMounth; d++) {
           this.options1.push({ label: d, value: d, key: d });
           this.options2.push({ label: d, value: d, key: d });
           this.marks1[d] = "" + d + "";
           // console.log(this.marks, "======");
         }
       }
+      this.index = this.firstdate ; 
+      
+      this.play()
     },
     //数值预报 动态填充option的值
     initOption() {
@@ -598,6 +509,8 @@ export default {
         $(".rq1").css("margin-top", "0px");
         this.value1=this.min1=2010
         this.value2 =this.max1=2019;
+        this.firstdate = 0;
+        this.seconddate = 9;
         let startYear = new Date().getFullYear();
         //根据传过来的参数判断时间轴下面的文字
           for (let i = this.min1; i < startYear; i++) {
@@ -617,7 +530,7 @@ export default {
         let startYear = new Date().getFullYear();
         let startMounth = new Date().getMonth() + 2;
         if (this.date === "逐小时月平均风速") {
-          this.value = 0;
+          // this.value = 0;
           this.min1 = this.firstdate = 0;
           this.max1 = this.seconddate = 23;
           for (let i = 0; i < 24; i++) {
@@ -672,11 +585,14 @@ export default {
           this.options1.push({ label: j, value: j, key: j });
         }
       }
+      this.index = this.firstdate;
+      this.value = this.min1;
+      this.play();
     },
     //点击暂停方法
     zt() {
       $(".btn-5>img").attr("src", ks);
-      console.log(this.timer);
+      // console.log(this.timer);
       if (this.timer != null) {
         clearInterval(this.timer);
       }
@@ -721,7 +637,7 @@ export default {
       this.wxAndWxcs();
       // this.addWxImg()
       this.element='yggc1'
-      this.play()
+      // this.play()
       
     }
   },
@@ -745,17 +661,23 @@ export default {
   },
   watch:{
     value1(value){
-    // console.log(this.value,'ttt')
-      if (this.rq1 === "开始年份" || this.rq2 === "结束年份") {
+      if ((this.rq1 === "开始年份" && this.rq2 === "结束年份") ) {
         this.min1 = this.value = value; //给轴赋值
+        this.index = this.firstdate = value-this.options1[0].value;
+      }else if(this.rq1 === "开始月份" && this.rq2 === "结束月份"){
+        this.min1 = this.value = value; //给轴赋值
+        this.index = this.firstdate = value-this.options1[0].value+1;
+     
       }
-      this.index = this.firstdate = value-this.options1[0].value;
     },
     value2(value){
       
       if (this.date !== "逐小时月平均风速") {
         this.max1 = value; //给轴最大值赋值
         this.seconddate=value-this.options1[0].value;
+        if(this.rq1 === "开始月份" && this.rq2 === "结束月份"){
+        this.seconddate += 1;
+        }
       }
     }
   }

@@ -36,8 +36,31 @@ export default {
       minLon:[],
       minLat:[],
       gdvalue:'',
-      yggcImg:[]
+      yggcImg:[],
+      //传过来的 年份
+      value1:'',
+      //存取 根据年份 轴为12个月的图片路径数组 
+      sliderList:[],
+      //存取 根据年份 轴为0-23小时的图片路径数组
+      hourList:[],
+      //存取 根据年份 轴为1-30图片路径数组 
+      thirtyList:[],
+
+      //单张图片
+      singleImgList:[],
+      //年份的 图片数组（数值预报）
+      yearPicList:[],
+      //有效波高中有轴的
+     routePic :{"逐年平均值":'YEAR_AVG',"逐年最大值":'YEAR_MAX',"逐年最小值":'YEAR_MIN',"逐月平均值":'MONTH_AVG','逐月最大值':'MONTH_MAX','逐月最小值':'MONTH_MIN'},
+     //有效波高中单张图片的
+     singlePic:{'十年平均值':'YEARS_AVG','十年最大值':'YEARS_MAX','十年最小值':'YEARS_MIN','十年一遇':'PEAK10','三十年一遇':'PEAK30','台风频次':'TYPHOON'},
+     //数值预报中 开始年份 结束年份的
+     startEndYearPic:{'年平均风速':'WSPD_YR','年平均风功率密度':'Dwp','有效风速时数':'NSIGHR','风切变系数':'ALPHA_ALL','威布尔分布形状参数':'SHAPE','威布尔分布尺度参数':'SCALE'},
+     //年份 （数值预报）
+     YearPic:{'月平均风速':'WSPD_MN','逐小时年平均风速':'WSPD_HY','月平均风功率密度':'DWP_MN','各区间风速分布频率':'FWS','各区间风功率密度分布频率':'FWE'}
+
     
+   
     };
   },
   mounted() {
@@ -84,13 +107,29 @@ export default {
       //调用添加图片方法并传参
       this.AddImg(this.viewer, this.szybvalue);
     });
-    //加载矢量数据方法
-    bus.$on("event2", pgbjvalue => {
+    //加载矢量数据方法（评估背景）
+    bus.$on("pgbj", pgbjvalue => {
       this.ylclc = pgbjvalue;
       this.AddSl(this.viewer, this.ylclc);
-     this.AddSl2(this.viewer,this.ylclc)
+      //海岸线矢量
+    //  this.AddSl2(this.viewer,this.ylclc)
 
     });
+    //接收传值（评估决策）
+    bus.$on('pgjc',(pgjc)=>{
+      if(pgjc==='可开发厂址推荐'){
+        this.clearSl()
+      this.farmall(this.viewer)
+      }else{
+        this.clearSl()
+      this.allsites(this.viewer)
+      let params={material:'RED'}
+      this.AddSlxian(this.viewer,pgjc,params)
+
+      }
+      // this.mouseMove()
+
+    })
     //接收有效波高传过来的值
     bus.$on('addyxbgimg',yxbgvalue=>{
       this.AddImg(this.viewer,yxbgvalue)
@@ -222,6 +261,7 @@ export default {
     },
     //添加矢量数据
     AddSl(viewer, ylclc) {
+      this.clearSl()
       var promise = Cesium.GeoJsonDataSource.load("./zsc.json", {
         stroke: new Cesium.Color(0.019, 0.156, 0.639, 0), //多边形轮廓线的颜色
         // fill: Cesium.Color.CORNFLOWERBLUE.withAlpha(.7),       //多边形中间的颜色
@@ -235,20 +275,7 @@ export default {
       if (ylclc === "鱼类产卵场") {
         viewer.dataSources.add(promise);
         viewer._cesiumWidget._creditContainer.style.display = "none"; // 隐藏版权
-      } else {
-        var len = viewer.dataSources.length;
-        //判断数量数据是否有
-        if (len > 0) {
-          for (var i = 0; i < len; i++) {
-            //获取到矢量数据
-            var dataSource = viewer.dataSources.get(i);
-            //移除矢量数据
-            viewer.dataSources.remove(dataSource);
-          }
-        } else {
-          return;
-        }
-      }
+      } 
     },
      //添加矢量数据（沿海线）
     AddSl2(viewer, ylclc) {
@@ -280,70 +307,151 @@ export default {
         }
       }
     },
+    //可开发容量
+    allsites(viewer) {
+      this.clearSl()
+      var promise = Cesium.GeoJsonDataSource.load("./allsites.json", {
+        stroke: new Cesium.Color(0.019, 0.156, 0.639, 0), //多边形轮廓线的颜色
+        // fill: Cesium.Color.CORNFLOWERBLUE.withAlpha(.7),       //多边形中间的颜色
+        // fill: new Cesium.Color(0.019,0.156,0.639,0.7),       //多边形中间的颜色
+        fill: new Cesium.Color(0.047, 0.588, 0.807, 0.5), //多边形中间的颜色
+        strokeWidth: 5, //多边形的厚度
+        markerSymbol: "?", //多边形
+        show: true
+      });
+      //判断被点击是不是鱼类产卵场 是则将创建好的矢量是加载上 不是则判断是否有矢量数据 如果有则取消
+      // if(ylclc=='可开发容量'){
+        viewer.dataSources.add(promise);
+        viewer._cesiumWidget._creditContainer.style.display = "none";
+
+        // 在地图中添加矢量数据（左下角图）---可执行
+      var colorMap = {'30':[214,214,255],'40':[188,190,245],'50':[166,171,237],'60':[143,151,227],'80':[123,136,219],'100':[102,120,209],'110':[85,108,201],'120':[67,96,191],'150':[51,87,184],'160':[36,78,173],'180':[23,71,166],'450':[11,64,156],'670':[0,57,148]} 
+      // var colorList = [[120, 0, 136],[90, 0, 184],[70, 0, 245],[0, 170, 225],[0, 200, 200],[0, 200, 125],[195, 255, 0],[255, 255, 0],[255, 155, 0],[255, 0, 0]];
+      var promise1 = Cesium.GeoJsonDataSource.load("./allsites.json");
+      promise1.then(function(dataSource) {
+        viewer.dataSources.add(dataSource);
+
+        var entities = dataSource.entities.values;
+        for (var i = 0; i < entities.length; i++) {
+          var entity = entities[i];
+          let colorIndex = entity.properties.Capacity.valueOf();
+          entity.polygon.material = new Cesium.Color(
+            colorMap[colorIndex][0] / 255,
+            colorMap[colorIndex][1] / 255,
+            colorMap[colorIndex][2] / 255,
+            0.7
+          );
+          entity.polygon.outline = false;
+          // entity.polygon.extrudedHeight =5000.0;
+        }
+      });
+      // 是否以此矢量数据定位至中心
+      // viewer.flyTo(promise1);
+      // }
+      
+    },
+   //清除矢量
+    clearSl(){
+    var len = this.viewer.dataSources.length;
+        //判断数量数据是否有
+        if (len > 0) {
+          for (var i = 0; i < len; i++) {
+            //获取到矢量数据
+            var dataSource = this.viewer.dataSources.get(i);
+            //移除矢量数据
+            this.viewer.dataSources.remove(dataSource);
+          }
+        } else {
+          return;
+        }
+    },
+  //可开发厂址推荐
+    farmall(viewer) {
+      this.clearSl()
+      var promise = Cesium.GeoJsonDataSource.load("./farmall.json", {
+        stroke: new Cesium.Color(0.019, 0.156, 0.639, 0), //多边形轮廓线的颜色
+        // fill: Cesium.Color.CORNFLOWERBLUE.withAlpha(.7),       //多边形中间的颜色
+        // fill: new Cesium.Color(0.019,0.156,0.639,0.7),       //多边形中间的颜色
+        fill: new Cesium.Color(0.047, 0.588, 0.807, 0.5), //多边形中间的颜色
+        strokeWidth: 5, //多边形的厚度
+        markerSymbol: "?", //多边形
+        show: true
+      });
+      //判断被点击是不是鱼类产卵场 是则将创建好的矢量是加载上 不是则判断是否有矢量数据 如果有则取消
+      // if(ylclc=='可开发厂址推荐'){
+        viewer.dataSources.add(promise);
+        viewer._cesiumWidget._creditContainer.style.display = "none";
+      // }
+     
+    },
+//线的矢量
+ AddSlxian(viewer, ylclc) {
+   
+
+var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
+      promise.then(function(dataSource) {
+      viewer.entities.add({
+        name:"seedepth50mline_GD",
+        polyline: {
+                positions:dataSource.entities.values,
+                width: 10,
+                arcType: Cesium.ArcType.NONE,
+                material: new Cesium.PolylineArrowMaterialProperty(
+                  Cesium.Color.PURPLE
+                )   ,
+                Color:Cesium.Color.RED
+              }
+          })
+        }) 
+      
+      // viewer.entities.add(entity);
+      // });
+        // viewer.entities.add(entity);
+      // var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json", {
+      //   stroke: new Cesium.Color(0.019, 0.156, 0.639, 0), //多边形轮廓线的颜色
+      //   // fill: Cesium.Color.CORNFLOWERBLUE.withAlpha(.7),       //多边形中间的颜色
+      //   // fill: new Cesium.Color(0.019,0.156,0.639,0.7),       //多边形中间的颜色
+      //   fill: new Cesium.Color(0.047, 0.588, 0.807, 0.5), //多边形中间的颜色
+      //   strokeWidth: 5, //多边形的厚度
+      //   // markerSymbol: "?", //多边形
+      //   show: true
+      // });
+      //判断被点击是不是鱼类产卵场 是则将创建好的矢量是加载上 不是则判断是否有矢量数据 如果有则取消
+      if (ylclc === "可开发容量") {
+        viewer.dataSources.add(promise);
+        viewer._cesiumWidget._creditContainer.style.display = "none"; // 隐藏版权
+      } else {
+        var len = viewer.dataSources.length;
+        //判断数量数据是否有
+        if (len > 0) {
+          for (var i = 0; i < len; i++) {
+            //获取到矢量数据
+            var dataSource = viewer.dataSources.get(i);
+            //移除矢量数据
+            viewer.dataSources.remove(dataSource);
+          }
+        } else {
+          return;
+        }
+      }
+    },
+
 
     //抽离加载图片方法
     AddImg(viewer,szybvalue,gdvalue) {
-      //清除图层
+        //清除图层
      this.clearImg()
         var img1;
 
-        if(szybvalue === "年平均风速"){
-
-           this.imgList=[]
-           this.$axios.post('/api/wind/GetData',{"ele":"WSPD_YR","level":gdvalue||0}).then(res=>{
-           res.data.forEach(item=>{
-           this.imgList.push(item.processPath)
-         })
-       })
+        if(szybvalue === "年平均风速"||szybvalue === "年平均风功率密度"||szybvalue === "有效风速时数"||szybvalue === "风切变系数"||szybvalue === "威布尔分布形状参数"||szybvalue === "威布尔分布尺度参数"){
+          this.getstartEndRearPic(szybvalue,gdvalue)
+        
       //对传过来的参数进行判断  符合则添加图层 不符合则移除图层
-      bus.$on('szyb',index=>{
-      if(index==0){
-       this.clearImg()
+          bus.$on('szyb',index=>{
+          if(index==0){
+          this.clearImg()
       }
       //  console.log("index:"+index)
-        //将已经创建好的图层添加
-          img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.imgList[index],
-          rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
-          show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img1);
-        })
-      
-    }else if(szybvalue === "月平均风速"){
-       this.imgList=[]
-       this.$axios.post('/api/wind/GetData',{"ele":"WSPD_MN","level":gdvalue||0}).then(res=>{
-         res.data.forEach(item=>{
-          this.imgList.push(item.processPath)
-         })
-       })
-      bus.$on('szyb',index=>{
-      if(index==0){
-       this.clearImg()
-      }
-      
-        //将已经创建好的图层添加
-          img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.imgList[index],
-          rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
-          show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img1);
-        })
-    }else if(szybvalue === "逐小时年平均风速"){
-       this.imgList=[]
-       this.$axios.post('/api/wind/GetData',{"ele":"WSPD_HY","level":gdvalue||0}).then(res=>{
-        
-         res.data.forEach(item=>{
-          this.imgList.push(item.processPath)
-         })
-
-       })
-      bus.$on('szyb',index=>{
-      if(index==0){
-       this.clearImg()
-      }
-      
         //将已经创建好的图层添加
           img1 = new Cesium.SingleTileImageryProvider({
           url:'/static'+this.imgList[index],
@@ -376,15 +484,16 @@ export default {
         viewer.imageryLayers.addImageryProvider(img1);
         })
       
-    }else if(szybvalue === "年平均风功率密度"){
+    }
+    else if(szybvalue === "风向分布频率"){
        this.imgList=[]
-       this.$axios.post('/api/wind/GetData',{"ele":"Dwp","level":gdvalue||1}).then(res=>{
+      //  this.$axios.post('/api/wind/GetData',{"ele":"SHAPE","level":gdvalue||0}).then(res=>{
         
-         res.data.forEach(item=>{
-          this.imgList.push(item.processPath)
-         })
+      //    res.data.forEach(item=>{
+      //     this.imgList.push(item.processPath)
+      //    })
 
-       })
+      //  })
       bus.$on('szyb',index=>{
       if(index==0){
        this.clearImg()
@@ -392,354 +501,86 @@ export default {
       
         //将已经创建好的图层添加
           img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.imgList[index],
+          // url:'/static'+this.imgList[index],
+          url:'./22.png',
           rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
           show: false
         });
         viewer.imageryLayers.addImageryProvider(img1);
         })
       
-    }else if(szybvalue === "月平均风功率密度"){
-       this.imgList=[]
-       this.$axios.post('/api/wind/GetData',{"ele":"DWP_MN","level":gdvalue||1}).then(res=>{
-        
-         res.data.forEach(item=>{
-          this.imgList.push(item.processPath)
-         })
-       })
-      bus.$on('szyb',index=>{
-      if(index==0){
-       this.clearImg()
-      }
-      
-        //将已经创建好的图层添加
-          img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.imgList[index],
+    }else if(szybvalue === "各区间风功率密度分布频率"||szybvalue === "各区间风速分布频率"||szybvalue === "月平均风速"||szybvalue === "逐小时年平均风速"||szybvalue === "月平均风功率密度"){
+      //调用请求接口方法
+      this.getYearPic(szybvalue,gdvalue)
+      //存取index
+      var startindex
+      //接收传参（数值预报）
+      bus.$on('szyb',(index,value)=>{
+        //截取数组中图片路径年份
+        for(let i=0;i<this.yearPicList.length;i++){
+          //以 / 为区分截取第三个 Year存取年份
+          let Year=this.yearPicList[i].split("/")[3]
+          if(Year==value){
+            startindex=i;
+            break
+          }
+         }
+         //slice为删除数组中的值（从开始年份到以后的12个）
+          this.sliderList = this.yearPicList.slice(startindex,12+startindex);
+          this.hourList=this.yearPicList.slice(startindex,24+startindex);
+          this.thirtyList=this.yearPicList.slice(startindex,30+startindex)
+        // this.value1=value
+        //逐小时年平均风速的index是0 其他是1
+        if(szybvalue==='逐小时年平均风速'){
+          //清除图片
+          if(index==0){
+            this.clearImg()
+          }
+          //添加图片
+           img1 = new Cesium.SingleTileImageryProvider({
+          url:'/static'+this.hourList[index],
           rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
           show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img1);
-        })
-      
-    }else if(szybvalue === "有效风速时数"){
-       this.imgList=[]
-       this.$axios.post('/api/wind/GetData',{"ele":"NSIGHR","level":gdvalue||1}).then(res=>{
-        
-         res.data.forEach(item=>{
-          this.imgList.push(item.processPath)
-         })
+           });
+           viewer.imageryLayers.addImageryProvider(img1);
 
-       })
-      bus.$on('szyb',index=>{
-      if(index==0){
-       this.clearImg()
-      }
-      
-        //将已经创建好的图层添加
-          img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.imgList[index],
+        }else if(szybvalue=='月平均风速'||szybvalue=='月平均风功率密度'){
+          //清除图片
+          if(index==1){
+            this.clearImg()
+          }
+          //添加图片
+           img1 = new Cesium.SingleTileImageryProvider({
+          url:'/static'+this.sliderList[index-1],
           rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
           show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img1);
-        })
-      
-    }else if(szybvalue === "风切变系数"){
-       this.imgList=[]
-       this.$axios.post('/api/wind/GetData',{"ele":"ALPHA_ALL","level":gdvalue||0}).then(res=>{
-        
-         res.data.forEach(item=>{
-          this.imgList.push(item.processPath)
-         })
-
-       })
-      bus.$on('szyb',index=>{
-      if(index==0){
-       this.clearImg()
-      }
-      
-        //将已经创建好的图层添加
-          img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.imgList[index],
+           });
+           viewer.imageryLayers.addImageryProvider(img1);
+        }else{
+          if(index==1){
+            this.clearImg()
+          }
+          //添加图片
+           img1 = new Cesium.SingleTileImageryProvider({
+          url:'/static'+this.thirtyList[index-1],
           rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
           show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img1);
-        })
-      
-    }else if(szybvalue === "威布尔分布形状参数"){
-       this.imgList=[]
-       this.$axios.post('/api/wind/GetData',{"ele":"SHAPE","level":gdvalue||0}).then(res=>{
-        
-         res.data.forEach(item=>{
-          this.imgList.push(item.processPath)
-         })
-
-       })
-      bus.$on('szyb',index=>{
-      if(index==0){
-       this.clearImg()
-      }
-      
-        //将已经创建好的图层添加
-          img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.imgList[index],
-          rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
-          show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img1);
-        })
-      
-    }else if(szybvalue === "威布尔分布尺度参数"){
-       this.imgList=[]
-       this.$axios.post('/api/wind/GetData',{"ele":"SCALE","level":gdvalue||0}).then(res=>{
-        
-         res.data.forEach(item=>{
-          this.imgList.push(item.processPath)
-         })
-
-       })
-      bus.$on('szyb',index=>{
-      if(index==0){
-       this.clearImg()
-      }
-      
-        //将已经创建好的图层添加
-          img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.imgList[index],
-          rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
-          show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img1);
-        })
-      
-    }else if(szybvalue === "威布尔分布形状参数"){
-       this.imgList=[]
-       this.$axios.post('/api/wind/GetData',{"ele":"SHAPE","level":gdvalue||0}).then(res=>{
-        
-         res.data.forEach(item=>{
-          this.imgList.push(item.processPath)
-         })
-
-       })
-      bus.$on('szyb',index=>{
-      if(index==0){
-       this.clearImg()
-      }
-      
-        //将已经创建好的图层添加
-          img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.imgList[index],
-          rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
-          show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img1);
-        })
-      
-    }else if(szybvalue === "各区间风速分布频率"){
-       this.imgList=[]
-       this.$axios.post('/api/wind/GetData',{"ele":"FWS","level":gdvalue||0}).then(res=>{
-        
-         res.data.forEach(item=>{
-          this.imgList.push(item.processPath)
-         })
-
-       })
-      bus.$on('szyb',index=>{
-      if(index==0){
-       this.clearImg()
-      }
-      
-        //将已经创建好的图层添加
-          img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.imgList[index],
-          rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
-          show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img1);
-        })
-      
-    }else if(szybvalue === "各区间风功率密度分布频率"){
-       this.imgList=[]
-       this.$axios.post('/api/wind/GetData',{"ele":"FWE","level":gdvalue||0}).then(res=>{
-        
-         res.data.forEach(item=>{
-          this.imgList.push(item.processPath)
-         })
-
-       })
-      bus.$on('szyb',index=>{
-      if(index==0){
-       this.clearImg()
-      }
-      
-        //将已经创建好的图层添加
-          img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.imgList[index],
-          rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
-          show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img1);
-        })
+           });
+           viewer.imageryLayers.addImageryProvider(img1);
+        }
+     })
       
     }
-    
-
-     else if(szybvalue === "逐月平均值"){
-       this.monthAvg=[]
-      this.$axios.post('/api/swh/GetData',{"ele":'MONTH_AVG'}).then(res=>{
-          res.data.forEach(item=>{
-            this.monthAvg.push(item.processPath)
-            this.maxLon.push(item.maxLon)
-            this.maxLat.push(item.maxLat)
-            this.minLon.push(item.minLon)
-            this.minLat.push(item.minLat)
-          }) 
-        })
-    }else if(szybvalue === "逐月最大值"){
-      this.monthAvg=[]
-      this.$axios.post('/api/swh/GetData',{"ele":'MONTH_MAX'}).then(res=>{
-          res.data.forEach(item=>{
-            this.monthAvg.push(item.processPath)
-            this.maxLon.push(item.maxLon)
-            this.maxLat.push(item.maxLat)
-            this.minLon.push(item.minLon)
-            this.minLat.push(item.minLat)
-          }) 
-        })
-     
-    }else if(szybvalue === "逐月最小值"){
-      this.monthAvg=[]
-      this.$axios.post('/api/swh/GetData',{"ele":'MONTH_MIN'}).then(res=>{
-          res.data.forEach(item=>{
-            this.monthAvg.push(item.processPath)
-            this.maxLon.push(item.maxLon)
-            this.maxLat.push(item.maxLat)
-            this.minLon.push(item.minLon)
-            this.minLat.push(item.minLat)
-          }) 
-        })
-     
-// let staticValue=[
-//   {"逐年平均值":{"url":'/api/swh/GetData',"para":"{'ele':'YEAR_AVG'}"},
-//   "逐月最小值":{"url":'/api/swh/GetData',"para":"{'ele':'YEAR_AVG'}"}
-// }],
-
-// if(staticValue.hasOwnProperty(szybvalue))
-
-
-    }else if(szybvalue === "逐年平均值"){
-      this.monthAvg=[]
-      this.$axios.post('/api/swh/GetData',{"ele":'YEAR_AVG'}).then(res=>{
-          // console.log(res.data,'------12345678')
-          res.data.forEach(item=>{
-            this.monthAvg.push(item.processPath)
-            this.maxLon.push(item.maxLon)
-            this.maxLat.push(item.maxLat)
-            this.minLon.push(item.minLon)
-            this.minLat.push(item.minLat)
-          }) 
-        })
-        
-     
-    }else if(szybvalue === "逐年最大值"){
-      this.monthAvg=[]
-      this.$axios.post('/api/swh/GetData',{"ele":'YEAR_MAX'}).then(res=>{
-          console.log(res.data,'------')
-          res.data.forEach(item=>{
-            this.monthAvg.push(item.processPath)
-            this.maxLon.push(item.maxLon)
-            this.maxLat.push(item.maxLat)
-            this.minLon.push(item.minLon)
-            this.minLat.push(item.minLat)
-           
-          }) 
-        })
-     
-    }else if(szybvalue === "逐年最小值"){
-      this.monthAvg=[]
-      this.$axios.post('/api/swh/GetData',{"ele":'YEAR_MIN'}).then(res=>{
-          // console.log(res.data,'------')
-          res.data.forEach(item=>{
-            this.monthAvg.push(item.processPath)
-            this.maxLon.push(item.maxLon)
-            this.maxLat.push(item.maxLat)
-            this.minLon.push(item.minLon)
-            this.minLat.push(item.minLat)
-          }) 
-        })
-     
+    else if(szybvalue === "逐年平均值" ||szybvalue === "逐年最大值"||szybvalue === "逐年最小值"||szybvalue === "逐月平均值"||szybvalue === "逐月最大值"||szybvalue === "逐月最小值"){
+      this.getRoutePic(szybvalue);
     }
 
-    else if(szybvalue === "十年平均值"){
-       var img7
-        this.$axios.post('/api/swh/GetData',{"ele":'YEARS_AVG'}).then(res=>{
-          img7 = new Cesium.SingleTileImageryProvider({
-          url: '/static'+res.data[0].processPath,
-          rectangle: Cesium.Rectangle.fromDegrees(res.data[0].minLon, res.data[0].minLat, res.data[0].maxLon, res.data[0].maxLat),
-          // show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img7);
-        })
-    }else if(szybvalue === "十年最大值"){
-     var img8
-        this.$axios.post('/api/swh/GetData',{"ele":'YEARS_MAX'}).then(res=>{
-          console.log(res.data[0].processPath,'----')
-          img8 = new Cesium.SingleTileImageryProvider({
-          url: '/static'+res.data[0].processPath,
-          rectangle: Cesium.Rectangle.fromDegrees(res.data[0].minLon, res.data[0].minLat, res.data[0].maxLon, res.data[0].maxLat),
-          // show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img8);
-        })
-    }else if(szybvalue === "十年最小值"){
-      
-      var img9
-        this.$axios.post('/api/swh/GetData',{"ele":'YEARS_MIN'}).then(res=>{
-          img9 = new Cesium.SingleTileImageryProvider({
-          url: '/static'+res.data[0].processPath,
-          rectangle: Cesium.Rectangle.fromDegrees(res.data[0].minLon, res.data[0].minLat, res.data[0].maxLon, res.data[0].maxLat),
-          // show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img9);
-        })
+  else if(szybvalue === "十年最大值"||szybvalue === "十年最小值"||szybvalue === "十年平均值"||szybvalue === "十年一遇"||szybvalue === "三十年一遇"||szybvalue==='台风频次'){
+    this.getSingleImg(szybvalue)
     }
-    else if(szybvalue === "十年一遇"){
-        var img10
-        this.$axios.post('/api/swh/GetData',{"ele":'PEAK30'}).then(res=>{
-          img10 = new Cesium.SingleTileImageryProvider({
-          url: '/static'+res.data[0].processPath,
-          rectangle: Cesium.Rectangle.fromDegrees(res.data[0].minLon, res.data[0].minLat, res.data[0].maxLon, res.data[0].maxLat),
-        });
-        viewer.imageryLayers.addImageryProvider(img10);
-        })
-    }else if(szybvalue === "三十年一遇"){
-       var img11
-        this.$axios.post('/api/swh/GetData',{"ele":'PEAK30'}).then(res=>{
-          img11 = new Cesium.SingleTileImageryProvider({
-          url: '/static'+res.data[0].processPath,
-          rectangle: Cesium.Rectangle.fromDegrees(res.data[0].minLon, res.data[0].minLat, res.data[0].maxLon, res.data[0].maxLat),
-          show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img11);
-        })
-    }else if(szybvalue === "台风频次"){
-      var img12
-        this.$axios.post('/api/swh/GetData',{"ele":'TYPHOON'}).then(res=>{
-          img12 = new Cesium.SingleTileImageryProvider({
-          url: '/static'+res.data[0].processPath,
-          // url: './44.png',
-          // rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
-          // rectangle: Cesium.Rectangle.fromDegrees(107.875, 17.625, 118.625, 26.375),
-          rectangle: Cesium.Rectangle.fromDegrees(res.data[0].minLon, res.data[0].minLat, res.data[0].maxLon, res.data[0].maxLat),
-          show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img12);
-        })
-    }
+
     //接收数据 添加图层
      bus.$on('yxbg',index=>{
-      //  console.log(this.maxLon,this.minLon)
         if(index==0){
           this.clearImg()
         }
@@ -752,11 +593,9 @@ export default {
         viewer.imageryLayers.addImageryProvider(img7);
       })
         //遥感观测传过来的参数
-        bus.$on('yggc',(Wx,Wxcs)=>{
+    bus.$on('yggc',(Wx,Wxcs)=>{
           this.clearImg()
           bus.$on('yggc1',index=>{
-
-          console.log(index,'12345678')
           if(index==0){
           this.clearImg()
         }
@@ -998,20 +837,75 @@ export default {
      //以下还没有接口文档（没有替换参数）
 
           else if(Wx=='HY-2B' && Wxcs=='月平均风速'){
-            this.$axios.post('/api/swh/GetData',{"ele":"H2A_WPW_YR"}).then(res=>{
-              console.log(res.data,'------')
+            this.$axios.post('/api/swh/GetData',{"ele":"H2B_WSP_MN"}).then(res=>{
+              res.data.forEach(item=>{
+                this.yggcImg.push(item.processPath)
+                this.minLon.push(item.minLon)
+                this.minLat.push(item.minLat)
+                this.maxLon.push(item.maxLon)
+                this.maxLat.push(item.maxLat)
+              })
+
+              let img3
+              img3 = new Cesium.SingleTileImageryProvider({
+              url:'/static'+this.yggcImg[index],
+              rectangle: Cesium.Rectangle.fromDegrees(this.minLon[0],this.minLat[0],this.maxLon[0],this.maxLat[0]),
+              // show: false
+              });
+              viewer.imageryLayers.addImageryProvider(img3);
             })
           }else if(Wx=='HY-2B' && Wxcs=='月平均风功率密度'){
-            this.$axios.post('/api/swh/GetData',{"ele":"H2A_WPW_YR"}).then(res=>{
-              console.log(res.data,'------')
+            this.$axios.post('/api/swh/GetData',{"ele":"H2B_WPW_MN"}).then(res=>{
+              res.data.forEach(item=>{
+                this.yggcImg.push(item.processPath)
+                this.minLon.push(item.minLon)
+                this.minLat.push(item.minLat)
+                this.maxLon.push(item.maxLon)
+                this.maxLat.push(item.maxLat)
+              })
+              let img3
+              img3 = new Cesium.SingleTileImageryProvider({
+              url:'/static'+this.yggcImg[index],
+              rectangle: Cesium.Rectangle.fromDegrees(this.minLon[0],this.minLat[0],this.maxLon[0],this.maxLat[0]),
+              // show: false
+              });
+              viewer.imageryLayers.addImageryProvider(img3);
             })
           }else if(Wx=='HY-2B' && Wxcs=='年平均风速'){
-            this.$axios.post('/api/swh/GetData',{"ele":"H2A_WPW_YR"}).then(res=>{
-              console.log(res.data,'------')
+            this.$axios.post('/api/swh/GetData',{"ele":"H2B_WSP_YR"}).then(res=>{
+              res.data.forEach(item=>{
+                this.yggcImg.push(item.processPath)
+                this.minLon.push(item.minLon)
+                this.minLat.push(item.minLat)
+                this.maxLon.push(item.maxLon)
+                this.maxLat.push(item.maxLat)
+              })
+
+              let img3
+              img3 = new Cesium.SingleTileImageryProvider({
+              url:'/static'+this.yggcImg[index],
+              rectangle: Cesium.Rectangle.fromDegrees(this.minLon[0],this.minLat[0],this.maxLon[0],this.maxLat[0]),
+              // show: false
+              });
+              viewer.imageryLayers.addImageryProvider(img3);
             })
           }else if(Wx=='HY-2B' && Wxcs=='年平均风功率密度'){
-            this.$axios.post('/api/swh/GetData',{"ele":"H2A_WPW_YR"}).then(res=>{
-              console.log(res.data,'------')
+            this.$axios.post('/api/swh/GetData',{"ele":"H2B_WPW_YR"}).then(res=>{
+              res.data.forEach(item=>{
+                this.yggcImg.push(item.processPath)
+                this.minLon.push(item.minLon)
+                this.minLat.push(item.minLat)
+                this.maxLon.push(item.maxLon)
+                this.maxLat.push(item.maxLat)
+              })
+
+              let img3
+              img3 = new Cesium.SingleTileImageryProvider({
+              url:'/static'+this.yggcImg[index],
+              rectangle: Cesium.Rectangle.fromDegrees(this.minLon[0],this.minLat[0],this.maxLon[0],this.maxLat[0]),
+              // show: false
+              });
+              viewer.imageryLayers.addImageryProvider(img3);
             })
           }else if(Wx=='CFOSAT' && Wxcs=='月平均风速'){
             this.$axios.post('/api/swh/GetData',{"ele":"CFO_WSP_MN"}).then(res=>{
@@ -1147,12 +1041,67 @@ export default {
       //             }
       //         }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
     },
+    //年份 （数值预报）
+    getYearPic(szybvalue,gdvalue){
+      this.yearPicList=[]
+       this.$axios.post('/api/wind/GetData',{"ele":this.YearPic[szybvalue],"level":gdvalue||0}).then(res=>{
+        
+         res.data.forEach(item=>{
+          this.yearPicList.push(item.processPath)
+         })
+        
+          console.log(res.data,'-----')
+       })
 
+    },
+    //开始年份 结束年份（数值预报）
+    getstartEndRearPic(szybvalue,gdvalue){
+        this.imgList=[]
+        this.$axios.post('/api/wind/GetData',{"ele":this.startEndYearPic[szybvalue],"level":gdvalue||0}).then(res=>{
+        
+         res.data.forEach(item=>{
+          this.imgList.push(item.processPath)
+         })
+
+       })
+
+    },
+
+    //获取带时间轴的数据(有效波高)
+    getRoutePic:function(szybvalue){
+      console.log(this.routePic[szybvalue])
+          this.monthAvg=[]
+          this.$axios.post('/api/swh/GetData',{"ele":this.routePic[szybvalue]}).then(res=>{
+          res.data.forEach(item=>{
+            this.monthAvg.push(item.processPath)
+            this.maxLon.push(item.maxLon)
+            this.maxLat.push(item.maxLat)
+            this.minLon.push(item.minLon)
+            this.minLat.push(item.minLat)
+          }) 
+        })
+        },
+
+        //获取单张图片数据（有效波高）
+        getSingleImg(szybvalue){
+           let img11
+           this.$axios.post('/api/swh/GetData',{"ele":this.singlePic[szybvalue]}).then(res=>{
+           img11 = new Cesium.SingleTileImageryProvider({
+           url: '/static'+res.data[0].processPath,
+          rectangle: Cesium.Rectangle.fromDegrees(res.data[0].minLon, res.data[0].minLat, res.data[0].maxLon, res.data[0].maxLat),
+          show: false
+           });
+           this.viewer.imageryLayers.addImageryProvider(img11);
+           })
+
+          },
+  
+  
     ChuanId() {
-      var handlerVideo = new Cesium.ScreenSpaceEventHandler(
+         var handlerVideo = new Cesium.ScreenSpaceEventHandler(
         this.viewer.scene.canvas
-      );
-      handlerVideo.setInputAction(click => {
+        );
+        handlerVideo.setInputAction(click => {
         var pick = this.viewer.scene.pick(click.position);
         if (pick.id.id) {
           // 将原来数组置为空
@@ -1166,7 +1115,7 @@ export default {
           return;
         }
       }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-    },
+      },
 
     // 声明添加点的方法
     // AddPoint(params) {

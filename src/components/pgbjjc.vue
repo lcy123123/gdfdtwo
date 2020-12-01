@@ -11,7 +11,7 @@
       <div class="top-1">
         <div class="top-11">
           <el-form>
-          <el-radio-group v-model="pgbjvalue" @change="addsl">
+          <el-radio-group v-model="pgbj">
           <el-radio label="海洋行政功能区划"></el-radio>
           <!-- 点击实现子组件向父组件传值 -->
           <el-radio class="p2" label="鱼类产卵场"></el-radio>
@@ -34,7 +34,10 @@
          <div class="top-2">
         <el-form>
           <el-form-item>
-            <el-radio class="radio-tfpc" v-model="tf" label="可开发厂址推荐"></el-radio>
+            <el-radio-group v-model="tf">
+            <el-radio class="radio-tfpc"  label="可开发厂址推荐"></el-radio>
+            <el-radio class="radio-tfpc"  label="可开发容量"></el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-form>
            
@@ -57,15 +60,23 @@ import bus from '../utils/eventBus'
 export default {
     data(){
     return{
-      pgbjvalue:'',
+      pgbj:'',
       tf:'',
     }
   },
-     methods:{
-       //子组件向父组件传值
-       addsl(){
-        bus.$emit('event2',this.pgbjvalue)
+  //监听
+     watch:{
+       tf(value){
+         bus.$emit('pgjc',value)
        },
+       pgbj(value){
+         bus.$emit('pgbj',value)
+
+       }
+
+     },
+     methods:{
+      
 
           //显示此页面时 默认展开第一个（遥感观测）
     Cli1(){
