@@ -1,7 +1,9 @@
 <template>
   <div>
     <!-- 风参数信息 -->
-    <Fcsxx></Fcsxx>
+    <div>
+      <Fcsxx></Fcsxx>
+    </div>
     <!-- 五个小按钮 -->
     <Fiveli></Fiveli>
     <!-- 上边的 -->

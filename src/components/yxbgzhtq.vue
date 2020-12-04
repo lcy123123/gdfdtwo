@@ -24,7 +24,7 @@
           <el-radio label="十年最小值"></el-radio>
           <el-radio label="十年一遇"></el-radio>
           <el-radio class="radio-san" label="三十年一遇"></el-radio>
-          <el-radio class="radio-tfpc" label="台风频次"></el-radio>
+          <!-- <el-radio class="radio-tfpc" label="台风频次"></el-radio> -->
           </el-radio-group>
           </el-form-item>
           </el-form>

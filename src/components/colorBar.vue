@@ -4,11 +4,11 @@
         class="temp_legend1"
         style="display:block;position:absolute;right:88px;bottom:60px; width: 1.875rem; height: 7.625rem; margin-bottom: 0.5rem"></span>
       <!-- 第一组（年平均风速） -->
-      <div style="display:inline-block; float: left; margin-top: -0.5rem; height: 10.625rem;color:white">
-        <span style="position:absolute;right:50px;bottom:172px">{{maxvalue}}</span><br />
-        <span style="position:absolute;right:50px;bottom:68px;">{{minvalue}}</span><br />
+      <div style="display:inline-block; float: left; margin-top: -0.5rem; height: 10.625rem;color:blue">
+        <span style="position:absolute;left:100%;width:auto;margin-left:-88px;;bottom:172px">{{maxvalue}}</span><br />
+        <span style="position:absolute;left:100%;width:auto;margin-left:-88px;bottom:68px;">{{minvalue}}</span><br />
       </div>
-      <span style="color:white">{{dw}}</span>
+      <!-- <span style="color:blue;font-size:14px">{{dw}}</span> -->
 
     </div>
 </template>
@@ -20,7 +20,7 @@ export default {
     return{
       maxvalue:12,
       minvalue:0,
-      dw:'单位:m/s'
+      dw:'(m/s)'
     }
   },
   mounted(){
@@ -28,39 +28,39 @@ export default {
       if(szyb=='年平均风速'){
         this.maxvalue=12;
         this.minvalue=0;
-        this.dw='单位:m/s';
+        // this.dw='(m/s)';
       }else if(szyb=='月平均风速'){
         this.maxvalue=15;
         this.minvalue=0;
-        this.dw='单位:m/s';
+        // this.dw='单位:m/s';
       }else if(szyb=='逐小时年平均风速'||szyb=='逐小时月平均风速'){
         this.maxvalue=15;
         this.minvalue=0;
-        this.dw='单位:m/s';
+        // this.dw='单位:m/s';
       }else if(szyb=='年平均风功率密度'||szyb=='月平均风功率密度'){
         this.maxvalue=1000;
         this.minvalue=0;
         this.dw='单位:W/m²';
       }else if(szyb=='有效风速时数'){
-        this.maxvalue=5000;
-        this.minvalue=8000;
-        this.dw='单位:h';
+        this.maxvalue=8000;
+        this.minvalue=5000;
+        // this.dw='单位:h';
       }else if(szyb=='风切变系数'){
         this.maxvalue=0.1;
         this.minvalue=0;
-        this.dw=''
+        // this.dw=''
       }else if(szyb=='威布尔分布形状参数'){
         this.maxvalue=3.5;
         this.minvalue=0;
-        this.dw='';
+        // this.dw='';
       }else if(szyb=='威布尔分布尺度参数'){
         this.maxvalue=11;
         this.minvalue=0;
-        this.dw='单位:m/s'
+        // this.dw='单位:m/s'
       }else if(szyb=='各区间风速分布频率'||szyb=='各区间风功率密度分布频率'){
         this.maxvalue=15;
         this.minvalue=0;
-        this.dw='单位:%'
+        // this.dw='单位:%'
       }else{
         return
       }

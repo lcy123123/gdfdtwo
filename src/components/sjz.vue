@@ -232,7 +232,7 @@ export default {
       }
       // console.log(this.value1,'=====')
       //发起组件传值（index 默认为0）
-      bus.$emit(this.element, this.index,this.value1);
+      bus.$emit(this.element, this.index,this.value1,this.value2);
       //判断index
       if (this.index >= this.seconddate) {
         this.index = this.firstdate;
@@ -247,6 +247,8 @@ export default {
     //有效波高传过来的值
     yxbgmethods() {
       bus.$on("addyxbgimg", yxbg => {
+        // bus.$off('addimg')
+
         //防止上一个执行一半时下一个继续执行
         // this.index = 0;
         this.element = "yxbg";
@@ -286,23 +288,31 @@ export default {
     //根据传递过来的参数 动态换时间轴上面框中的内容
     dongtaidate() {
       bus.$on("addimg", date => {
+        // bus.$off('addyxbgimg')
         this.zt();
         this.date = date;
         this.element = "szyb";
         //组件传过来的值
         if (date === "年平均风速" || date === "年平均风功率密度" || date === "有效风速时数" || date === "风切变系数" || date === "威布尔分布形状参数" || date === "威布尔分布尺度参数") {
-          $(".rq2").css("display", "block");
+          $('.sjz-srk-z').show()
+         $(".rq2").css("display", "block");
           this.rq1 = "开始年份";
           this.rq2 = "结束年份";
           //调用暂停方法（暂停方法中有添加定时器以及清除定时器）
         } else if (date === "月平均风速" || date === "逐小时年平均风速" || date === "月平均风功率密度"||date === "风向分布频率" || date === "各向风功率密度分布频率" || date === "各区间风速分布频率" || date === "各区间风功率密度分布频率") {
+          $('.sjz-srk-z').show()
           this.rq1 = "年份";
           this.rq2 = "1";
           $(".rq2").css("display", "none");
         } else if (date === "逐小时月平均风速") {
+          $('.sjz-srk-z').show()
           $(".rq2").css("display", "block");
           this.rq1 = "年份";
           this.rq2 = "月份";
+        }else if(date==='格点风参'){
+          $('.sjz-srk-z').hide()
+          this.element=''
+
         }
         //调用获取日期以及月份方法
         this.initOption();
@@ -360,11 +370,10 @@ export default {
                  this.options1.push({ value: i, key: i, label: i });
                  }
              }
-          this.max1 = 12;
-          this.min1 = 1;
-          let wxmonth = new Date().getMonth() + 2;
+          this.min1 =this.firstdate= 1;
+          this.max1 =this.seconddate= 12;
           this.marks1 = {};
-          for (let i = 1; i <= wxmonth; i++) {
+          for (let i = 1; i <= 12; i++) {
             this.marks1[i] = "" + i + "";
           }
           $(".rq2").css("display", "none");
@@ -386,6 +395,8 @@ export default {
           $(".rq2").css("display", "none");
           $(".rq1").css("margin-top", "20px");
         }
+        this.firstdate=1
+        this.seconddate=12
       } else if (
         this.Wxcs === "年平均风速" ||
         this.Wxcs === "年平均风功率密度"
@@ -396,10 +407,12 @@ export default {
           this.rq2 = "结束年份";
           this.options1 = [];
           this.options2 = [];
-          this.value1 = 2010;
-          this.value2 = 2019;
-          this.max1 = 2019;
-          this.min1 = 2010;
+          this.value1 = this.min1= 2010;
+          this.value2 =this.max1= 2019;
+          this.firstdate=0;
+          this.seconddate=9
+          // this.max1 = 2019;
+          // this.min1 = 2010;
           this.marks1 = {};
           let startYear = new Date().getFullYear();
           for (var f = 2010; f < startYear; f++) {
@@ -415,10 +428,12 @@ export default {
           this.rq2 = "结束年份";
           this.options1 = [];
           this.options2 = [];
-          this.value1 = 2012;
-          this.value2 = 2018;
-          this.max1 = 2018;
-          this.min1 = 2012;
+          this.value1 =this.min1= 2012;
+          this.value2 =this.max1= 2018;
+          // this.max1 = 2018;
+          // this.min1 = 2012;
+          this.firstdate=0
+          this.seconddate=7
           this.marks1 = {};
           let startYear = new Date().getFullYear() - 1;
           for (let f = 2012; f < startYear; f++) {
@@ -434,10 +449,12 @@ export default {
           this.rq2 = "结束年份";
           this.options1 = [];
           this.options2 = [];
-          this.value1 = 2019;
-          this.value2 = 2020;
-          this.max1 = 2020;
-          this.min1 = 2019;
+          this.value1 = this.min1=2019;
+          this.value2 = this.max1=2020;
+          // this.max1 = 2020;
+          // this.min1 = 2019;
+          this.firstdate=0
+          this.seconddate=1
           
           this.marks1 = {};
           let startYear = new Date().getFullYear();
@@ -541,7 +558,7 @@ export default {
         for (var k = 2010; k < startYear; k++) {
           this.options1.push({ label: k, value: k, key: k });
         }
-        for (var n = 1; n <= startMounth; n++) {
+        for (var n = 1; n < startMounth; n++) {
           this.options2.push({ label: n, value: n, key: n });
           this.marks1[n] = "" + n + "";
         }
@@ -633,6 +650,7 @@ export default {
         //调用填充options方法
         this.wxAndWxcs();
         this.addWxImg()
+        this.play()
       });
       this.wxAndWxcs();
       // this.addWxImg()
@@ -642,12 +660,7 @@ export default {
     }
   },
   mounted() {
-    //当选中台风频次的时候隐藏时间轴
-    bus.$on("addzhtqimg", zhtq => {
-      if (zhtq === "台风频次") {
-        $(".sjz-srk-z").css("display", "none");
-      }
-    });
+   
     //调用初始化option
     this.startOption();
     //根据选择不同框显示的不同
@@ -656,6 +669,14 @@ export default {
     this.yxbgmethods();
     //接收参数
     this.getWx()
+     //当选中台风频次的时候隐藏时间轴
+    bus.$on("addzhtqimg", zhtq => {
+      if (zhtq === "台风频次") {
+        $(".sjz-srk-z").css("display", "none");
+        // this.element='tfpc'
+        bus.$emit('tfpc',zhtq)
+      }
+    });
 
   
   },
@@ -743,6 +764,7 @@ export default {
   position: absolute;
   left: 36px;
   top: 18px;
+  cursor: pointer;
 }
 .btn-3 > img {
   width: 20px;
