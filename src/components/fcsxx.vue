@@ -1,11 +1,11 @@
 <template>
-  <div v-drag class="fcsxx-z" style="display:none">
+  <div class="fcsxx-z" style="display:none" >
     <!-- 中间组件  风参数信息 -->
-    <div class="fcsxx">
+    <div v-drag class="fcsxx">
       <!-- 上面标题 -->
       <div class="div-btn">
         <span class="first-text">风参数信息</span>
-        <span class="btn-1" @click="Gb">×</span>
+        <!-- <span class="btn-1" @click="Gb" :distance=1 >×</span> -->
       </div>
       <div class="fcsxx-z">
         <!-- 左面 -->
@@ -13,11 +13,12 @@
           <div class="fcsxx-left-text">
             <div>经度：{{clickLon}}°E</div>
             <div>纬度：{{clickLat}}°N</div>
-            <div>高度：-56.0m</div>
-            <div>风速：{{windSpeed}}</div>
-            <div>风功率密度：{{windDensity}}</div>
-            <div>有效风速时数: {{sighr}}</div>
-            <div>50年一遇最大风速: {{windMaxSpeed}}</div>
+            <div>高度：{{megdvalue}}m</div>
+            <div>风速：{{windSpeed}}m/s</div>
+            <div>风功率密度:{{windDensity}}W/m²</div>
+            <div>有效风速时数: {{sighr}}h</div>
+            <div>五十年一遇风速:{{windMaxSpeed}}m/s</div>
+            <!-- <div>五十年一遇 </div> <div>最大风速: </div><span style="position:absolute;bottom:20px;left:20px;color:white">{{windMaxSpeed}}m/s</span> -->
           </div>
         </div>
         <!-- 中间占位 -->
@@ -30,20 +31,22 @@
               各向风功率
             </div>
             <div class="wbetext" @click="Wbetb">韦布尔分布图</div>
+            <span class="btn-1" @click="Gb" >×</span>
+
           </div>
 
           <!-- 统计图 -->
           <!-- 两个小文字 -->
           <div class="small-text">
             <div class="KC">
-              <span>K=8.16</span>
-              <span>C=2.00</span>
+              <span>K={{K}}</span>
+              <span>C={{C}}</span>
             </div>
           </div>
           <div
             id="main-1"
             
-            style="width:330px;height:230px;position:absolute;left:200px;top:100px;"
+            style="width:330px;height:230px;position:absolute;left:200px;top:80px;"
           ></div>
           <div
             id="main-2"
@@ -85,18 +88,59 @@ export default {
       sighr:'',
       //五十年一遇极大风速
       windMaxSpeed:'',
+      //三个图表的标志
+      ele:'wbe',
+      gdvalue:1,
+      megdvalue:'10',
+      K:'',
+      C:'',
 
     };
   },
   //钩子函数（加载完dom后调用加载图表方法）
   mounted() {
+    this.Wbetb()
+    //接收高度value
+    bus.$on('gdvalue',gdvalue=>{
+      this.megdvalue=gdvalue
+      if(gdvalue=='10'){
+        this.gdvalue=0
+      }else if(gdvalue=='30'){
+       this.gdvalue=1
+      }else if(gdvalue=='50'){
+        this.gdvalue=2
+      }else if(gdvalue=='70'){
+        this.gdvalue=3
+      }else if(gdvalue=='80'){
+        this.gdvalue=4
+      }else if(gdvalue=='90'){
+        this.gdvalue=5
+      }else if(gdvalue=='100'){
+        this.gdvalue=6
+      }else if(gdvalue=='110'){
+        this.gdvalue=7
+      }else if(gdvalue=='120'){
+        this.gdvalue=8
+      }else if(gdvalue=='130'){
+        this.gdvalue=9
+      }else if(gdvalue=='150'){
+        this.gdvalue=10
+      }
+      this.getData()
+      if(this.ele=='fmg'){
+        this.Fmg()
+        }else if(this.ele=='fgl'){
+          this.fglmd()
+        }else{
+          this.Wbetb()
+        }
+    })
     //调用加载韦布尔图表方法
-    this.Wbetb();
     //调用接收经纬度方法
     this.getLonAndLat()
     //调用接收格点风参方法
     this.getgdfc();
-    this.getData()
+    // this.getwbe();
 
   },
   // 自定义指令（拖动div移动）
@@ -124,9 +168,17 @@ export default {
           this.clickLon !== "" &&
           this.clickLat !== "" &&
           this.szyb == "格点风参"
+          
         ) {
           $(".fcsxx-z").show();
-        } else {
+          $('.sjz-srk-z').hide()
+        } else if( this.clickLon == "" &&
+          this.clickLat == "" &&
+          this.szyb == "格点风参"){
+            $('.sjz-srk-z').hide()
+          $(".fcsxx-z").hide();
+        }else{
+          $('.sjz-srk-z').show()
           $(".fcsxx-z").hide();
           this.clickLon = "";
           this.clickLat = "";
@@ -136,50 +188,65 @@ export default {
     },
     //接收经纬度并判断
     getLonAndLat(){
+      this.fmgfn=[]
+      this.fmgfx=[]
        bus.$on("lonAndlat", (clickLon, clickLat) => {
       // this.clickLon = clickLon;
       // this.clickLat = clickLat;
       //如果是格点风参并且经纬度不为空则显示组件
       if (clickLon !== "" && clickLat !== "" && this.szyb == "格点风参") {
-        console.log(this.clickLon,this.clickLat,'===---')
+        
         let lon=clickLon.toString()
         let lat=clickLat.toString()
         this.clickLon=lon.substring(0,lon.indexOf('.')+5)
         this.clickLat=lat.substring(0,lat.indexOf('.')+5)
         $(".fcsxx-z").show();
         //调用获取数据方法
-        this.getData()
-        //调用风玫瑰（后期对加载图表进行抽离  替换）
-        this.addFmg()
+        // this.getData()
+        //调用风玫瑰
+        if(this.ele=='fmg'){
+        this.Fmg()
+        }else if(this.ele=='fgl'){
+          this.fglmd()
+        }else{
+          this.Wbetb()
+        }
+
         //如果不是格点风参则清除经纬度
       } else {
         $(".fcsxx-z").hide();
         this.clickLon='';
         this.clickLat='';
+        console.log($('.sjz-srk-z'))
+          $('.sjz-srk-z').show()
+
       }
     });
     },
     //点击关闭风参数(收起风参数)
     Gb: function() {
+      console.log('1111111')
       //上滑风参数元素
       $(".fcsxx-z").hide();
+
     },
     //请求图表数据方法
    async getData(){
-     console.log(this.clickLon,this.clickLat,'=-=-=-=111')
-      //请求数据（风玫瑰）
+     this.fmgfx=[]
+     this.fmgfn=[]
+    //  console.log(this.clickLon,this.clickLat,'=-=-=-=111')
+      //请求数据
     //  await this.$axios.post('/api/param/GetData',{"lon":"118.389084","lat":"17.9811","level":1}).then(res=>{
-     await this.$axios.post('/api/param/GetData',{"lon":this.clickLon,"lat":this.clickLat,"level":1}).then(res=>{
-        console.log(res.data,'===')
-        // console.log(res.data,'===')
-        for(let i=0;i<16;i++){
+     await this.$axios.post('/api/param/GetData',{"lon":this.clickLon,"lat":this.clickLat,"level":this.gdvalue}).then(res=>{
+       console.log(res,'12112121')
+       for(let i=0;i<16;i++){
         //风能频率
          this.fmgfn.push(res.data.windFre.split(';')[i])
          //风向频率
          this.fmgfx.push(res.data.windFwd.split(';')[i])
         }
         //风速
-        let Speed=res.data.windSpeed.toString()
+       let Speed=res.data.windSpeed.toString()
        this.windSpeed=Speed.substring(0,Speed.indexOf('.')+3);
        //风功率密度
        let Density=res.data.windDensity.toString()
@@ -189,11 +256,15 @@ export default {
        //五十年一遇极大风速
        let MaxSpeed=res.data.windMaxSpeed.toString()
        this.windMaxSpeed=MaxSpeed.substring(0,MaxSpeed.indexOf('.')+3);
-       
+       //K
+       this.K=res.data.weibullK
+       //C
+       this.C=res.data.weibullC
       })
     },
     //点击出现风玫瑰图
     async Fmg() {
+      this.ele='fmg'
       //判断flag的值 改变背景以及文字颜色  初始为false
         $(".wbetext").removeClass("clickcss");
         $(".fglmd").removeClass("clickcss");
@@ -204,16 +275,16 @@ export default {
         $("#main-1").hide();
         $("#main-3").hide();
         $("#main-2").show();
-        //将点击的经纬度添加到页面上
         
       //调用请求数据方法
       await this.getData()
       await this.addFmg()
+      console.log(this.fmgfn,'=====')
 
-      
     },
       //渲染图表(风玫瑰图)
     addFmg(){
+      console.log(this.fmgfx,'-=-=-=-=111')
       var mychart2 = echarts.init(document.getElementById("main-2"));
       var options2 = {
         //玫瑰图颜色
@@ -289,7 +360,7 @@ export default {
           {
             type: "bar",
             // data: [1, 2, 3, 4, 3, 5, 1, 3, 4, 5, 6, 7, 8, 9, 1],
-            data: this.fmgfn,
+            data: this.fmgfx,
             // data: fxtjList,
             coordinateSystem: "polar",
             stack: "a"
@@ -300,6 +371,7 @@ export default {
     },
     //点击出现风功率密度
    async fglmd() {
+     this.ele='fgl'
       //添加样式
       $(".fglmd").addClass("clickcss");
       $(".fmgtext").removeClass("clickcss");
@@ -310,9 +382,13 @@ export default {
       $('#main-1').hide()
       $('#main-2').hide()
       $('#main-3').show()
+      //请求数据
      await this.getData()
-
       //风功率密度图表
+      this.getFglmd()
+      
+    },
+    getFglmd(){
       var mychart3 = echarts.init(document.getElementById("main-3"));
       var options3 = {
         //玫瑰图颜色
@@ -388,7 +464,7 @@ export default {
           {
             type: "bar",
             // data: [4, 4, 5, 1, 1, 5, 1, 3, 4, 5, 1, 2, 3, 4, 9],
-            data: this.fmgfx,
+            data: this.fmgfn,
             // data: fxtjList,
             coordinateSystem: "polar",
             stack: "a"
@@ -398,7 +474,8 @@ export default {
       mychart3.setOption(options3);
     },
     //加载图表方法(已在mounted中调用)
-    Wbetb() {
+    async Wbetb() {
+      this.ele='wbe'
         $(".wbetext").addClass("clickcss");
         $(".fmgtext").removeClass("clickcss");
         $(".fglmd").removeClass("clickcss");
@@ -407,10 +484,26 @@ export default {
         $("#main-1").show();
         $("#main-2").hide();
         $("#main-3").hide();
-        
+       await this.getData()
+        this.getwbe(this.K,this.C)
 
-      //为图表设定容器
+    },
+
+
+
+
+    getwbe(k,c){
+       //为图表设定容器
       var mychart1 = echarts.init(document.getElementById("main-1"));
+      var datax=["0","2","4","6","8","10","12","14","16", "18","20","22","24"];
+      var datay=[]
+       for(let i=0;i<datax.length;i++){
+        datay.push(fun(datax[i]))
+      }
+      function fun(x){
+         return k/c*(Math.pow(x/c,k-1)*Math.exp(-Math.pow(x/c,k)))
+        }
+        console.log(datay,'1=1=1=11=')
       //设置图表属性（图表配置项）
       var option = {
         grid: {
@@ -431,21 +524,7 @@ export default {
           nameRotate: "0.1",
           type: "category",
           boundaryGap: false,
-          data: [
-            "0",
-            "2",
-            "4",
-            "6",
-            "8",
-            "10",
-            "12",
-            "14",
-            "16",
-            "18",
-            "20",
-            "22",
-            "24"
-          ],
+          data: datax,
           axisLabel: {
             color: "white"
           },
@@ -462,11 +541,12 @@ export default {
         },
         yAxis: {
           type: "value",
-          name: "风频率",
+          name: "风频率%",
           nameTextStyle: { color: "white", fontSize: 10 },
-          min: 0,
-          max: 0.08,
-          interval: 0.02,
+          // min: 0,
+          // max: 0.08,
+          // interval: 0.02,
+          data:datay,
           //改变y轴文字颜色
           axisLabel: {
             color: "white"
@@ -492,21 +572,7 @@ export default {
         },
         series: [
           {
-            data: [
-              0,
-              0.02,
-              0.01,
-              0.04,
-              0.05,
-              0.06,
-              0.05,
-              0.03,
-              0.04,
-              0.05,
-              0.06,
-              0.07,
-              0.08
-            ],
+            data: datay,
             type: "line",
             //折现下面区域颜色的渐变
             areaStyle: {
@@ -526,6 +592,7 @@ export default {
       //将设置好的图表配置项添加到容器中
       mychart1.setOption(option);
     }
+
   }
 };
 </script>
@@ -558,8 +625,8 @@ export default {
   color: transparent;
 }
 .fcsxx-z {
-  width: 100%;
-  height: 308px;
+  /* width: 100%;
+  height: 308px; */
   position: absolute;
     top: 0;
     left: 0;
@@ -603,8 +670,8 @@ export default {
 .fcsxx-right-text {
   width: 230px;
   height: 34px;
-  margin-left: -4px;
-  margin-top: 20px;
+  margin-left: 2px;
+  margin-top: 28px;
 }
 .fcsxx-right-text div {
   display: inline-block;
@@ -626,7 +693,7 @@ export default {
   color: white;
   cursor: pointer;
   position: absolute;
-  right: 3px;
+  right: -3px;
 }
 .small-text {
   color: white;
@@ -646,5 +713,12 @@ export default {
   position: absolute;
   right: 20px;
   top:80px
+}
+.btn-1{
+  position: absolute;
+  top:0px;
+  right: 0px;
+  width: 20px;
+  height: 20px;
 }
 </style>

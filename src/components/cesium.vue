@@ -55,12 +55,18 @@ export default {
       singlemaxLat:'',
       singleminLon:'',
       singleminLat:'',
+      //台风频次
+      tfpcimg:'',
+      tfpcmaxLat:'',
+      tfpcmaxLon:'',
+      tfpcminLat:'',
+      tfpcminLon:'',
       //年份的 图片数组（数值预报）
       yearPicList:[],
       //有效波高中有轴的
      routePic :{"逐年平均值":'YEAR_AVG',"逐年最大值":'YEAR_MAX',"逐年最小值":'YEAR_MIN',"逐月平均值":'MONTH_AVG','逐月最大值':'MONTH_MAX','逐月最小值':'MONTH_MIN'},
      //有效波高中单张图片的
-     singlePic:{'十年平均值':'YEARS_AVG','十年最大值':'YEARS_MAX','十年最小值':'YEARS_MIN','十年一遇':'PEAK10','三十年一遇':'PEAK30','台风频次':'TYPHOON'},
+     singlePic:{'十年平均值':'YEARS_AVG','十年最大值':'YEARS_MAX','十年最小值':'YEARS_MIN','十年一遇':'PEAK10','三十年一遇':'PEAK30'},
      //数值预报中 开始年份 结束年份的
      startEndYearPic:{'年平均风速':'WSPD_YR','年平均风功率密度':'Dwp','有效风速时数':'NSIGHR','风切变系数':'ALPHA_ALL','威布尔分布形状参数':'SHAPE','威布尔分布尺度参数':'SCALE'},
      //年份 （数值预报）
@@ -114,7 +120,7 @@ export default {
       bus.$off("szyb");
       bus.$off("yxbg");
       bus.$off("yggc");
-      bus.$off("tfpc");
+      // bus.$off("tfpc");
       // 调用加载图片方法
       this.szybvalue = szybvalue;
       //调用添加图片方法并传参
@@ -659,7 +665,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
 
 
     //抽离加载图片方法
-    AddImg(viewer,szybvalue,gdvalue) {
+   async AddImg(viewer,szybvalue,gdvalue) {
         //清除图层
      this.clearImg()
         var img1;
@@ -669,7 +675,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
         
       //对传过来的参数进行判断  符合则添加图层 不符合则移除图层
           bus.$on('szyb',index=>{
-          
+          console.log(index,'123123123123')
           if(index==0){
           this.clearImg()
       }
@@ -686,24 +692,24 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
     }else if(szybvalue === "逐小时月平均风速"){
        this.gethourMounthList(gdvalue)
         
-      //  console.log(hourMounthList,'===')
       bus.$on('szyb',(index,value1,value2)=>{
-        console.log("月");
-        var startindexList
-          // console.log(this.hourMounthList)
+        //记录开始位置
+          var startindexList
           for(let i=0;i<this.hourMounthList.length;i++){
+            //截取年
           let Year=this.hourMounthList[i].split("/")[3]
-
+            //截取月
           let Mounth=this.hourMounthList[i].split('_')[1]
-         
+            //如果年和月符合选择的则记录开始位置
          if(Year==value1&&Mounth==value2){
            startindexList=i
            break;
          }
-          // console.log(this.imgList,'=====')
+          
        }
+            //存储从开始位置到结束位置路径
           this.imgList=this.hourMounthList.slice(startindexList,24+startindexList)
-          // console.log(this.imgList,'------')
+
           if(index==0){
             this.clearImg()
               }
@@ -812,30 +818,36 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
       
     //接收数据 添加图层
      bus.$on('yxbg',index=>{
-       console.log(index)
-        if(index==0){
+       //index从0开始传
+       if(szybvalue === "逐年平均值" ||szybvalue === "逐年最大值"||szybvalue === "逐年最小值"){
+         if(index==0){
           this.clearImg()
         }
-          img1 = new Cesium.SingleTileImageryProvider({
+        img1 = new Cesium.SingleTileImageryProvider({
           url:'/static'+this.monthAvg[index],
           rectangle: Cesium.Rectangle.fromDegrees(this.minLon[0],this.minLat[0],this.maxLon[0],this.maxLat[0]),
           // show: false
         });
         viewer.imageryLayers.addImageryProvider(img1);
+        //index从1开始传
+       }else{
+         if(index==1){
+          this.clearImg()
+        }
+          img1 = new Cesium.SingleTileImageryProvider({
+          url:'/static'+this.monthAvg[index-1],
+          rectangle: Cesium.Rectangle.fromDegrees(this.minLon[0],this.minLat[0],this.maxLon[0],this.maxLat[0]),
+          // show: false
+        });
+        viewer.imageryLayers.addImageryProvider(img1);
+       }
+        
       })
     }
 
   else if(szybvalue === "十年最大值"||szybvalue === "十年最小值"||szybvalue === "十年平均值"||szybvalue === "十年一遇"||szybvalue === "三十年一遇"){
    this.clearImg()
-  //  this.sliderList=[]
-  //  this.hourList=[]
-  //  this.hourList=[]
-  //  this.thirtyList=[]
-  //  this.yearPicList=[]
-  //  this.hourMounthList=[]
-  //  this.monthAvg=[]
-  //  this.yearAvg=[]
-  //  this.imgList=[]
+    //调用请求
    this.getSingleImg(szybvalue)
     
     //接收数据 添加图层
@@ -848,14 +860,13 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
         viewer.imageryLayers.addImageryProvider(img1);
       })
     }else if(szybvalue=='台风频次'){
-      this.getSingleImg(szybvalue)
-              console.log(this.singleImgList,'[][]')
+       await  this.Tfpc()
          bus.$on('tfpc',()=>{
-              // console.log(this.singleImgList,'[][]')
+         console.log(this.tfpcimg,'===')
                
             img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.singleImgList,
-          rectangle: Cesium.Rectangle.fromDegrees(this.singleminLon,this.singleminLat,this.singlemaxLon,this.singlemaxLat),
+          url:'/static'+this.tfpcimg,
+          rectangle: Cesium.Rectangle.fromDegrees(this.tfpcminLon,this.tfpcminLat,this.tfpcmaxLon,this.tfpcmaxLat),
           // show: false
         });
         this.viewer.imageryLayers.addImageryProvider(img1);
@@ -863,16 +874,12 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
     })
     }
 
-    
- 
-
         //遥感观测传过来的参数
     bus.$on('yggc',(Wx,Wxcs)=>{
          var img1
           this.clearImg()
           this.getyggc(Wx,Wxcs)
           bus.$on('yggc1',(index,value1)=>{
-            console.log(index,'============')
            var startindexList
           if(index==0){
           this.clearImg()
@@ -887,16 +894,13 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               }
               this.yggcImgList=this.yggcImg.slice(startindexList,12+startindexList)
           
-            
-            console.log(this.yggcImgList,'0-0-')
               img1 = new Cesium.SingleTileImageryProvider({
-              url:'/static'+this.yggcImgList[index],
+              url:'/static'+this.yggcImgList[index-1],
               rectangle: Cesium.Rectangle.fromDegrees(this.minLon[0],this.minLat[0],this.maxLon[0],this.maxLat[0]),
               show: false
               });
               viewer.imageryLayers.addImageryProvider(img1);
           }else{
-            console.log(this.yggcImg,'-=-=-=')
             img1 = new Cesium.SingleTileImageryProvider({
               url:'/static'+this.yggcImg[index],
               rectangle: Cesium.Rectangle.fromDegrees(this.minLon[0],this.minLat[0],this.maxLon[0],this.maxLat[0]),
@@ -958,6 +962,19 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
       //         }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
     },
     //
+    async Tfpc(){
+        
+        await this.$axios.post('/api/swh/GetData',{ele:'TYPHOON'}).then(res=>{
+           this.tfpcimg=res.data[0].processPath;
+           console.log(res.data[0].processPath)
+           this.tfpcmaxLat=res.data[0].maxLat;
+           this.tfpcmaxLon=res.data[0].maxLon;
+           this.tfpcminLat=res.data[0].minLat;
+           this.tfpcminLon=res.data[0].minLon;
+         })
+       },
+
+
    async gethourMounthList(gdvalue){
       await this.$axios.post('/api/wind/GetData',{"ele":"WSPD_HM","level":gdvalue||0}).then(res=>{
          res.data.forEach(item=>{

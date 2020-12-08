@@ -4,14 +4,14 @@
         <!-- 天气灾害组件 -->
         <Zhtq ref="child"></Zhtq>
         <!-- 时间轴 -->
-        <Sjz style='display:none'></Sjz>
+        <!-- <Sjz style='display:none'></Sjz> -->
         <ColorBar/>
     </div>
 </template>
 
 <script>
 import Zhtq from './yxbgzhtq'
-import Sjz from './sjz'
+// import Sjz from './sjz'
 import ColorBar from './colorBar'
 
 export default {
@@ -21,7 +21,7 @@ export default {
     },
     components:{
         Zhtq,
-        Sjz,
+        // Sjz,
         ColorBar
     },
     methods: {

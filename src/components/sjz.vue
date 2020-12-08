@@ -283,6 +283,7 @@ export default {
           $(".sjz-srk-z").css("display", "none");
         }
         this.yxbgDate();
+        // bus.$off('addimg')
       });
     },
     //根据传递过来的参数 动态换时间轴上面框中的内容
@@ -372,6 +373,7 @@ export default {
              }
           this.min1 =this.firstdate= 1;
           this.max1 =this.seconddate= 12;
+          this.index=1
           this.marks1 = {};
           for (let i = 1; i <= 12; i++) {
             this.marks1[i] = "" + i + "";
@@ -660,15 +662,22 @@ export default {
     }
   },
   mounted() {
-   
+    // bus.$on('changepage',(page)=>{
+    //   if(page=)
+    // })
     //调用初始化option
     this.startOption();
+
+    if(this.$route.path == '/szyb'){
     //根据选择不同框显示的不同
     this.dongtaidate();
+    } else if(this.$route.path == '/yxbg'){
     //调用有效波高方法
     this.yxbgmethods();
+    }else if(this.$route.path=='/yggc'){
     //接收参数
     this.getWx()
+    }
      //当选中台风频次的时候隐藏时间轴
     bus.$on("addzhtqimg", zhtq => {
       if (zhtq === "台风频次") {
@@ -700,9 +709,11 @@ export default {
         this.seconddate += 1;
         }
       }
-    }
-  }
-};
+    },
+  },
+
+  
+}
 </script>
 <style>
 .sjz-srk-z {
