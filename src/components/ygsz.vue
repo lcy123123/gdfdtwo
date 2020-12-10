@@ -110,11 +110,11 @@ export default {
       //选择卫星参数方法
       selectWxcs(Wxcs){ 
         bus.$emit('Wxcs',Wxcs)
+        bus.$emit('addimg',"")
       },
       //卫星选择方法
       selectWx(Wx){
         bus.$emit('Wx',Wx)
-
       },
       //根据卫星以及卫星参数判断前端输入数据方法
       wxAndWxcs(){
@@ -141,11 +141,14 @@ export default {
       //点击年平均风速 出图片（添加图片方法）
       addimg(){
         bus.$emit('addimg',this.szybvalue)
+         bus.$emit('Wxcs','');
+         bus.$emit('Wx','')
       },
 
 
        //显示此页面时 默认展开第一个（遥感观测）
       Cli1(){
+        this.$router.push('/yggc')
       // 点击按钮  判断第一个小图标（如果是亮的 则将小图标变不亮  背景以及文字变不亮）  默认是展开的 （小图标和文字背景是亮的）
       if($('.y1').attr('src')==y2){
         //将小图标变成不亮的
@@ -177,7 +180,7 @@ export default {
 
     //点击第二个
     Cli2(){
-
+        this.$router.push('/szyb')
         if($('.y2').attr('src')==s1){
         //将小图标变成亮的
         $('.y2').attr('src',s2)

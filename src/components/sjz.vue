@@ -87,6 +87,7 @@
           :marks="marks1"
           :max="max1"
           :min="min1"
+          @change="clikeValue"
         ></el-slider>
       </div>
       <div>
@@ -159,9 +160,9 @@ export default {
       sjzFlag: true,
       element: "",
       //卫星数据
-      Wx: "ASCAT",
+      Wx: "",
       //卫星参数数据
-      Wxcs: "月平均风速",
+      Wxcs: "",
       //数值预报value
       date: "",
       //根据选择的日期1传index
@@ -171,6 +172,19 @@ export default {
     };
   },
   methods: {
+    clikeValue(){
+      console.log(this.value)
+      // this.index=val-this.options1[this.firstdate].value
+      if(this.value-this.options1[this.firstdate].value>=0){
+      this.index=this.value-this.options1[this.firstdate].value
+        //  bus.$emit(this.element, this.index);
+      }else{
+        this.index=this.value
+      }
+      bus.$emit(this.element, this.index);
+      console.log(this.index,'firstdata')
+      this.zt()
+    },
     //点击显示第一张图片
     firstImg() {
       //将index设置为0
@@ -188,8 +202,7 @@ export default {
       this.index = this.seconddate;
       this.value = this.max1;
       bus.$emit(this.element, this.index);
-      // this.dsq();
-      // this.zt();
+  
     },
     //点击前一张图片
     beforeImg() {
@@ -225,20 +238,15 @@ export default {
       if(this.value-2009>=0){
         this.value = this.options1[this.index].value;
       }else{
-        // this.index=this.min1
         this.value = this.index;
-        // this.value=this.options1[this.index].value
-        
       }
-      // console.log(this.value1,'=====')
       //发起组件传值（index 默认为0）
       bus.$emit(this.element, this.index,this.value1,this.value2);
       //判断index
       if (this.index >= this.seconddate) {
         this.index = this.firstdate;
       }
-      // else if (this.index == this.options1.length - 1) {
-      //   this.index = this.firstdate;
+      
       // }  
       else {
         this.index++;
@@ -246,9 +254,10 @@ export default {
     },
     //有效波高传过来的值
     yxbgmethods() {
+     
       bus.$on("addyxbgimg", yxbg => {
-        // bus.$off('addimg')
-
+       bus.$emit('Wx','')
+       bus.$emit('Wxcs','')
         //防止上一个执行一半时下一个继续执行
         // this.index = 0;
         this.element = "yxbg";
@@ -259,7 +268,6 @@ export default {
           yxbg == "逐月最大值" ||
           yxbg == "逐月最小值"
         ) {
-          // this.zt()
           $(".rq2").css("display", "block");
           this.rq1 = "开始月份";
           this.rq2 = "结束月份";
@@ -271,7 +279,6 @@ export default {
           yxbg == "逐年最大值" ||
           yxbg == "逐年最小值"
         ) {
-          // this.zt()
 
           $(".rq2").css("display", "block");
           this.rq1 = "开始年份";
@@ -283,12 +290,12 @@ export default {
           $(".sjz-srk-z").css("display", "none");
         }
         this.yxbgDate();
-        // bus.$off('addimg')
       });
     },
     //根据传递过来的参数 动态换时间轴上面框中的内容
     dongtaidate() {
       bus.$on("addimg", date => {
+        // this.initOption()
         // bus.$off('addyxbgimg')
         this.zt();
         this.date = date;
@@ -413,8 +420,6 @@ export default {
           this.value2 =this.max1= 2019;
           this.firstdate=0;
           this.seconddate=9
-          // this.max1 = 2019;
-          // this.min1 = 2010;
           this.marks1 = {};
           let startYear = new Date().getFullYear();
           for (var f = 2010; f < startYear; f++) {
@@ -432,10 +437,8 @@ export default {
           this.options2 = [];
           this.value1 =this.min1= 2012;
           this.value2 =this.max1= 2018;
-          // this.max1 = 2018;
-          // this.min1 = 2012;
           this.firstdate=0
-          this.seconddate=7
+          this.seconddate=6
           this.marks1 = {};
           let startYear = new Date().getFullYear() - 1;
           for (let f = 2012; f < startYear; f++) {
@@ -453,8 +456,6 @@ export default {
           this.options2 = [];
           this.value1 = this.min1=2019;
           this.value2 = this.max1=2020;
-          // this.max1 = 2020;
-          // this.min1 = 2019;
           this.firstdate=0
           this.seconddate=1
           
@@ -476,9 +477,6 @@ export default {
       bus.$emit('yggc',this.Wx,this.Wxcs)
 
     },
-
-
-
 
 
     //根据有效波高渲染日期
@@ -638,40 +636,45 @@ export default {
     getWx(){
       
         bus.$on("Wx", Wx => {
+          
+          if(Wx=='' || Wx==null){this.zt();}
+          else{
       // 储存参数
       this.Wx = Wx;
       //调用填充options方法
       this.wxAndWxcs();
       this.addWxImg()
-      // this.play()
+      }
     });
     //接收卫星参数
       bus.$on("Wxcs", Wxcs => {
+        if(Wxcs=='' || Wxcs==null){this.zt()}
+        else{
         //储存参数
         this.Wxcs = Wxcs;
         //调用填充options方法
         this.wxAndWxcs();
         this.addWxImg()
         this.play()
+        }
       });
-      this.wxAndWxcs();
+      // this.wxAndWxcs();
       // this.addWxImg()
       this.element='yggc1'
-      // this.play()
-      
+        
     }
   },
-  mounted() {
-    // bus.$on('changepage',(page)=>{
-    //   if(page=)
-    // })
+  created() {
     //调用初始化option
     this.startOption();
-
+    // this.zt()
     if(this.$route.path == '/szyb'){
+      this.element='szyb'
     //根据选择不同框显示的不同
     this.dongtaidate();
     } else if(this.$route.path == '/yxbg'){
+      
+      this.element='yxbg'
     //调用有效波高方法
     this.yxbgmethods();
     }else if(this.$route.path=='/yggc'){
@@ -682,14 +685,13 @@ export default {
     bus.$on("addzhtqimg", zhtq => {
       if (zhtq === "台风频次") {
         $(".sjz-srk-z").css("display", "none");
-        // this.element='tfpc'
-        bus.$emit('tfpc',zhtq)
       }
     });
 
-  
   },
+
   watch:{
+    
     value1(value){
       if ((this.rq1 === "开始年份" && this.rq2 === "结束年份") ) {
         this.min1 = this.value = value; //给轴赋值

@@ -1,5 +1,8 @@
 const proxy = require('http-proxy-middleware');
 module.exports = {
+    publicPath:'./',
+    outputDir:'dist',
+    assetsDir: './',
     devServer: {
         disableHostCheck: false,
         host: "localhost",
@@ -8,30 +11,30 @@ module.exports = {
         hotOnly: false,
         // 代理
         proxy: {
-            '/api':{
-              target: 'http://10.1.100.52:8088',
+            // '/api':{
+            //   target: 'http://10.1.100.52:8088',
+            //   changeOrigin: true,
+            //   ws: true, 
+            //   pathRewrite: {
+            //     '^/api': ''
+            //   }
+            // }, 
+            '/':{
+              target: 'http://10.1.100.52:8080',
               changeOrigin: true,
               ws: true, 
               pathRewrite: {
-                '^/api': ''
-              }
-            }, 
-            '/static':{
-              target: 'http://10.1.100.52:8089',
-              changeOrigin: true,
-              ws: true, 
-              pathRewrite: {
-                '^/static': ''
-              }
-            },
-            '/windy':{
-              target: 'http://localhost:9010',
-              changeOrigin: true,
-              ws: true, 
-              pathRewrite: {
-                '^/windy': ''
+                '^/': ''
               }
             },
+            // '/windy':{
+            //   target: 'http://localhost:9010',
+            //   changeOrigin: true,
+            //   ws: true, 
+            //   pathRewrite: {
+            //     '^/windy': ''
+            //   }
+          //   },
           },
     },
 };

@@ -33,10 +33,10 @@ export default {
       //年平均值
       yearAvg:[],
       // lj10:'',
-      maxLon:[],
-      maxLat:[],
-      minLon:[],
-      minLat:[],
+      maxLon:'',
+      maxLat:'',
+      minLon:'',
+      minLat:'',
       gdvalue:'',
       yggcImg:[],
       //传过来的 年份
@@ -158,6 +158,9 @@ export default {
     })
 
       bus.$on('addzhtqimg',szybvalue=>{
+         bus.$off("szyb");
+         bus.$off("yxbg");
+        bus.$off("yggc"); 
       this.AddImg(this.viewer,szybvalue)
 
       })
@@ -418,7 +421,6 @@ export default {
 //线的矢量
  AddSlxian(viewer, ylclc) {
    
-
 var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
       promise.then(function(dataSource) {
       viewer.entities.add({
@@ -482,10 +484,10 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               // console.log(res.data,'--')
               res.data.forEach(item=>{
                 this.yggcImg.push(item.processPath)
-                this.minLon.push(item.minLon)
-                this.minLat.push(item.minLat)
-                this.maxLon.push(item.maxLon)
-                this.maxLat.push(item.maxLat)
+                this.minLon=item.minLon
+                this.minLat=item.minLat
+                this.maxLon=item.maxLon
+                this.maxLat=item.maxLat
               })
                
             })
@@ -496,14 +498,15 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               }else{
                 ele='ASCAT_WPW_YR'
               }
+                 this.yggcImg=[]
                await this.$axios.post('/api/swh/GetData',{"ele":ele}).then(res=>{
-              console.log(res.data,'--')
+              
               res.data.forEach(item=>{
                 this.yggcImg.push(item.processPath)
-                this.minLon.push(item.minLon)
-                this.minLat.push(item.minLat)
-                this.maxLon.push(item.maxLon)
-                this.maxLat.push(item.maxLat)
+                this.minLon=item.minLon
+                this.minLat=item.minLat
+                this.maxLon=item.maxLon
+                this.maxLat=item.maxLat
               })
                
             })
@@ -520,10 +523,10 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               console.log(res.data,'--')
               res.data.forEach(item=>{
                 this.yggcImg.push(item.processPath)
-                this.minLon.push(item.minLon)
-                this.minLat.push(item.minLat)
-                this.maxLon.push(item.maxLon)
-                this.maxLat.push(item.maxLat)
+                this.minLon=item.minLon
+                this.minLat=item.minLat
+                this.maxLon=item.maxLon
+                this.maxLat=item.maxLat
               })
                
             })
@@ -534,14 +537,15 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               }else{
                 ele='WINDSAT_WPW_YR'
               }
+                 this.yggcImg=[]
                await this.$axios.post('/api/swh/GetData',{"ele":ele}).then(res=>{
-              console.log(res.data,'--')
+              
               res.data.forEach(item=>{
                 this.yggcImg.push(item.processPath)
-                this.minLon.push(item.minLon)
-                this.minLat.push(item.minLat)
-                this.maxLon.push(item.maxLon)
-                this.maxLat.push(item.maxLat)
+                this.minLon=item.minLon
+                this.minLat=item.minLat
+                this.maxLon=item.maxLon
+                this.maxLat=item.maxLat
               })
                
             })
@@ -558,10 +562,10 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               console.log(res.data,'--')
               res.data.forEach(item=>{
                 this.yggcImg.push(item.processPath)
-                this.minLon.push(item.minLon)
-                this.minLat.push(item.minLat)
-                this.maxLon.push(item.maxLon)
-                this.maxLat.push(item.maxLat)
+                this.minLon=item.minLon
+                this.minLat=item.minLat
+                this.maxLon=item.maxLon
+                this.maxLat=item.maxLat
               })
                
             })
@@ -572,14 +576,14 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               }else{
                 ele='CFO_WPW_YR'
               }
+                 this.yggcImg=[]
                await this.$axios.post('/api/swh/GetData',{"ele":ele}).then(res=>{
-              console.log(res.data,'--')
               res.data.forEach(item=>{
                 this.yggcImg.push(item.processPath)
-                this.minLon.push(item.minLon)
-                this.minLat.push(item.minLat)
-                this.maxLon.push(item.maxLon)
-                this.maxLat.push(item.maxLat)
+                this.minLon=item.minLon
+                this.minLat=item.minLat
+                this.maxLon=item.maxLon
+                this.maxLat=item.maxLat
               })
                
             })
@@ -596,10 +600,10 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               console.log(res.data,'--')
               res.data.forEach(item=>{
                 this.yggcImg.push(item.processPath)
-                this.minLon.push(item.minLon)
-                this.minLat.push(item.minLat)
-                this.maxLon.push(item.maxLon)
-                this.maxLat.push(item.maxLat)
+                this.minLon=item.minLon
+                this.minLat=item.minLat
+                this.maxLon=item.maxLon
+                this.maxLat=item.maxLat
               })
                
             })
@@ -610,14 +614,14 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               }else{
                 ele='H2B_WPW_YR'
               }
+                 this.yggcImg=[]
                await this.$axios.post('/api/swh/GetData',{"ele":ele}).then(res=>{
-              console.log(res.data,'--')
               res.data.forEach(item=>{
                 this.yggcImg.push(item.processPath)
-                this.minLon.push(item.minLon)
-                this.minLat.push(item.minLat)
-                this.maxLon.push(item.maxLon)
-                this.maxLat.push(item.maxLat)
+                this.minLon=item.minLon
+                this.minLat=item.minLat
+                this.maxLon=item.maxLon
+                this.maxLat=item.maxLat
               })
                
             })
@@ -634,10 +638,10 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               console.log(res.data,'--')
               res.data.forEach(item=>{
                 this.yggcImg.push(item.processPath)
-                this.minLon.push(item.minLon)
-                this.minLat.push(item.minLat)
-                this.maxLon.push(item.maxLon)
-                this.maxLat.push(item.maxLat)
+                this.minLon=item.minLon
+                this.minLat=item.minLat
+                this.maxLon=item.maxLon
+                this.maxLat=item.maxLat
               })
                
             })
@@ -648,14 +652,15 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               }else{
                 ele='H2A_WPW_YR'
               }
+                 this.yggcImg=[]
                await this.$axios.post('/api/swh/GetData',{"ele":ele}).then(res=>{
               console.log(res.data,'--')
               res.data.forEach(item=>{
                 this.yggcImg.push(item.processPath)
-                this.minLon.push(item.minLon)
-                this.minLat.push(item.minLat)
-                this.maxLon.push(item.maxLon)
-                this.maxLat.push(item.maxLat)
+                this.minLon=item.minLon
+                this.minLat=item.minLat
+                this.maxLon=item.maxLon
+                this.maxLat=item.maxLat
               })
                
             })
@@ -675,15 +680,14 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
         
       //对传过来的参数进行判断  符合则添加图层 不符合则移除图层
           bus.$on('szyb',index=>{
-          console.log(index,'123123123123')
           if(index==0){
           this.clearImg()
       }
-      //  console.log("index:"+index)
         //将已经创建好的图层添加
           img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.imgList[index],
+          url:this.imgList[index],
           rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
+          // rectangle: Cesium.Rectangle.fromDegrees(this.minLon, this.minLat, this.maxLon, this.maxLat),
           show: false
         });
         viewer.imageryLayers.addImageryProvider(img1);
@@ -716,7 +720,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
       
         //将已经创建好的图层添加
           img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.imgList[index],
+          url:this.imgList[index],
           rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
           show: false
         });
@@ -777,7 +781,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           }
           //添加图片
            img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.hourList[index],
+          url:this.hourList[index],
           rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
           show: false
            });
@@ -792,7 +796,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           }
           //添加图片
            img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.sliderList[index-1],
+          url:this.sliderList[index-1],
           rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
           show: false
            });
@@ -803,7 +807,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           }
           //添加图片
            img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.thirtyList[index-1],
+          url:this.thirtyList[index-1],
           rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
           show: false
            });
@@ -824,8 +828,8 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           this.clearImg()
         }
         img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.monthAvg[index],
-          rectangle: Cesium.Rectangle.fromDegrees(this.minLon[0],this.minLat[0],this.maxLon[0],this.maxLat[0]),
+          url:this.monthAvg[index],
+          rectangle: Cesium.Rectangle.fromDegrees(this.minLon,this.minLat,this.maxLon,this.maxLat),
           // show: false
         });
         viewer.imageryLayers.addImageryProvider(img1);
@@ -835,8 +839,8 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           this.clearImg()
         }
           img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.monthAvg[index-1],
-          rectangle: Cesium.Rectangle.fromDegrees(this.minLon[0],this.minLat[0],this.maxLon[0],this.maxLat[0]),
+          url:this.monthAvg[index-1],
+          rectangle: Cesium.Rectangle.fromDegrees(this.minLon,this.minLat,this.maxLon,this.maxLat),
           // show: false
         });
         viewer.imageryLayers.addImageryProvider(img1);
@@ -853,29 +857,26 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
     //接收数据 添加图层
      bus.$on('yxbg',()=>{
           img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.singleImgList,
+          url:this.singleImgList,
           rectangle: Cesium.Rectangle.fromDegrees(this.singleminLon,this.singleminLat,this.singlemaxLon,this.singlemaxLat),
           // show: false
         });
         viewer.imageryLayers.addImageryProvider(img1);
       })
     }else if(szybvalue=='台风频次'){
-       await  this.Tfpc()
-         bus.$on('tfpc',()=>{
-         console.log(this.tfpcimg,'===')
-               
-            img1 = new Cesium.SingleTileImageryProvider({
-          url:'/static'+this.tfpcimg,
+         await  this.Tfpc()
+          img1 = new Cesium.SingleTileImageryProvider({
+          url:this.tfpcimg,
           rectangle: Cesium.Rectangle.fromDegrees(this.tfpcminLon,this.tfpcminLat,this.tfpcmaxLon,this.tfpcmaxLat),
           // show: false
         });
         this.viewer.imageryLayers.addImageryProvider(img1);
 
-    })
     }
 
         //遥感观测传过来的参数
     bus.$on('yggc',(Wx,Wxcs)=>{
+      if(Wx!=='' && Wx!==null && Wxcs!=='' && Wxcs!== null){
          var img1
           this.clearImg()
           this.getyggc(Wx,Wxcs)
@@ -885,6 +886,10 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           this.clearImg()
             }
           if(Wxcs=='月平均风功率密度'||Wxcs=='月平均风速'){
+            // if(index==1){this.clearImg()} 
+            for(let i=0;i<this.yggcImg.length;i++){
+              this.clearImg()
+            }
               for(let i=0;i<this.yggcImg.length;i++){
                 let Year=this.yggcImg[i].split('_')[2]
                if(Year==value1){
@@ -895,21 +900,28 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               this.yggcImgList=this.yggcImg.slice(startindexList,12+startindexList)
           
               img1 = new Cesium.SingleTileImageryProvider({
-              url:'/static'+this.yggcImgList[index-1],
-              rectangle: Cesium.Rectangle.fromDegrees(this.minLon[0],this.minLat[0],this.maxLon[0],this.maxLat[0]),
+              url:this.yggcImgList[index-1],
+              rectangle: Cesium.Rectangle.fromDegrees(this.minLon,this.minLat,this.maxLon,this.maxLat),
               show: false
               });
               viewer.imageryLayers.addImageryProvider(img1);
           }else{
+            
+            console.log(this.yggcImg,'11111111')
+            
+            for(let i=0;i<this.yggcImg.length;i++){
+              this.clearImg()
+            }
             img1 = new Cesium.SingleTileImageryProvider({
-              url:'/static'+this.yggcImg[index],
-              rectangle: Cesium.Rectangle.fromDegrees(this.minLon[0],this.minLat[0],this.maxLon[0],this.maxLat[0]),
+              url:this.yggcImg[index],
+              rectangle: Cesium.Rectangle.fromDegrees(this.minLon,this.minLat,this.maxLon,this.maxLat),
               show: false
               });
               viewer.imageryLayers.addImageryProvider(img1);
           }
         
         })
+      }
         })
 
   },
@@ -944,10 +956,10 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
 
       //点击事件获取id
       // var handlerVideo = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
-      // console.log(11)
+
       //         handlerVideo.setInputAction( (click) =>{
       //             var pick = this.viewer.scene.pick(click.position);
-      //             // console.log(pick.id.id)
+  
       //             if (pick.id.id) {
       //             // 将原来数组置为空
       //             this.ggpid=[]
@@ -955,7 +967,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
       //             this.ggpid.push(pick.id.id)
       //             //向兄弟传递参数
       //             bus.$emit('myid',this.ggpid)
-      //             console.log()
+      //             
       //             } else {
       //                 return;
       //             }
@@ -966,7 +978,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
         
         await this.$axios.post('/api/swh/GetData',{ele:'TYPHOON'}).then(res=>{
            this.tfpcimg=res.data[0].processPath;
-           console.log(res.data[0].processPath)
+          
            this.tfpcmaxLat=res.data[0].maxLat;
            this.tfpcmaxLon=res.data[0].maxLon;
            this.tfpcminLat=res.data[0].minLat;
@@ -977,7 +989,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
 
    async gethourMounthList(gdvalue){
       await this.$axios.post('/api/wind/GetData',{"ele":"WSPD_HM","level":gdvalue||0}).then(res=>{
-         res.data.forEach(item=>{
+       res.data.forEach(item=>{
           this.hourMounthList.push(item.processPath)
          })
        })
@@ -991,7 +1003,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           this.yearPicList.push(item.processPath)
          })
         
-          console.log(res.data,'-----')
+
        })
 
     },
@@ -1010,15 +1022,15 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
 
     //获取带时间轴的数据(有效波高)
     getRoutePic:function(szybvalue){
-      console.log(this.routePic[szybvalue])
+
           this.monthAvg=[]
           this.$axios.post('/api/swh/GetData',{"ele":this.routePic[szybvalue]}).then(res=>{
           res.data.forEach(item=>{
             this.monthAvg.push(item.processPath)
-            this.maxLon.push(item.maxLon)
-            this.maxLat.push(item.maxLat)
-            this.minLon.push(item.minLon)
-            this.minLat.push(item.minLat)
+            this.maxLon=item.maxLon
+            this.maxLat=item.maxLat
+            this.minLon=item.minLon
+            this.minLat=item.minLat
           }) 
         })
         },
@@ -1029,7 +1041,6 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           await this.$axios.post('/api/swh/GetData',{"ele":this.singlePic[szybvalue]}).then(res=>{
           res.data.forEach(item=>{
             this.singleImgList=item.processPath
-             console.log(this.singleImgList,'===1 11')
              this.singlemaxLon=item.maxLon
              this.singlemaxLat=item.maxLat
              this.singleminLon=item.minLon
@@ -1062,7 +1073,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
 
     // 声明添加点的方法
     // AddPoint(params) {
-    //   // console.log(params,'========')
+    //  
     //   if (params.lon === undefined || params.lat === undefined) {
     //     alert("请提供经纬度!");
     //     return;

@@ -14,10 +14,10 @@
             <div>经度：{{clickLon}}°E</div>
             <div>纬度：{{clickLat}}°N</div>
             <div>高度：{{megdvalue}}m</div>
-            <div>风速：{{windSpeed}}m/s</div>
-            <div>风功率密度:{{windDensity}}W/m²</div>
-            <div>有效风速时数: {{sighr}}h</div>
-            <div>五十年一遇风速:{{windMaxSpeed}}m/s</div>
+            <div class="fs">风速：{{windSpeed}}m/s</div>
+            <div class="fgl">风功率密度:{{windDensity}}W/m²</div>
+            <div class="fsss">有效风速时数: {{sighr}}h</div>
+            <div class="wsn">五十年一遇风速:{{windMaxSpeed}}m/s</div>
             <!-- <div>五十年一遇 </div> <div>最大风速: </div><span style="position:absolute;bottom:20px;left:20px;color:white">{{windMaxSpeed}}m/s</span> -->
           </div>
         </div>
@@ -234,11 +234,10 @@ export default {
    async getData(){
      this.fmgfx=[]
      this.fmgfn=[]
-    //  console.log(this.clickLon,this.clickLat,'=-=-=-=111')
       //请求数据
-    //  await this.$axios.post('/api/param/GetData',{"lon":"118.389084","lat":"17.9811","level":1}).then(res=>{
      await this.$axios.post('/api/param/GetData',{"lon":this.clickLon,"lat":this.clickLat,"level":this.gdvalue}).then(res=>{
-       console.log(res,'12112121')
+        if(res.data!==''){
+          $('.fcsxx').show()
        for(let i=0;i<16;i++){
         //风能频率
          this.fmgfn.push(res.data.windFre.split(';')[i])
@@ -246,20 +245,49 @@ export default {
          this.fmgfx.push(res.data.windFwd.split(';')[i])
         }
         //风速
-       let Speed=res.data.windSpeed.toString()
-       this.windSpeed=Speed.substring(0,Speed.indexOf('.')+3);
+        if(res.data.windSpeed!==-32767.0){
+          $('.fs').show()
+          let Speed=res.data.windSpeed.toString()
+          this.windSpeed=Speed.substring(0,Speed.indexOf('.')+3);
+        }else{
+          $('.fs').hide()
+        }
+       
        //风功率密度
-       let Density=res.data.windDensity.toString()
-       this.windDensity=Density.substring(0,Density.indexOf('.')+3);
+       if(res.data.windDensity!==-32767.0){
+          $('.fgl').show()
+          let Density=res.data.windDensity.toString()
+          this.windDensity=Density.substring(0,Density.indexOf('.')+3);
+       }else{
+          $('.fgl').hide()
+       }
+      
        //有效风速时数
-       this.sighr=res.data.sighr;
+       if(res.data.sighr!==0.0){
+         $('.fsss').show()
+         this.sighr=res.data.sighr;
+       }else{
+         $('.fsss').hide()
+       }
+    
        //五十年一遇极大风速
-       let MaxSpeed=res.data.windMaxSpeed.toString()
-       this.windMaxSpeed=MaxSpeed.substring(0,MaxSpeed.indexOf('.')+3);
+       if(res.data.windMaxSpeed!==9999.0){
+         $('.wsn').show()
+        let MaxSpeed=res.data.windMaxSpeed.toString()
+        this.windMaxSpeed=MaxSpeed.substring(0,MaxSpeed.indexOf('.')+3);
+       }else{
+         $('.wsn').hide()
+       }
+       
        //K
        this.K=res.data.weibullK
        //C
        this.C=res.data.weibullC
+        }else if(this.clickLon!==''&&this.clickLat!==''&&res.data==''){
+          $('.fcsxx').hide()
+          alert('暂无无数据')
+        }
+       
       })
     },
     //点击出现风玫瑰图
@@ -716,7 +744,7 @@ export default {
 }
 .btn-1{
   position: absolute;
-  top:0px;
+  top:3px;
   right: 0px;
   width: 20px;
   height: 20px;
