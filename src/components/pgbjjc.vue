@@ -68,9 +68,24 @@ export default {
      watch:{
        tf(value){
          bus.$emit('pgjc',value)
+         bus.$off('szyb','')
+         bus.$off('yxbg','')
+
+        //  bus.$emit('Wx','')
+        //  bus.$emit('Wxcs','')
+         bus.$off('yggc')
+        //  bus.$off('yggc','')
+         
        },
        pgbj(value){
          bus.$emit('pgbj',value)
+         bus.$off('szyb')
+        //  bus.$off('yggc')
+         bus.$off('yggc')
+         bus.$off('yxbg')
+        //  bus.$off('Wx')
+        //  bus.$off('Wxcs')
+
 
        }
 

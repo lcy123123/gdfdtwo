@@ -4,7 +4,6 @@
       <Yxbg></Yxbg>
       <!-- 时间轴 -->
       <Sjz style="display:none"></Sjz>
-      <ColorBar/>
     </div>
 </template>
 
@@ -12,13 +11,11 @@
 
 import Yxbg from './yxbgzhtq'
 import Sjz from './sjz'
-import ColorBar from './colorBar'
 
 export default {
   components:{
     Yxbg,
     Sjz,
-    ColorBar
   },
     methods:{
 

@@ -1,15 +1,8 @@
 <template>
-     <div id="temp_legend" style="position:absolute;right:10px;bottom:10px;">
-      <span
-        class="temp_legend1"
-        style="display:block;position:absolute;right:88px;bottom:60px; width: 1.875rem; height: 7.625rem; margin-bottom: 0.5rem"></span>
-      <!-- 第一组（年平均风速） -->
-      <div style="display:inline-block; float: left; margin-top: -0.5rem; height: 10.625rem;color:blue">
-        <span style="position:absolute;left:100%;width:auto;margin-left:-88px;;bottom:172px">{{maxvalue}}</span><br />
-        <span style="position:absolute;left:100%;width:auto;margin-left:-88px;bottom:68px;">{{minvalue}}</span><br />
-      </div>
-      <!-- <span style="color:blue;font-size:14px">{{dw}}</span> -->
-
+     <div id="temp_legend">
+      <span class="temp_legend1" style="position:absolute;right:30px;width:22px;height:100px;top:-180px"></span>
+        <span class="span1"  style="position:absolute;top:-185px;margin-left:-24px;color:blue">{{maxvalue}}</span><br />
+        <span class="span2" style="position:absolute;top:-99px;margin-left:-24px;color:blue">{{minvalue}}</span><br />
     </div>
 </template>
 <script>

@@ -87,7 +87,7 @@
           :marks="marks1"
           :max="max1"
           :min="min1"
-          @change="clikeValue"
+      
         ></el-slider>
       </div>
       <div>
@@ -172,19 +172,19 @@ export default {
     };
   },
   methods: {
-    clikeValue(){
-      console.log(this.value)
-      // this.index=val-this.options1[this.firstdate].value
-      if(this.value-this.options1[this.firstdate].value>=0){
-      this.index=this.value-this.options1[this.firstdate].value
-        //  bus.$emit(this.element, this.index);
-      }else{
-        this.index=this.value
-      }
-      bus.$emit(this.element, this.index);
-      console.log(this.index,'firstdata')
-      this.zt()
-    },
+    // clikeValue(){
+    //   console.log(this.value)
+    //   // this.index=val-this.options1[this.firstdate].value
+    //   if(this.value-this.options1[this.firstdate].value>=0){
+    //   this.index=this.value-this.options1[this.firstdate].value
+    //     //  bus.$emit(this.element, this.index);
+    //   }else{
+    //     this.index=this.value
+    //   }
+    //   bus.$emit(this.element, this.index);
+    //   console.log(this.index,'firstdata')
+    //   this.zt()
+    // },
     //点击显示第一张图片
     firstImg() {
       //将index设置为0
@@ -215,7 +215,10 @@ export default {
         this.index -=1;
         this.value --;
       }
+      // if(this.$route.path!='/pdjc'){
+  
       bus.$emit(this.element, this.index);
+      // }
     },
     //点击后一张图片
     afterImg() {
@@ -291,6 +294,7 @@ export default {
         }
         this.yxbgDate();
       });
+     
     },
     //根据传递过来的参数 动态换时间轴上面框中的内容
     dongtaidate() {
@@ -474,8 +478,10 @@ export default {
     //向cesium传参
     addWxImg(){
       // console.log(this.Wx,this.Wxcs)
+        if(this.$route.path!='/pgbj'){
+      
       bus.$emit('yggc',this.Wx,this.Wxcs)
-
+        }
     },
 
 
@@ -660,8 +666,9 @@ export default {
       });
       // this.wxAndWxcs();
       // this.addWxImg()
-      this.element='yggc1'
-        
+        // if(this.$route.path!='/pgbj'){
+         this.element='yggc1'
+        // }
     }
   },
   created() {

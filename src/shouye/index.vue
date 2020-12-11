@@ -3,10 +3,10 @@
       <!-- 五个小按钮 -->
         <Fiveli style="position:absolute;right:22px;top:60px"></Fiveli>
 
-      <!-- 下面时间轴和输入框总div -->
-      <Sjz></Sjz>
-        <!-- 图例 -->
-    <div class="zy-b">
+         <!-- 下面时间轴和输入框总div -->
+            <Sjz></Sjz>
+         <!-- 图例 -->
+          <div class="zy-b">
             <div class="tu">图例</div>
               <div class="zscdiv"></div>
               <div class="s1">中上层鱼类产卵场</div>

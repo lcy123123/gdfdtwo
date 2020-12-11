@@ -2,12 +2,10 @@
   <div>
     <!-- 五个小按钮 -->
     <Fiveli></Fiveli>
-    
     <!-- 遥感数据 数值预报组件 -->
     <Ygsz></Ygsz>
     <!-- 时间轴 -->
     <Sjz></Sjz>
-    <ColorBar/>
   </div>
 </template>
 <script>
@@ -17,7 +15,6 @@ import Fiveli from './fiveli'
 import Ygsz from './ygsz'
 import Sjz from './sjz'
 // import bus from '../utils/eventBus'
-import ColorBar from './colorBar'
 
 
 export default {
@@ -25,7 +22,6 @@ export default {
     Fiveli,
     Ygsz,
     Sjz,
-    ColorBar
   },
   methods:{
     

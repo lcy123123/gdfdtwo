@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div style="width:1680px">
     <!-- <router-view></router-view> -->
+    <div class="left-z" style="width:20px">
     <!-- 左面第一个图表 -->
     <div class="left-1 bottom-line" style="background-color:rgba(0, 3, 44, 0.5)">
       <div class="div-btn">
@@ -33,6 +34,8 @@
         style="width:340px;height:200px;position:absolute;top:-10px;left:10px"
       ></div>
     </div>
+    </div>
+    <div style="position:fixed;right:0px;top:0px;margin-right:10px">
     <!-- 右面第一个图表 -->
     <div class="right-1 bottom-line" style="background-color:rgba(0, 3, 44, 0.5)">
       <div class="div-btn">
@@ -40,7 +43,7 @@
       </div>
       <div
         id="main-left-4"
-        style="width:340px;height:140px;position:absolute;top:22px;right:0px"
+        style="width:340px;height:140px;position:absolute;top:22px;right:20px"
       ></div>
     </div>
     <!-- 右面第二个图表 -->
@@ -62,6 +65,7 @@
         id="main-left-6"
         style="width:340px;height:200px;position:absolute;top:-10px;right:-12px"
       ></div>
+      </div>
     </div>
     <!-- 高度下拉框 -->
     <div class="gdxlk">

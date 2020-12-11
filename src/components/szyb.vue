@@ -11,7 +11,7 @@
     <Ygsz ref="child"></Ygsz>
      
 
-     <ColorBar/>
+     <!-- <ColorBar/> -->
    
     <!-- 时间轴 -->
     <Sjz></Sjz>
@@ -23,7 +23,7 @@ import Fcsxx from "./fcsxx";
 import Ygsz from "./ygsz";
 import Sjz from "./sjz";
 // import bus from '../utils/eventBus'
-import ColorBar from './colorBar'
+// import ColorBar from './colorBar'
 
 export default {
   components: {
@@ -31,7 +31,7 @@ export default {
     Fiveli,
     Ygsz,
     Sjz,
-    ColorBar
+    // ColorBar
   },
 
   mounted() {

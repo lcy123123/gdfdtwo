@@ -25,14 +25,12 @@ export default {
       ylclc: "",
       //其他组件传过来的值（年平均风速）
       szybvalue: "",
-      // 图片路径
-      // imgList: ['./1.png','./2.png','./3.png','./4.png'],
+      // 图片路径（数值预报）
       imgList:[],
       // 月平均值数组
       monthAvg:[],
       //年平均值
       yearAvg:[],
-      // lj10:'',
       maxLon:'',
       maxLat:'',
       minLon:'',
@@ -80,7 +78,7 @@ export default {
   },
   mounted() {
     // this.AddSl2(this.viewer)
-    //接收组件传值
+    //接收组件传值(高度)
     bus.$on('gdvalue',(gdvalue1)=>{
       this.gdvalue=gdvalue1
       let gdvalue=''
@@ -128,6 +126,8 @@ export default {
     });
     //加载矢量数据方法（评估背景）
     bus.$on("pgbj", pgbjvalue => {
+    
+      this.clearImg()
       this.ylclc = pgbjvalue;
       this.AddSl(this.viewer, this.ylclc);
       //海岸线矢量
@@ -136,6 +136,7 @@ export default {
     });
     //接收传值（评估决策）
     bus.$on('pgjc',(pgjc)=>{
+      this.clearImg()
       if(pgjc==='可开发厂址推荐'){
         this.clearSl()
       this.farmall(this.viewer)
@@ -671,6 +672,9 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
 
     //抽离加载图片方法
    async AddImg(viewer,szybvalue,gdvalue) {
+     //清除矢量
+     this.clearSl()
+     this.clearSl()
         //清除图层
      this.clearImg()
         var img1;
@@ -737,17 +741,18 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
       //    })
 
       //  })
-      bus.$on('szyb',index=>{
-      if(index==0){
-       this.clearImg()
-      }
+      // bus.$on('szyb',index=>{
+      bus.$on('szyb',()=>{
+      // if(index==0){
+      //  this.clearImg()
+      // }
       
         //将已经创建好的图层添加
           img1 = new Cesium.SingleTileImageryProvider({
           // url:'/static'+this.imgList[index],
           url:'./22.png',
           rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
-          show: false
+          // show: false
         });
         viewer.imageryLayers.addImageryProvider(img1);
         })
@@ -879,8 +884,10 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
       if(Wx!=='' && Wx!==null && Wxcs!=='' && Wxcs!== null){
          var img1
           this.clearImg()
-          this.getyggc(Wx,Wxcs)
-          bus.$on('yggc1',(index,value1)=>{
+          
+         this.getyggc(Wx,Wxcs)
+         
+        bus.$on('yggc1',(index,value1)=>{
            var startindexList
           if(index==0){
           this.clearImg()
@@ -921,6 +928,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           }
         
         })
+         
       }
         })
 
@@ -1011,7 +1019,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
     getstartEndRearPic(szybvalue,gdvalue){
         this.imgList=[]
         this.$axios.post('/api/wind/GetData',{"ele":this.startEndYearPic[szybvalue],"level":gdvalue||0}).then(res=>{
-        
+        console.log(res.data,'-=-=-=-=')
          res.data.forEach(item=>{
           this.imgList.push(item.processPath)
          })

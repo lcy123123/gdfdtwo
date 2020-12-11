@@ -59,7 +59,7 @@
            </el-form>
            <!-- 右面的时间轴 -->
             <!-- <div>  <el-slider  class="sli1" v-model="value" min="0" max="200" step="40" range  :marks="marks"></el-slider></div> -->
-            <div>  <el-slider  class="sli1" v-model="gdvalue" :min="10" :max="150" :step="10" show-stops :marks="marks" @change="changeGdValue($event)"></el-slider></div>
+            <div>  <el-slider  class="sli1" v-model="gdvalue" :min="10" :max="110" :step="10" show-stops :marks="marks" @change="changeGdValue($event)"></el-slider></div>
         </div>
     </div>
 </template>
@@ -83,19 +83,20 @@ export default {
         //卫星参数初始数据
         Wxcsinit:'',
         gdvalue:10,
+        gdvaluecs:'',
         szybvalue:'',
         marks:{
           10:'10',
-          30:'30',
-          50:'50',
-          70:'70',
-          80:'80',
-          90:'90',
-          100:'100',
-          110:'110',
-          120:'120',
-          130:'130',
-          150:'150',
+          20:'30',
+          30:'50',
+          40:'70',
+          50:'80',
+          60:'90',
+          70:'100',
+          80:'110',
+          90:'120',
+          100:'130',
+          110:'150',
         },
        
       }
@@ -103,9 +104,33 @@ export default {
     methods:{
       //选择高度值
       changeGdValue(gdvalue){
-        this.gdvalue=gdvalue
+        console.log(gdvalue,'-----')
+        
+        if(gdvalue==10){
+          this.gdvaluecs=10
+        }else if(gdvalue==20){
+          this.gdvaluecs=30
+        }else if(gdvalue==30){
+          this.gdvaluecs=50
+        }else if(gdvalue==40){
+          this.gdvaluecs=70
+        }else if(gdvalue==50){
+          this.gdvaluecs=80
+        }else if(gdvalue==60){
+          this.gdvaluecs=90
+        }else if(gdvalue==70){
+          this.gdvaluecs=100
+        }else if(gdvalue==80){
+          this.gdvaluecs=110
+        }else if(gdvalue==90){
+          this.gdvaluecs=120
+        }else if(gdvalue==100){
+          this.gdvaluecs=130
+        }else if(gdvalue==110){
+          this.gdvaluecs=150
+        }
         //向其他组件传值
-        bus.$emit('gdvalue',gdvalue)
+        bus.$emit('gdvalue',this.gdvaluecs)
       },
       //选择卫星参数方法
       selectWxcs(Wxcs){ 
@@ -143,9 +168,9 @@ export default {
         bus.$emit('addimg',this.szybvalue)
          bus.$emit('Wxcs','');
          bus.$emit('Wx','')
+         
+
       },
-
-
        //显示此页面时 默认展开第一个（遥感观测）
       Cli1(){
         this.$router.push('/yggc')
@@ -326,5 +351,8 @@ cursor: pointer;
 /* HY-2A等样式 */
 .a1{
   margin-right: 30px;
+}
+.el-tooltip__popper.is-dark{
+display: none;
 }
 </style>

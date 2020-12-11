@@ -199,12 +199,13 @@ export default {
 }
 /* 头部导航 */
 .header-right {
-  width: 300px;
+  width: 210px;
   height: 50px;
   /* border: 1px solid red; */
-  position: absolute;
+  position: fixed;
   top: 22px;
-  right: 10px;
+  right: 0px;
+  margin-right: 1px;
 }
 .xtsz {
   color: white;
