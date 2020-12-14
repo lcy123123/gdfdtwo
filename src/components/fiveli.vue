@@ -39,7 +39,7 @@ export default {
 </script>
 <style  scoped>
 .tog-six{
-   position: absolute;
+   position: fixed;
    top:70px;
    right: 382px;
    cursor: pointer;

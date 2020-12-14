@@ -1081,8 +1081,8 @@ export default {
   color: transparent;
 }
 .gdxlk {
-  position: absolute;
-  bottom: 30px;
+  position: fixed;
+  top: 530px;
   right: 378px;
   width: 150px;
   border: 1px solid #0c96cd;

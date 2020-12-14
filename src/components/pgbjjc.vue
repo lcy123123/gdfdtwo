@@ -71,8 +71,8 @@ export default {
          bus.$off('szyb','')
          bus.$off('yxbg','')
 
-        //  bus.$emit('Wx','')
-        //  bus.$emit('Wxcs','')
+         bus.$emit('Wx','')
+         bus.$emit('Wxcs','')
          bus.$off('yggc')
         //  bus.$off('yggc','')
          
@@ -81,8 +81,10 @@ export default {
          bus.$emit('pgbj',value)
          bus.$off('szyb')
         //  bus.$off('yggc')
-         bus.$off('yggc')
+        //  bus.$off('yggc')
          bus.$off('yxbg')
+         bus.$emit('Wx','')
+         bus.$emit('Wxcs','')
         //  bus.$off('Wx')
         //  bus.$off('Wxcs')
 
@@ -174,7 +176,7 @@ export default {
 .right{
   width: 360px;
   border: 1px solid rgba(8,26,127,.5);
-  position: absolute;
+  position: fixed;
   right:15px;
   top:65px
 }

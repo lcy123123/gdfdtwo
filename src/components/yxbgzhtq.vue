@@ -145,6 +145,13 @@ export default {
 </script>
 
 <style  scoped>
+.right{
+  width: 360px;
+  border: 1px solid rgba(8,26,127,.5);
+  position: fixed;
+  right:15px;
+  top:65px
+}
 .el-radio{
   margin-right: 13px;
   margin-top:10px;
@@ -169,18 +176,6 @@ export default {
 }
 
 
-
-
-
-
-
-.right{
-  width: 360px;
-  border: 1px solid rgba(8,26,127,.5);
-  position: absolute;
-  right:15px;
-  top:65px
-}
 .bottom-line{
   background: linear-gradient(to left,#01A2FE,#01A2FE) left bottom no-repeat,
                 linear-gradient(to bottom,#01A2FE,#01A2FE) left bottom no-repeat,

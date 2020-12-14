@@ -701,6 +701,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
        this.gethourMounthList(gdvalue)
         
       bus.$on('szyb',(index,value1,value2)=>{
+        console.log(index,'90909090')
         //记录开始位置
           var startindexList
           for(let i=0;i<this.hourMounthList.length;i++){
@@ -752,7 +753,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           // url:'/static'+this.imgList[index],
           url:'./22.png',
           rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
-          // show: false
+          show: false
         });
         viewer.imageryLayers.addImageryProvider(img1);
         })

@@ -238,7 +238,7 @@ export default {
 .right{
   width: 360px;
   border: 1px solid rgba(8,26,127,.5);
-  position: absolute;
+  position: fixed;
   right:15px;
   top:65px
 }

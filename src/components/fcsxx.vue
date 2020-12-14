@@ -164,20 +164,21 @@ export default {
     getgdfc() {
       bus.$on("addimg", szyb => {
         this.szyb = szyb;
-        if (
-          this.clickLon !== "" &&
-          this.clickLat !== "" &&
-          this.szyb == "格点风参"
-          
-        ) {
+        if (this.clickLon !== "" &&this.clickLat !== "" &&this.szyb == "格点风参"   ) {
           $(".fcsxx-z").show();
           $('.sjz-srk-z').hide()
-        } else if( this.clickLon == "" &&
-          this.clickLat == "" &&
-          this.szyb == "格点风参"){
-            $('.sjz-srk-z').hide()
+        } else if( this.clickLon == "" &&this.clickLat == "" &&this.szyb == "格点风参"){
+          $('.sjz-srk-z').hide()
           $(".fcsxx-z").hide();
-        }else{
+        }else if(this.clickLon == "" &&this.clickLat == "" &&this.szyb == "风向分布频率"){
+          console.log('经纬度为空的风向分布频率')
+          $('.sjz-srk-z').hide()
+        }else if(this.clickLon !== "" &&this.clickLat !== "" &&this.szyb == "风向分布频率"){
+          console.log('经纬度不为空的风向分布频率')
+          $('.sjz-srk-z').hide()
+        }
+        else{
+          console.log('else')
           $('.sjz-srk-z').show()
           $(".fcsxx-z").hide();
           this.clickLon = "";
@@ -213,11 +214,17 @@ export default {
         }
 
         //如果不是格点风参则清除经纬度
-      } else {
+      }else if(this.clickLon !== "" &&this.clickLat !== "" &&this.szyb == "风向分布频率"){
+          $('.sjz-srk-z').hide()
+          bus.$off('szyb')
+      }else if(this.clickLon == "" &&this.clickLat == "" &&this.szyb == "风向分布频率"){
+          $('.sjz-srk-z').hide()
+          bus.$off('szyb')
+      }
+       else {
         $(".fcsxx-z").hide();
         this.clickLon='';
         this.clickLat='';
-        console.log($('.sjz-srk-z'))
           $('.sjz-srk-z').show()
 
       }
@@ -225,7 +232,6 @@ export default {
     },
     //点击关闭风参数(收起风参数)
     Gb: function() {
-      console.log('1111111')
       //上滑风参数元素
       $(".fcsxx-z").hide();
 
@@ -307,12 +313,10 @@ export default {
       //调用请求数据方法
       await this.getData()
       await this.addFmg()
-      console.log(this.fmgfn,'=====')
 
     },
       //渲染图表(风玫瑰图)
     addFmg(){
-      console.log(this.fmgfx,'-=-=-=-=111')
       var mychart2 = echarts.init(document.getElementById("main-2"));
       var options2 = {
         //玫瑰图颜色
@@ -531,7 +535,6 @@ export default {
       function fun(x){
          return k/c*(Math.pow(x/c,k-1)*Math.exp(-Math.pow(x/c,k)))
         }
-        console.log(datay,'1=1=1=11=')
       //设置图表属性（图表配置项）
       var option = {
         grid: {

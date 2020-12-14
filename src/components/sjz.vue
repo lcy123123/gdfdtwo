@@ -144,15 +144,18 @@ export default {
       flagrq: false,
       flagsz: false,
       sd: 1000,
-      jg: 5,
+      jg: 1,
       sdoption: [
         { key: 1, value: 500, label: 500 },
         { key: 2, value: 1000, label: 1000 },
         { key: 3, value: 2000, label: 2000 }
       ],
       jgoption: [
-        { key: 1, value: 5, label: 5 },
-        { key: 2, value: 10, label: 10 }
+        { key: 1, value: 1, label: 1 },
+        { key: 2, value: 2, label: 2 },
+        { key: 3, value: 3, label: 3 },
+        { key: 4, value: 4, label: 4 },
+        { key: 5, value: 5, label: 5 },
       ],
       rq1: "开始年份",
       rq2: "结束年份",
@@ -168,7 +171,8 @@ export default {
       //根据选择的日期1传index
       firstdate: "0",
       //根据选择的日期2传index
-      seconddate: "9"
+      seconddate: "9",
+      count:1,
     };
   },
   methods: {
@@ -252,7 +256,7 @@ export default {
       
       // }  
       else {
-        this.index++;
+        this.index=this.index+this.count;
       }
     },
     //有效波高传过来的值
@@ -311,7 +315,8 @@ export default {
           this.rq1 = "开始年份";
           this.rq2 = "结束年份";
           //调用暂停方法（暂停方法中有添加定时器以及清除定时器）
-        } else if (date === "月平均风速" || date === "逐小时年平均风速" || date === "月平均风功率密度"||date === "风向分布频率" || date === "各向风功率密度分布频率" || date === "各区间风速分布频率" || date === "各区间风功率密度分布频率") {
+        } else if (date === "月平均风速" || date === "逐小时年平均风速" || date === "月平均风功率密度" || date === "各向风功率密度分布频率" || date === "各区间风速分布频率" || date === "各区间风功率密度分布频率") {
+        
           $('.sjz-srk-z').show()
           this.rq1 = "年份";
           this.rq2 = "1";
@@ -321,10 +326,13 @@ export default {
           $(".rq2").css("display", "block");
           this.rq1 = "年份";
           this.rq2 = "月份";
-        }else if(date==='格点风参'){
+        }
+        else if(date==='格点风参'){
           $('.sjz-srk-z').hide()
           this.element=''
-
+        }else if(date==='风向分布频率'){
+          $('.sjz-srk-z').hide()
+           
         }
         //调用获取日期以及月份方法
         this.initOption();
@@ -719,6 +727,17 @@ export default {
         }
       }
     },
+    // jg(jgvalue){
+    //   console.log((this.max1-this.min1+1)/jgvalue,'----------')
+      
+    //   // let con=1
+    //   if(jgvalue==1){
+    //     this.count=1
+    //   }else if(jgvalue==2){
+    //     this.count=2
+    //   }
+
+    // }
   },
 
   
