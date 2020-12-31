@@ -140,6 +140,8 @@ export default {
       //卫星选择方法
       selectWx(Wx){
         bus.$emit('Wx',Wx)
+        bus.$emit('addimg',"")
+
       },
       //根据卫星以及卫星参数判断前端输入数据方法
       wxAndWxcs(){

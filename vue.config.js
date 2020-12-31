@@ -27,14 +27,7 @@ module.exports = {
                 '^/': ''
               }
             },
-            // '/windy':{
-            //   target: 'http://localhost:9010',
-            //   changeOrigin: true,
-            //   ws: true, 
-            //   pathRewrite: {
-            //     '^/windy': ''
-            //   }
-          //   },
+            
           },
     },
 };

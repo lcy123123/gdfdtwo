@@ -9,10 +9,6 @@
     <!-- 上边的 -->
     <!-- 父组件接收子组件的传值addimg -->
     <Ygsz ref="child"></Ygsz>
-     
-
-     <!-- <ColorBar/> -->
-   
     <!-- 时间轴 -->
     <Sjz></Sjz>
   </div>

@@ -87,7 +87,7 @@
           :marks="marks1"
           :max="max1"
           :min="min1"
-      
+          @change="clikeValue"
         ></el-slider>
       </div>
       <div>
@@ -173,22 +173,62 @@ export default {
       //根据选择的日期2传index
       seconddate: "9",
       count:1,
+      jgvalue:1,
     };
   },
   methods: {
-    // clikeValue(){
-    //   console.log(this.value)
-    //   // this.index=val-this.options1[this.firstdate].value
-    //   if(this.value-this.options1[this.firstdate].value>=0){
-    //   this.index=this.value-this.options1[this.firstdate].value
-    //     //  bus.$emit(this.element, this.index);
-    //   }else{
-    //     this.index=this.value
-    //   }
-    //   bus.$emit(this.element, this.index);
-    //   console.log(this.index,'firstdata')
-    //   this.zt()
-    // },
+    Jg(jgvalue){
+      if(jgvalue==1){
+        this.count=1
+        //间隔为2
+      }else if(jgvalue==2){
+        if(this.index>this.seconddate){
+          this.index=this.firstdate
+          console.log(this.index)
+        }else{
+          console.log(this.index)
+          this.count=2
+        }
+        //间隔为3
+      }else if(jgvalue==3){
+        
+        if(this.index>this.seconddate){
+          this.index=this.firstdate
+        }else{
+          this.count=3
+        }
+        //间隔为4
+      }else if(jgvalue==4){
+        if(this.index>this.seconddate){
+          this.index=this.firstdate
+        }else{
+          this.count=4
+        }
+        //间隔为5
+      }else if(jgvalue==5){
+        if(this.index>this.seconddate){
+          this.index=this.firstdate
+        }else{
+        this.count=5
+        }
+
+      }
+    },
+    //点击轴上的点
+    clikeValue(){
+      console.log(this.firstdate,'---')
+      if(this.value-this.options1[this.firstdate].value>=0){
+      this.index=this.value-this.options1[this.firstdate].value
+      console.log(this.index,'index1')
+      }else{
+        this.index=this.value
+      }
+      bus.$emit(this.element, this.index);
+      
+      this.zt()
+
+
+    },
     //点击显示第一张图片
     firstImg() {
       //将index设置为0
@@ -219,10 +259,9 @@ export default {
         this.index -=1;
         this.value --;
       }
-      // if(this.$route.path!='/pdjc'){
   
       bus.$emit(this.element, this.index);
-      // }
+
     },
     //点击后一张图片
     afterImg() {
@@ -242,6 +281,8 @@ export default {
     },
     //定时器执行的内容
     dsq() {
+      
+      console.log(this.index,'index2')
       if(this.value-2009>=0){
         this.value = this.options1[this.index].value;
       }else{
@@ -254,10 +295,11 @@ export default {
         this.index = this.firstdate;
       }
       
-      // }  
       else {
         this.index=this.index+this.count;
+        // this.value++
       }
+
     },
     //有效波高传过来的值
     yxbgmethods() {
@@ -300,11 +342,9 @@ export default {
       });
      
     },
-    //根据传递过来的参数 动态换时间轴上面框中的内容
+    //（数值预报）根据传递过来的参数 动态换时间轴上面框中的内容
     dongtaidate() {
       bus.$on("addimg", date => {
-        // this.initOption()
-        // bus.$off('addyxbgimg')
         this.zt();
         this.date = date;
         this.element = "szyb";
@@ -314,7 +354,7 @@ export default {
          $(".rq2").css("display", "block");
           this.rq1 = "开始年份";
           this.rq2 = "结束年份";
-          //调用暂停方法（暂停方法中有添加定时器以及清除定时器）
+          
         } else if (date === "月平均风速" || date === "逐小时年平均风速" || date === "月平均风功率密度" || date === "各向风功率密度分布频率" || date === "各区间风速分布频率" || date === "各区间风功率密度分布频率") {
         
           $('.sjz-srk-z').show()
@@ -334,6 +374,7 @@ export default {
           $('.sjz-srk-z').hide()
            
         }
+        
         //调用获取日期以及月份方法
         this.initOption();
       });
@@ -341,7 +382,6 @@ export default {
     //初始化option
     startOption() {
       let year = new Date().getFullYear();
-      // console.log(year);
       for (var m = 2010; m < year; m++) {
         this.options1.push({ label: m, value: m, key: m });
         this.options2.push({ label: m, value: m, key: m });
@@ -351,18 +391,14 @@ export default {
     //点击选择日期
     selectrq() {
       //让其兄弟隐藏
-      $(".sjz-srk")
-        .siblings()
-        .hide();
+      $(".sjz-srk").siblings().hide();
       //改变状态值
       this.flagrq = !this.flagrq;
     },
     //点击选择速度方法
     selectsz() {
       // $('.sjz-sz').show()
-      $(".sjz-sz")
-        .siblings()
-        .hide();
+      $(".sjz-sz").siblings().hide();
       this.flagsz = !this.flagsz;
     },
 
@@ -377,7 +413,7 @@ export default {
           this.Wx === "HY-2B" ||
           this.Wx === "CFOSAT"
         ) {
-          console.log("2019年的");
+          // console.log("2019年的");
           this.rq1 = "年份";
           this.value1 = 2019;
           this.options1 = [];
@@ -400,7 +436,7 @@ export default {
           $(".rq2").css("display", "none");
           $(".rq1").css("margin-top", "20px");
         } else {
-          console.log("2017年的");
+          // console.log("2017年的");
           this.rq1 = "年份";
           this.value1 = 2017;
           this.options1 = [];
@@ -423,7 +459,7 @@ export default {
         this.Wxcs === "年平均风功率密度"
       ) {
         if (this.Wx === "ASCAT" || this.Wx == "WindSat") {
-          console.log("2010-2019年的");
+          // console.log("2010-2019年的");
           this.rq1 = "开始年份";
           this.rq2 = "结束年份";
           this.options1 = [];
@@ -442,7 +478,7 @@ export default {
           $(".rq2").css("display", "block");
           $(".rq1").css("margin-top", "0px");
         } else if (this.Wx === "HY-2A") {
-          console.log("2012-2018年的");
+          // console.log("2012-2018年的");
           this.rq1 = "开始年份";
           this.rq2 = "结束年份";
           this.options1 = [];
@@ -461,7 +497,7 @@ export default {
           $(".rq2").css("display", "block");
           $(".rq1").css("margin-top", "0px");
         } else {
-          console.log("2019-2020年的");
+          // console.log("2019-2020年的");
           this.rq1 = "开始年份";
           this.rq2 = "结束年份";
           this.options1 = [];
@@ -485,7 +521,6 @@ export default {
     },
     //向cesium传参
     addWxImg(){
-      // console.log(this.Wx,this.Wxcs)
         if(this.$route.path!='/pgbj'){
       
       bus.$emit('yggc',this.Wx,this.Wxcs)
@@ -523,7 +558,7 @@ export default {
           this.options1.push({ label: d, value: d, key: d });
           this.options2.push({ label: d, value: d, key: d });
           this.marks1[d] = "" + d + "";
-          // console.log(this.marks, "======");
+
         }
       }
       this.index = this.firstdate ; 
@@ -623,7 +658,7 @@ export default {
     //点击暂停方法
     zt() {
       $(".btn-5>img").attr("src", ks);
-      // console.log(this.timer);
+      // console.log($(".btn-5>img"),'-------')
       if (this.timer != null) {
         clearInterval(this.timer);
       }
@@ -650,8 +685,9 @@ export default {
     getWx(){
       
         bus.$on("Wx", Wx => {
-          
-          if(Wx=='' || Wx==null){this.zt();}
+          if(Wx=='' || Wx==null){
+            this.zt();
+            }
           else{
       // 储存参数
       this.Wx = Wx;
@@ -662,7 +698,9 @@ export default {
     });
     //接收卫星参数
       bus.$on("Wxcs", Wxcs => {
-        if(Wxcs=='' || Wxcs==null){this.zt()}
+        if(Wxcs=='' || Wxcs==null){
+          this.zt()
+          }
         else{
         //储存参数
         this.Wxcs = Wxcs;
@@ -672,31 +710,30 @@ export default {
         this.play()
         }
       });
-      // this.wxAndWxcs();
-      // this.addWxImg()
-        // if(this.$route.path!='/pgbj'){
-         this.element='yggc1'
-        // }
+        
+        //  this.element='yggc1'
+        
     }
   },
   created() {
     //调用初始化option
     this.startOption();
-    // this.zt()
+    this.zt()
     if(this.$route.path == '/szyb'){
       this.element='szyb'
+
     //根据选择不同框显示的不同
     this.dongtaidate();
     } else if(this.$route.path == '/yxbg'){
-      
       this.element='yxbg'
     //调用有效波高方法
     this.yxbgmethods();
     }else if(this.$route.path=='/yggc'){
-    //接收参数
-    this.getWx()
+         this.element='yggc1'
+        //接收参数
+         this.getWx()
     }
-     //当选中台风频次的时候隐藏时间轴
+     //当选中（台风频次）的时候隐藏时间轴
     bus.$on("addzhtqimg", zhtq => {
       if (zhtq === "台风频次") {
         $(".sjz-srk-z").css("display", "none");
@@ -706,19 +743,17 @@ export default {
   },
 
   watch:{
-    
     value1(value){
       if ((this.rq1 === "开始年份" && this.rq2 === "结束年份") ) {
         this.min1 = this.value = value; //给轴赋值
         this.index = this.firstdate = value-this.options1[0].value;
+        console.log(this.firstdate,'=-1=1=1=1=1')
       }else if(this.rq1 === "开始月份" && this.rq2 === "结束月份"){
         this.min1 = this.value = value; //给轴赋值
         this.index = this.firstdate = value-this.options1[0].value+1;
-     
       }
     },
     value2(value){
-      
       if (this.date !== "逐小时月平均风速") {
         this.max1 = value; //给轴最大值赋值
         this.seconddate=value-this.options1[0].value;
@@ -727,17 +762,17 @@ export default {
         }
       }
     },
-    // jg(jgvalue){
-    //   console.log((this.max1-this.min1+1)/jgvalue,'----------')
-      
-    //   // let con=1
-    //   if(jgvalue==1){
-    //     this.count=1
-    //   }else if(jgvalue==2){
-    //     this.count=2
-    //   }
-
-    // }
+    value(){
+      //调用间隔方法
+      this.Jg(this.jgvalue)
+    },
+    //监听间隔的变化 
+    jg(jgvalue){
+      //储存间隔
+    this.jgvalue=jgvalue
+    // this.index=this.firstdate
+    this.Jg()
+    }
   },
 
   

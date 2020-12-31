@@ -192,6 +192,7 @@ export default {
       this.fmgfn=[]
       this.fmgfx=[]
        bus.$on("lonAndlat", (clickLon, clickLat) => {
+         console.log(clickLon,clickLat)
       // this.clickLon = clickLon;
       // this.clickLat = clickLat;
       //如果是格点风参并且经纬度不为空则显示组件

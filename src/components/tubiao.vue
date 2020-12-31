@@ -50,6 +50,15 @@
     <div class="right-2 bottom-line" style="background-color:rgba(0, 3, 44, 0.5)">
       <div class="div-btn">
         <span class="first-text">遥感数据对比</span><span class="btn-1">×</span>
+        <el-form>
+          <el-form-item style="position:absolute;top:18px;right:22px;z-index:1">
+             <el-radio-group  v-model="wxvalue" class="wxxx" size="small">
+                   <el-radio-button label="ASCAT"></el-radio-button>
+                   <el-radio-button label="CFOSAT"></el-radio-button>
+                   <el-radio-button label="HY-2B"></el-radio-button>
+             </el-radio-group>
+          </el-form-item>
+        </el-form>
       </div>
       <div
         id="main-left-5"
@@ -59,7 +68,7 @@
     <!-- 右面第三个图表 -->
     <div class="right-3 bottom-line" style="background-color:rgba(0, 3, 44, 0.5)">
       <div class="div-btn">
-        <span class="first-text">浮标数据对比</span><span class="btn-1">×</span>
+        <span class="first-text">{{fbsj}}</span><span class="btn-1">×</span>
       </div>
       <div
         id="main-left-6"
@@ -91,9 +100,14 @@ import echarts from "echarts";
 import bus from '../utils/eventBus'
 
 export default {
-  mounted() {
+  created() {
     bus.$on('myid',(id)=>{
-      console.log()
+      //当id为1或2时 改变标签中文字
+      if(id==1||id==2){
+        this.fbsj='数值数据对比'
+      }else{
+        this.fbsj='浮标数据对比'
+      }
       // 将id储存起来
       this.ggpid=[]
       this.ggpid=id[0]
@@ -119,11 +133,16 @@ export default {
     this.getyaoGanShuJuDuiBi(this.ggpid);
     //调用请求浮标数据对比
     this.getfuBiaoShuJuDuiBi(this.ggpid);
-    //接收兄弟（cesium）传过来的参数
     
   },
   data() {
     return {
+      fbsj:'浮标数据对比',
+      //卫星选项值(遥感数据对比中)
+      wxvalue:'ASCAT',
+      //向后台传入的卫星参数
+      wxvalue2:'',
+      //广告牌id
       ggpid:'',
       //高度下拉框数据
       options: [],
@@ -163,7 +182,9 @@ export default {
       yxfsLength:[]
     };
   },
+  
   methods: {
+
     //高度下拉框 获取选中值
     changeValue(e){
       //获取选中值 并赋值
@@ -209,13 +230,11 @@ export default {
       //请求接口 获取数据
      await this.$axios.post("/api/show/MonthlyVariationWindSpeed", { "local": ggpid||3, "level": gdyxValue||10 }).then(res => {
           //遍历
-          // console.log()
           res.data.forEach((item) => {
             //获取平均风速数据
           this.pjfsList.push(item.vAvg);
           //获取风速标准差数据
           this.fsbzcList.push(item.vStd)
-          // console.log(index+1+'月')
           this.fsybhLenth.push(item.vDate.substring(6,4)+'月')
           });
         });
@@ -494,8 +513,10 @@ export default {
      this.yxfsLength=[]
       //请求接口 获取数据
     await this.$axios.post('/api/show/EffectiveWindSpeed',{"local":ggpid||3,"level":gdyxValue||10}).then(res=>{
+      
       //遍历数据 获取有效风速数据
         res.data.forEach(item=>{
+          
           this.yxfsList.push(item.vFValid*100)
           this.yxfsLength.push(item.vDate.substring(6,4)+'月')
         })
@@ -629,9 +650,14 @@ export default {
     },
     //请求风向统计方法
    async getfengXiangTongJi(gdyxValue,ggpid) {
-     this.fxtjList=[]
+        this.fxtjList=[]
       //请求接口 获取数据
       await this.$axios.post('/api/show/WindDirection',{"local":ggpid||3,"level":gdyxValue||10}).then(res=>{
+        //判断data是否为空
+      if(res.data.length==0){
+        //调用 加载风向统计方法
+         this.fengXiangTongJi(this.fxtjList);
+      }else{
         let a=[]
         a.push(res.data[0])
         a.forEach(item=>{
@@ -639,11 +665,12 @@ export default {
                  item.vFreNnw*100,item.vFreNw*100,item.vFreS*100,item.vFreSe*100,item.vFreSse*100,item.vFreSsw*100,
                  item.vFreSw*100,item.vFreW*100,item.vFreWnw*100,item.vFreWsw*100)
         })
-        // console.log(a,'风向统计数据')
-      })
-        
-      //调用 加载风向统计方法（玫瑰图）
+         //调用 加载风向统计方法（玫瑰图）
       this.fengXiangTongJi(this.fxtjList);
+      }
+      })
+     
+   
     },
     //加载风向统计（玫瑰图）
     fengXiangTongJi(fxtjList) {
@@ -705,7 +732,6 @@ export default {
         series: [
           {
             type: "bar",
-            // data: [1, 2, 3, 4, 3, 5, 1, 3, 4, 5, 6, 7, 8, 9, 1],
             data: fxtjList,
             coordinateSystem: "polar",
             stack: "a"
@@ -722,7 +748,7 @@ export default {
       this.ygfsList=[]
       this.ygTime=[]
       //请求接口 获取数据
-      await this.$axios.post('/api/show/RemoteSensingData',{"id":ggpid||3}).then(res=>{
+      await this.$axios.post('/api/show/RemoteSensingData',{"id":ggpid||3,"sat":this.wxvalue2||"ascat"}).then(res=>{
         //遍历数据 
        res.data.forEach(item=>{
          //获取雷达风速数据
@@ -733,14 +759,12 @@ export default {
           this.ygfsList.push(item.wsAscat)
        })
       })
-      // console.log(this.ygfsList,'遥感风速数据')
       //调用 加载遥感数据对比（折现图）
       this.yaoGanShuJuDuiBi(this.ldfsList,this.ygfsList,this.ygTime);
     },
     //加载遥感数据对比
     yaoGanShuJuDuiBi(ldfsList,ygfsList,ygTime) {
       //右侧折线图1
-      // console.log(ygsjdbList)
       var mychartsLeft5 = echarts.init(document.getElementById("main-left-5"));
       var optionLeft5 = {
         //  图例相关
@@ -999,7 +1023,33 @@ export default {
       };
       mychartsLeft6.setOption(optionLeft6);
     }
-  }
+  },
+  watch:{
+     //动态监测路由变化  控制colorBar组件的显示
+    $route(to){
+    if(to.fullPath=='/tb'){
+      this.getfengSuYueBianHua(this.gdyxValue,this.ggpid);
+    this.getfengGongLvMiDuTongJi(this.gdyxValue,this.ggpid);
+    this.getyouXiaoFengSu(this.gdyxValue,this.ggpid);
+    this.getfengXiangTongJi(this.gdyxValue,this.ggpid);
+    this.getyaoGanShuJuDuiBi(this.ggpid);
+    this.getfuBiaoShuJuDuiBi(this.ggpid);
+    }
+     },
+     //监听卫星值的变化
+     wxvalue(value){
+       if(value=='ASCAT'){
+         this.wxvalue2='ascat'
+       }else if(value=='CFOSAT'){
+         this.wxvalue2='cfo'
+       }else if(value=='HY-2B'){
+         this.wxvalue2='h2b'
+       }
+    this.getyaoGanShuJuDuiBi(this.ggpid);
+
+     }
+     
+   },
 };
 </script>
 
@@ -1091,5 +1141,9 @@ export default {
 .el-select .el-input__inner{
   width: 100px;
   height: 30px;
+}
+/* 倒数第二个图表中卫星选则样式 */
+.wxxx .el-radio-button--small .el-radio-button__inner{
+  padding: 3px 8px;
 }
 </style>

@@ -155,6 +155,7 @@ export default {
       bus.$off("szyb");
       bus.$off("yxbg");
       bus.$off("yggc");
+      
       this.AddImg(this.viewer,szybvalue)
     })
 
@@ -162,6 +163,7 @@ export default {
          bus.$off("szyb");
          bus.$off("yxbg");
         bus.$off("yggc"); 
+
       this.AddImg(this.viewer,szybvalue)
 
       })
@@ -701,7 +703,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
        this.gethourMounthList(gdvalue)
         
       bus.$on('szyb',(index,value1,value2)=>{
-        console.log(index,'90909090')
+        console.log(index,'index')
         //记录开始位置
           var startindexList
           for(let i=0;i<this.hourMounthList.length;i++){
@@ -722,7 +724,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           if(index==0){
             this.clearImg()
               }
-      
+           console.log(index,'index2')
         //将已经创建好的图层添加
           img1 = new Cesium.SingleTileImageryProvider({
           url:this.imgList[index],
@@ -730,6 +732,8 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           show: false
         });
         viewer.imageryLayers.addImageryProvider(img1);
+        console.log(index,'index3')
+
         })
       
     }
@@ -962,6 +966,17 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
       });
 
       this.viewer.entities.add(ggp);
+      
+      //鼠标点击事件
+      var handler = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
+      //左键按下事件
+      handler.setInputAction(function(click){
+          console.log('左键按下事件：',click.position);},
+          Cesium.ScreenSpaceEventType.LEFT_DOWN);
+      //左键抬起事件
+      handler.setInputAction(function(click){
+          console.log('左键弹起事件：',click.position);},
+          Cesium.ScreenSpaceEventType.LEFT_UP);
 
       //点击事件获取id
       // var handlerVideo = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
@@ -1011,8 +1026,6 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
          res.data.forEach(item=>{
           this.yearPicList.push(item.processPath)
          })
-        
-
        })
 
     },
@@ -1128,12 +1141,14 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
     handler.setInputAction(function (event) {
      var earthPosition  = viewer.camera.pickEllipsoid(event.position,viewer.scene.globe.ellipsoid);
      var cartographic = Cesium.Cartographic.fromCartesian(earthPosition, viewer.scene.globe.ellipsoid, new Cesium.Cartographic());
+     //点击获取经纬度
      var lat=Cesium.Math.toDegrees(cartographic.latitude);
-     var lng=Cesium.Math.toDegrees(cartographic.longitude);
+     var lon=Cesium.Math.toDegrees(cartographic.longitude);
+  
     //  var height=cartographic.height;
     //  console.log("[Lng=>"+lng+",Lat=>"+lat+",H=>"+height+"]");
      //经度
-     clickLon=lng;
+     clickLon=lon;
      //纬度
      clickLat=lat
      //传参（经纬度）
