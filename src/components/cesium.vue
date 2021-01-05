@@ -72,11 +72,10 @@ export default {
      //轴为1-12月（遥感观测）
      yggcImgList:[]
 
-    
-   
     };
   },
   mounted() {
+    
     // this.AddSl2(this.viewer)
     //接收组件传值(高度)
     bus.$on('gdvalue',(gdvalue1)=>{
@@ -123,6 +122,8 @@ export default {
       this.szybvalue = szybvalue;
       //调用添加图片方法并传参
       this.AddImg(this.viewer, this.szybvalue);
+      // this.dbClick() 
+      
     });
     //加载矢量数据方法（评估背景）
     bus.$on("pgbj", pgbjvalue => {
@@ -177,8 +178,7 @@ export default {
       this.AddImg(this.viewer)
     })
     //调用添加广告牌方法
-    this.Addggp();
-    
+    this.Addggp();   
   },
 
   methods: {
@@ -898,7 +898,6 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           this.clearImg()
             }
           if(Wxcs=='月平均风功率密度'||Wxcs=='月平均风速'){
-            // if(index==1){this.clearImg()} 
             for(let i=0;i<this.yggcImg.length;i++){
               this.clearImg()
             }
@@ -918,8 +917,6 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               });
               viewer.imageryLayers.addImageryProvider(img1);
           }else{
-            
-            console.log(this.yggcImg,'11111111')
             
             for(let i=0;i<this.yggcImg.length;i++){
               this.clearImg()
@@ -941,7 +938,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
     //添加广告牌
     Addggp(params) {
       let ggp = new Cesium.Entity({
-        id: params.dataId,
+        id: params.dataId||1,
         name: params.stationName || "name",
         position: Cesium.Cartesian3.fromDegrees(params.lon, params.lat),
         billboard: {
@@ -967,16 +964,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
 
       this.viewer.entities.add(ggp);
       
-      //鼠标点击事件
-      var handler = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
-      //左键按下事件
-      handler.setInputAction(function(click){
-          console.log('左键按下事件：',click.position);},
-          Cesium.ScreenSpaceEventType.LEFT_DOWN);
-      //左键抬起事件
-      handler.setInputAction(function(click){
-          console.log('左键弹起事件：',click.position);},
-          Cesium.ScreenSpaceEventType.LEFT_UP);
+    
 
       //点击事件获取id
       // var handlerVideo = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
@@ -991,13 +979,12 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
       //             this.ggpid.push(pick.id.id)
       //             //向兄弟传递参数
       //             bus.$emit('myid',this.ggpid)
-      //             
       //             } else {
       //                 return;
       //             }
       //         }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
     },
-    //
+    //台风频次请求方法
     async Tfpc(){
         
         await this.$axios.post('/api/swh/GetData',{ele:'TYPHOON'}).then(res=>{
@@ -1084,8 +1071,8 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           this.ggpid = [];
           //将点击的id储存起来
           this.ggpid.push(pick.id.id);
-          //向兄弟传递参数
-          bus.$emit("myid", this.ggpid);
+          //向兄弟传递参数(站点id以及名字)
+          bus.$emit("myid", this.ggpid,pick.id.name);
           
         } else {
           return;
@@ -1095,7 +1082,6 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
 
     // 声明添加点的方法
     // AddPoint(params) {
-    //  
     //   if (params.lon === undefined || params.lat === undefined) {
     //     alert("请提供经纬度!");
     //     return;
@@ -1145,14 +1131,41 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
      var lat=Cesium.Math.toDegrees(cartographic.latitude);
      var lon=Cesium.Math.toDegrees(cartographic.longitude);
   
-    //  var height=cartographic.height;
-    //  console.log("[Lng=>"+lng+",Lat=>"+lat+",H=>"+height+"]");
+  
      //经度
      clickLon=lon;
      //纬度
      clickLat=lat
      //传参（经纬度）
      bus.$emit('lonAndlat',clickLon,clickLat)
+
+     //判断是否为格点风参
+     
+     //添加广告牌（格点风参）
+     if(lat===clickLat&&lon===clickLon){
+       //清除之前的广告牌
+       if(viewer.entities.getById(`5`)) {
+       viewer.entities.remove({id: '5'})  
+       }
+       //添加新的广告牌
+      let ggp=new Cesium.Entity({
+       id:'5',
+       position:Cesium.Cartesian3.fromDegrees(clickLon,clickLat),
+       billboard:{
+         image:'./ggpgdfc.png',
+         pixelSize: 1,
+         horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+         verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+         scale: 1,
+         disableDepthTestDistance: 0, //广告牌不进行深度检测
+         heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND 
+       }
+     });
+     //将创建好的广告牌添加上
+     viewer.entities.add(ggp)
+     }
+       
+         
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
     },
@@ -1165,13 +1178,12 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
       handler.setInputAction(function(movement) {
         if (scene.mode !== Cesium.SceneMode.MORPHING) {
           var pickedObject = scene.pick(movement.endPosition);
-          // console.log(pickedObject, 'gggggg')
           if (scene.pickPositionSupported && Cesium.defined(pickedObject)) {
-            // console.log(pickedObject.id.id);
+      
             TooltipDiv.showAt(
               movement.endPosition,
               '<div style="color: white;border:1px solid #008CFF;font-size:14px;padding:5px;background:rgba(8,26,127,.5)">' +
-                pickedObject.id.description +
+                pickedObject.id.description+
                 "</div>"
             );
           } else {

@@ -92,6 +92,8 @@
         </el-form-item>
       </el-form>
     </div>
+    <!-- 站点名字 -->
+    <span style="color:#79E5FD;position: fixed;top: 540px;left:380px;">{{zdname}}</span>
   </div>
 </template>
 
@@ -101,23 +103,26 @@ import bus from '../utils/eventBus'
 
 export default {
   created() {
-    bus.$on('myid',(id)=>{
-      //当id为1或2时 改变标签中文字
-      if(id==1||id==2){
-        this.fbsj='数值数据对比'
-      }else{
-        this.fbsj='浮标数据对比'
-      }
+    bus.$on('myid',(id,zdname)=>{
+      // 储存站点id以及站点名称
+      this.zdname=zdname
       // 将id储存起来
       this.ggpid=[]
       this.ggpid=id[0]
+      //当id为1或2时 改变标签中文字
+      if(id==1||id==2){
+        this.fbsj='预报数据对比'
+        this.getYuBaoShuJuDuiBi(this.ggpid)
+      }else{
+        this.fbsj='浮标数据对比'
+        this.getfuBiaoShuJuDuiBi(this.ggpid);
+      }
+      //调用加载所有图表方法
     this.getfengSuYueBianHua(this.gdyxValue,this.ggpid);
     this.getfengGongLvMiDuTongJi(this.gdyxValue,this.ggpid);
     this.getyouXiaoFengSu(this.gdyxValue,this.ggpid);
     this.getfengXiangTongJi(this.gdyxValue,this.ggpid);
     this.getyaoGanShuJuDuiBi(this.ggpid);
-    this.getfuBiaoShuJuDuiBi(this.ggpid);
-
     })
     //调用请求高度方法
     this.gaodu();
@@ -137,6 +142,8 @@ export default {
   },
   data() {
     return {
+      //站点名称
+      zdname:'海试二',
       fbsj:'浮标数据对比',
       //卫星选项值(遥感数据对比中)
       wxvalue:'ASCAT',
@@ -173,7 +180,7 @@ export default {
       //浮标时间
       fbTime:[],
       //高度选中值
-      gdyxValue:'',
+      gdyxValue:'10',
       //风速月变化的x轴数据
       fsybhLenth:[],
       //风功率密度统计的x轴数据
@@ -201,6 +208,7 @@ export default {
     this.getyaoGanShuJuDuiBi(this.ggpid)
     //调用 请求浮标数据对比方法
     this.getfuBiaoShuJuDuiBi(this.ggpid)
+    this.getYuBaoShuJuDuiBi(this.ggpid)
     },
 
     //请求高度数据方法
@@ -667,10 +675,8 @@ export default {
         })
          //调用 加载风向统计方法（玫瑰图）
       this.fengXiangTongJi(this.fxtjList);
-      }
-      })
-     
-   
+       }
+      })   
     },
     //加载风向统计（玫瑰图）
     fengXiangTongJi(fxtjList) {
@@ -749,7 +755,9 @@ export default {
       this.ygTime=[]
       //请求接口 获取数据
       await this.$axios.post('/api/show/RemoteSensingData',{"id":ggpid||3,"sat":this.wxvalue2||"ascat"}).then(res=>{
-        //遍历数据 
+        //判断高度是否为10（只有高度为10的数据）
+        if(this.gdyxValue==10){
+ //遍历数据 
        res.data.forEach(item=>{
          //获取雷达风速数据
          this.ldfsList.push(item.wsLidar)
@@ -758,6 +766,8 @@ export default {
          //获取遥感数据
           this.ygfsList.push(item.wsAscat)
        })
+        }
+       
       })
       //调用 加载遥感数据对比（折现图）
       this.yaoGanShuJuDuiBi(this.ldfsList,this.ygfsList,this.ygTime);
@@ -809,8 +819,8 @@ export default {
             nameTextStyle: { color: "white", fontSize: 10 },
             type: "value",
             min: 0,
-            max: 30,
-            interval: 10,
+            max: 18,
+            interval: 6,
             //坐标轴文字颜色
             axisLabel: {
               color: "white",
@@ -850,6 +860,7 @@ export default {
         ],
         series: [
           {
+            symbol:"none",
             showAllSymbol: true,    //是否全部显示数据
             name: "雷达风速",
             data: ldfsList,
@@ -867,6 +878,7 @@ export default {
             }
           },
           {
+            symbol:"none",
             showAllSymbol: true,    //是否全部显示数据
             name: "遥感风速",
             data: ygfsList,
@@ -893,13 +905,12 @@ export default {
      //清空数组之前的值
      this.fbldfsList=[]
      this.fbfsList=[]
+     this.fbTime=[]
       //请求接口 获取数据
     await  this.$axios.post('/api/show/BuoyData',{"id":ggpid||3}).then(res=>{
-       //清空数组中原有数据
-       this.fbTime=[]
-       this.fbldfsList=[]
-       this.fbfsList=[]
-       //遍历数据 获取雷达风速数据
+       //判断高度是否为10（只有高度为10的数据）
+       if(this.gdyxValue==10){
+      //遍历数据 获取雷达风速数据
         res.data.forEach(item=>{
           this.fbldfsList.push(item.wsLidar)
           //获取浮标时间
@@ -908,13 +919,40 @@ export default {
           this.fbfsList.push(item.wsBuoy)
 
         })
+       }
 
       })
       //调用 加载浮标数据对比方法
       this.fuBiaiShuJuDuiBi(this.fbldfsList,this.fbfsList,this.fbTime);
     },
+   async getYuBaoShuJuDuiBi(ggpid) {
+     //清空数组之前的值
+     this.fbldfsList=[]
+     this.fbfsList=[]
+      //请求接口 获取数据
+    await  this.$axios.post('/api/show/ForecastRes',{"local":ggpid||3,"level":this.gdyxValue||10}).then(res=>{
+      // console.log(res.data,'====22预报')
+       //清空数组中原有数据
+       this.fbTime=[]
+      //  this.fbldfsList=[]
+      //  this.fbfsList=[]
+       //遍历数据 获取雷达风速数据
+        res.data.forEach(item=>{
+          this.fbldfsList.push(item.wsLidar)
+          //获取预报时间
+          this.fbTime.push(item.time.substring(0,10))
+          //获取预报数据
+          this.fbfsList.push(item.wsAscat)
+
+        })
+
+      })
+      let textfs='预报风速'
+      //调用 加载浮标数据对比方法
+      this.fuBiaiShuJuDuiBi(this.fbldfsList,this.fbfsList,this.fbTime,textfs);
+    },
     //加载浮标数据对比
-    fuBiaiShuJuDuiBi(fbldfsList,fbfsList,fbTime) {
+    fuBiaiShuJuDuiBi(fbldfsList,fbfsList,fbTime,textfs) {
       //右侧折线图2
       var mychartsLeft6 = echarts.init(document.getElementById("main-left-6"));
       var optionLeft6 = {
@@ -927,7 +965,7 @@ export default {
           textStyle: {
             color: "white"
           },
-          data: ["雷达风速", "浮标风速"]
+          data: ["雷达风速", textfs||"浮标风速"]
         },
 
         //x轴数据
@@ -938,7 +976,7 @@ export default {
           axisLabel: {
             // showMinLabel: true,
             // showMaxLabel: true,
-            interval:400,      //坐标轴是否全部显示
+            interval:540,      //坐标轴是否全部显示
             // rotate:8,         //坐标轴文字是否倾斜
             color: "white",
             // interval: 0, //坐标轴全部显示
@@ -963,8 +1001,8 @@ export default {
             nameTextStyle: { color: "white", fontSize: 10 },
             type: "value",
             min: 0,
-            max: 30,
-            interval: 10,
+            max: 18,
+            interval: 6,
             //坐标轴文字颜色
             axisLabel: {
               textStyle: {
@@ -1014,7 +1052,7 @@ export default {
           },
           {
             showAllSymbol:true,    //是否全部显示数据（点）
-            name:'浮标风速',
+            name:textfs||"浮标风速",
             data: fbfsList,
             type: "line",
             symbol: "none",
@@ -1033,6 +1071,7 @@ export default {
     this.getyouXiaoFengSu(this.gdyxValue,this.ggpid);
     this.getfengXiangTongJi(this.gdyxValue,this.ggpid);
     this.getyaoGanShuJuDuiBi(this.ggpid);
+    this.getYuBaoShuJuDuiBi(this.ggpid);
     this.getfuBiaoShuJuDuiBi(this.ggpid);
     }
      },

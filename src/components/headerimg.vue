@@ -251,7 +251,7 @@ export default {
 /* 导航下拉框 */
 .xlk-z {
   width: 310px;
-  height: 110px;
+  /* height: 110px; */
   /* border: 1px solid red; */
 }
 .xlk-1 {

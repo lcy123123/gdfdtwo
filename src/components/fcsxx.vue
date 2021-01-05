@@ -163,8 +163,10 @@ export default {
     //接收格点风参
     getgdfc() {
       bus.$on("addimg", szyb => {
+        // if(this.$route.path=='/szyb'){
         this.szyb = szyb;
         if (this.clickLon !== "" &&this.clickLat !== "" &&this.szyb == "格点风参"   ) {
+         //传参添加广告牌
           $(".fcsxx-z").show();
           $('.sjz-srk-z').hide()
         } else if( this.clickLon == "" &&this.clickLat == "" &&this.szyb == "格点风参"){
@@ -184,7 +186,7 @@ export default {
           this.clickLon = "";
           this.clickLat = "";
         }
-
+  // }
       });
     },
     //接收经纬度并判断
@@ -192,19 +194,15 @@ export default {
       this.fmgfn=[]
       this.fmgfx=[]
        bus.$on("lonAndlat", (clickLon, clickLat) => {
-         console.log(clickLon,clickLat)
-      // this.clickLon = clickLon;
-      // this.clickLat = clickLat;
       //如果是格点风参并且经纬度不为空则显示组件
       if (clickLon !== "" && clickLat !== "" && this.szyb == "格点风参") {
         
         let lon=clickLon.toString()
         let lat=clickLat.toString()
+        console.log(this.clickLon,this.clickLat)
         this.clickLon=lon.substring(0,lon.indexOf('.')+5)
         this.clickLat=lat.substring(0,lat.indexOf('.')+5)
         $(".fcsxx-z").show();
-        //调用获取数据方法
-        // this.getData()
         //调用风玫瑰
         if(this.ele=='fmg'){
         this.Fmg()
@@ -292,7 +290,10 @@ export default {
        this.C=res.data.weibullC
         }else if(this.clickLon!==''&&this.clickLat!==''&&res.data==''){
           $('.fcsxx').hide()
+          //判断路径是否为数值预报页面（不是则不显示暂无数据）
+          if(this.$route.path=='/szyb'){
           alert('暂无无数据')
+          }
         }
        
       })
