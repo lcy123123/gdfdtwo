@@ -18,7 +18,9 @@ export default new Router({
     routes:[
         {
             path:'/',
-            redirect:'/index',
+            // redirect:'/index',
+            //防止弹窗以及格点风参出错
+            redirect:'/szyb',
             // children:[]
         },
         {

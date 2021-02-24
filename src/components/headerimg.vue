@@ -11,10 +11,8 @@
       </span>
     </div>
     <!-- 左侧 -->
-    <div class="nac-z">
-      <!-- <div class="nav nav1" @click="fn"><img class="i1" src="../assets/i1.png" alt=""><span>风能资源</span></div> -->
-      
-      <div class="nav nav1" @click="fn">
+    <div class="nac-z"> 
+      <div class="nav nav1" @click="tabclick($event)">
         <img class="i1" src="../assets/i1.png" alt="" /><span class="fnzy">风能资源</span>
         <!-- 下边框(下拉框下面的长div) -->
         <div class="long-div1" style="height:2px;background-color:#0f53fd;display:none"></div>
@@ -22,14 +20,14 @@
       <i class="el-icon-caret-bottom small-1" style="position:absolute;top:21px;left:26px;color:#3F9FEA;display:none"></i>
       </div>
       
-      <div class="nav nav2" @click="zh">
+      <div class="nav nav2" @click="tabclick($event)">
         <img class="i2" src="../assets/i2.png" alt="" /><span class="zhtq">风险评估</span>
           <!-- 下边框(下拉框下面的长div) -->
         <div class="long-div2" style="height:2px;background-color:#0f53fd;display:none"></div>
            <!-- i标签（小三角） -->
       <i class="el-icon-caret-bottom small-2" style="position:absolute;top:21px;left:26px;color:#3F9FEA;display:none"></i>
       </div>
-      <div class="nav nav3" @click="pg">
+      <div class="nav nav3" @click="tabclick($event)">
         <img class="i3" src="../assets/i3.png" alt="" /><span class="pgjc">评估决策</span>
         <!-- 下边框(下拉框下面的长div) -->
         <div class="long-div3" style="height:2px;background-color:#0f53fd;display:none"></div>
@@ -47,12 +45,10 @@
       <div class="nav xlk-2">
         <div @click="yxbgFn" style="margin:10px 0;text-align:center;font-size:13px">有效波高</div>
         <div @click="zhtqFn" style="margin:10px 0;text-align:center;font-size:13px">灾害天气</div>
-        <!-- <div style="margin:10px 0;text-align:center;font-size:13px">数值预报</div> -->
       </div>
       <div class="nav xlk-3">
         <div @click="pgbjFn" style="margin:10px 0;text-align:center;font-size:13px">评估背景</div>
         <div @click="pgjcFn" style="margin:10px 0;text-align:center;font-size:13px">评估决策</div>
-        <!-- <div style="margin:10px 0;text-align:center;font-size:13px">数值预报</div> -->
       </div>
     </div>
     <!-- <router-view></router-view> -->
@@ -69,62 +65,108 @@ import i22 from "../assets/i22.png";
 import i33 from "../assets/i33.png";
 export default {
   data() {
-    return {};
+    return {
+    };
   },
   methods: {
-    //第一个下拉框（点击事件）
-    fn: function() {
-      $(".xlk-1").css("display:block");
-      $(".xlk-1").slideToggle(200);
-      //点击切换下边框
-      $('.long-div1').slideToggle(100)
-      //点击上滑下滑小三角
-      $('.small-1').slideToggle(200)
-      //点击切换图标
-      if ($(".i1").attr("src") == i1) {
-        $(".i1").attr("src", i11);
-        $(".fnzy").css("color", "#03E2FF");
-      } else {
-        $(".i1").attr("src", i1);
-        $(".fnzy").css("color", "white");
-        console.log($(".fnzy"));
+    //三个下拉框调用同一个方法
+    tabclick(e){
+      //得到点击元素内容
+      let a=e.target.textContent
+      if(a==='风能资源'){
+        //判断是否有class名 （二次点击隐藏）
+        if($('.fnzy').hasClass('textcolor')==true){
+        $('.xlk-1').hide()
+        $('.small-1').hide()
+        $('.long-div1').hide()
+        $('.i1').attr('src',i1)
+        $('.fnzy').removeClass('textcolor')
+        }
+        else{
+        //显示自己的样式 并恢复其他元素的样式
+        $('.fnzy').addClass('textcolor')
+        $('.pgjc').removeClass('textcolor')
+        $('.zhtq').removeClass('textcolor')
+        //显示自己的小三角 并隐藏其他的小三角
+        $('.small-1').show()
+        $('.small-2').hide()
+        $('.small-3').hide()
+        //显示自己的下边框 并隐藏其他的下边框
+        $('.long-div1').show()
+        $('.long-div2').hide()
+        $('.long-div3').hide()
+        //显示自己的下拉框 并隐藏其他的下拉框
+        $('.xlk-1').show()
+        $('.xlk-2').hide()
+        $('.xlk-3').hide()
+        //显示自己图片 隐藏其他的图片
+        $('.i1').attr('src',i11)
+        $('.i2').attr('src',i2)
+        $('.i3').attr('src',i3)
+        }
+      }else if(a==='风险评估'){
+        //判断是否有class类名 （二次点击隐藏自己）
+        if($('.zhtq').hasClass('textcolor')==true){
+        $('.xlk-2').hide()
+        $('.small-2').hide()
+        $('.long-div2').hide()
+        $('.i2').attr('src',i2)
+        $('.zhtq').removeClass('textcolor')
+        }else{
+        //显示自己的样式 并恢复其他元素的样式
+        $('.zhtq').addClass('textcolor')
+        $('.fnzy').removeClass('textcolor')
+        $('.fxpg').removeClass('textcolor')
+        //显示自己的小三角 并隐藏其他的小三角
+        $('.small-1').hide()
+        $('.small-2').show()
+        $('.small-3').hide()
+        //显示自己的下边框 并隐藏其他的下边框
+        $('.long-div2').show()
+        $('.long-div1').hide()
+        $('.long-div3').hide()
+        //显示自己下拉框 并隐藏其他的下拉框
+        $('.xlk-1').hide()
+        $('.xlk-2').show()
+        $('.xlk-3').hide()
+        //显示自己的图片 并隐藏其他的图片
+        $('.i2').attr('src',i22)
+        $('.i1').attr('src',i1)
+        $('.i3').attr('src',i3)
+        }
+      }else if(a==='评估决策'){
+        //判断是否有class类名 （二次点击隐藏自己）
+        if($('.pgjc').hasClass('textcolor')==true){
+        $('.xlk-3').hide()
+        $('.small-3').hide()
+        $('.long-div3').hide()
+        $('.i3').attr('src',i3)
+        $('.pgjc').removeClass('textcolor')
+        }else{
+        //显示自己的样式 并恢复其他元素的样式
+        $('.pgjc').addClass('textcolor')
+        $('.fnzy').removeClass('textcolor')
+        $('.zhtq').removeClass('textcolor')
+        //显示自己的小三角 并隐藏其他的小三角
+        $('.small-1').hide()
+        $('.small-2').hide()
+        $('.small-3').show()
+        //显示自己的下边框 并隐藏其他元素的下边框
+        $('.long-div3').show()
+        $('.long-div2').hide()
+        $('.long-div1').hide()
+        //显示自己的下拉框 并隐藏其他的下拉框
+        $('.xlk-1').hide()
+        $('.xlk-2').hide()
+        $('.xlk-3').show()
+        //显示自己的图片 并隐藏其他的图片
+        $('.i3').attr('src',i33)
+        $('.i2').attr('src',i2)
+        $('.i1').attr('src',i1)
+        }
       }
     },
-    //第二个下拉框（点击事件）
-    zh: function() {
-      $(".xlk-2").css("display:block");
-      $(".xlk-2").slideToggle(200);
-      //点击切换下边框
-      $('.long-div2').slideToggle(100)
-      //点击上滑下滑小三角
-      $('.small-2').slideToggle(200)
-      //点击切换图标
-      if ($(".i2").attr("src") == i2) {
-        $(".i2").attr("src", i22);
-        $(".zhtq").css("color", "#03E2FF");
-      } else {
-        $(".i2").attr("src", i2);
-        $(".zhtq").css("color", "white");
-      }
-    },
-    //第三个下拉框（点击事件）
-    pg: function() {
-      $(".xlk-3").css("display:block");
-      $(".xlk-3").slideToggle(200);
-      //点击上滑下滑小三角
-      $('.small-3').slideToggle(200)
-      //点击显示隐藏下边框
-      $('.long-div3').slideToggle(100)
-      // $()
-      //点击切换图标
-      if ($(".i3").attr("src") == i3) {
-        $(".i3").attr("src", i33);
-        $(".pgjc").css("color", "#03E2FF");
-      } else {
-        $(".i3").attr("src", i3);
-        $(".pgjc").css("color", "white");
-      }
-    },
+
     //点击跳转激光雷达
     jgld() {
       this.$router.push("/tb");
@@ -157,7 +199,6 @@ export default {
     },
     pgbjFn(){
       this.$router.push('/pgbj')
-
     },
   }
 };
@@ -188,15 +229,10 @@ export default {
   height: 13px;
   margin-right: 4px;
 }
-.fnzy{
+.fnzy,.zhtq,.pgjc{
   font-size: 13px;
 }
-.zhtq{
-  font-size: 13px;
-}
-.pgjc{
-  font-size: 13px;
-}
+
 /* 头部导航 */
 .header-right {
   width: 210px;
@@ -312,5 +348,8 @@ export default {
 .three-xlk {
   width: 100%;
   margin: 0;
+}
+.textcolor{
+  color: #03E2FF;
 }
 </style>

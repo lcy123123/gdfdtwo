@@ -175,7 +175,8 @@ export default {
       },
        //显示此页面时 默认展开第一个（遥感观测）
       Cli1(){
-        this.$router.push('/yggc')
+        // $('.top-11').show()
+        // $('.top-22').hide()
       // 点击按钮  判断第一个小图标（如果是亮的 则将小图标变不亮  背景以及文字变不亮）  默认是展开的 （小图标和文字背景是亮的）
       if($('.y1').attr('src')==y2){
         //将小图标变成不亮的
@@ -185,9 +186,7 @@ export default {
         //将文字变成不亮的
         $('.y1-text').css({'color':'white'})
         //点击切换后面的小图标
-        // $('.c1,.el-icon-caret-bottom').attr('class','el-icon-caret-right')
         $('.c1').find('i').attr('class','el-icon-caret-right')
-
       }else{
         //将小图标变成亮的
         $('.y1').attr('src',y2)
@@ -197,17 +196,17 @@ export default {
         $('.y1-text').css({'color':'#04BFEA'})
         //点击切换后面小三角
         $('.c1').find('i').attr('class','el-icon-caret-bottom')
-
       }
       //top1上滑
       $('.top-1').slideToggle(200)
 
+        this.$router.push('/yggc')
      
     },
 
     //点击第二个
     Cli2(){
-        this.$router.push('/szyb')
+        //跳转路由
         if($('.y2').attr('src')==s1){
         //将小图标变成亮的
         $('.y2').attr('src',s2)
@@ -230,6 +229,7 @@ export default {
       }
       //点击上滑
       $('.top-2').slideToggle(200)
+        this.$router.push('/szyb')
 
     },
   }

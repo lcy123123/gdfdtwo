@@ -1,12 +1,18 @@
 <template>
+<div>
      <div id="temp_legend">
       <span class="temp_legend1" style="position:absolute;right:30px;width:22px;height:100px;top:-180px"></span>
         <span class="span1"  style="position:absolute;top:-185px;margin-left:-24px;color:blue">{{maxvalue}}</span><br />
         <span class="span2" style="position:absolute;top:-99px;margin-left:-24px;color:blue">{{minvalue}}</span><br />
     </div>
+    <!-- 右下角图表 -->
+    <div id="main-rightBottom" style="position:absolute;top:430px;right:20px;height:160px;width:160px"></div>
+</div>
 </template>
 <script>
 import bus from '../utils/eventBus'
+import echarts from "echarts";
+import $ from 'jquery'
 
 export default {
   data(){
@@ -17,44 +23,134 @@ export default {
     }
   },
   mounted(){
+    //接收台风频次 设置colorbar最大值
+    bus.$on('addzhtqimg',tfpc=>{
+      if(tfpc==='台风频次'){
+      this.maxvalue=25
+      }
+    })
+    //接收有效波高  设置colorbar最大值（最大值都一样）
+    bus.$on('addyxbgimg',()=>{
+      this.maxvalue=12
+    })
+    //接收数值预报  设置colorbar最大值
     bus.$on('addimg',szyb=>{
       if(szyb=='年平均风速'){
+        $('#main-rightBottom').hide()
+        $('#temp_legend').show()
         this.maxvalue=12;
         this.minvalue=0;
         // this.dw='(m/s)';
       }else if(szyb=='月平均风速'){
+         $('#main-rightBottom').hide()
+        $('#temp_legend').show()
         this.maxvalue=15;
         this.minvalue=0;
         // this.dw='单位:m/s';
       }else if(szyb=='逐小时年平均风速'||szyb=='逐小时月平均风速'){
+         $('#main-rightBottom').hide()
+        $('#temp_legend').show()
         this.maxvalue=15;
         this.minvalue=0;
         // this.dw='单位:m/s';
       }else if(szyb=='年平均风功率密度'||szyb=='月平均风功率密度'){
+         $('#main-rightBottom').hide()
+        $('#temp_legend').show()
         this.maxvalue=1000;
         this.minvalue=0;
         this.dw='单位:W/m²';
       }else if(szyb=='有效风速时数'){
+         $('#main-rightBottom').hide()
+        $('#temp_legend').show()
         this.maxvalue=8000;
         this.minvalue=5000;
         // this.dw='单位:h';
       }else if(szyb=='风切变系数'){
+         $('#main-rightBottom').hide()
+        $('#temp_legend').show()
         this.maxvalue=0.1;
         this.minvalue=0;
         // this.dw=''
       }else if(szyb=='威布尔分布形状参数'){
+         $('#main-rightBottom').hide()
+        $('#temp_legend').show()
         this.maxvalue=3.5;
         this.minvalue=0;
         // this.dw='';
       }else if(szyb=='威布尔分布尺度参数'){
+         $('#main-rightBottom').hide()
+        $('#temp_legend').show()
         this.maxvalue=11;
         this.minvalue=0;
         // this.dw='单位:m/s'
       }else if(szyb=='各区间风速分布频率'||szyb=='各区间风功率密度分布频率'){
+         $('#main-rightBottom').hide()
+        $('#temp_legend').show()
         this.maxvalue=15;
         this.minvalue=0;
         // this.dw='单位:%'
-      }else{
+      }
+      else if(szyb=='风向分布频率'||szyb=='各向风功率密度分布频率'){
+         $('#main-rightBottom').show()
+        $('#temp_legend').hide()
+        var mychartsLeft9 = echarts.init(document.getElementById("main-rightBottom"));
+      var optionLeft9 = {
+        //圆圈相关(角度轴)
+        angleAxis: { 
+          boundaryGap:false,      //圆轴外面的文字对其
+          data: ["北","东","南","西"],
+          //外边圆圈上的刻度值
+          axisTick: { show: false },
+          //外面圆圈文字的颜色
+          axisLabel: {
+            margin: 2,
+            color: "white",
+            fontSize: 10,
+            lineStyle: { color: "#020172" }
+          },
+          axisLine: {
+            lineStyle: { color: "#020172" }
+          },
+          //网格线的颜色
+          splitLine: {
+            show: true,
+            lineStyle: { color: ["#020172"] }
+          }
+        },
+        //数轴相关
+        radiusAxis: {
+          min: 0,         
+          max: 0.5,        
+          interval: 0.125,
+          // data:['0','','','','0.5'],
+          axisLabel: {
+            color: "white",
+            fontSize:10
+          },
+          //去掉刻度线
+          axisTick: { show: false },
+          //坐标轴颜色
+          axisLine: {
+            lineStyle: { color: "#020172" }
+          },
+          //网格线的颜色
+          splitLine: {
+            show: true,
+            lineStyle: { color: ["#020172"] }
+          }
+        },
+        //图表整体位置
+        polar: {
+          center: ["50%", "50%"]
+        },
+        //数据
+        series: []
+      };
+
+      mychartsLeft9.setOption(optionLeft9);
+
+      }
+      else{
         return
       }
     })
@@ -64,6 +160,10 @@ export default {
 }
 </script>
 <style  scoped>
+#main-rightBottom canvas{
+  width: 160px;
+  height: 160px;
+}
 .temp_legend1 {
   background-image: linear-gradient(
     0deg,

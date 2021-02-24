@@ -95,6 +95,7 @@
     <!-- 站点名字 -->
     <span style="color:#79E5FD;position: fixed;top: 540px;left:380px;">{{zdname}}</span>
   </div>
+  
 </template>
 
 <script>
@@ -109,13 +110,21 @@ export default {
       // 将id储存起来
       this.ggpid=[]
       this.ggpid=id[0]
+      
       //当id为1或2时 改变标签中文字
       if(id==1||id==2){
         this.fbsj='预报数据对比'
         this.getYuBaoShuJuDuiBi(this.ggpid)
+
       }else{
         this.fbsj='浮标数据对比'
         this.getfuBiaoShuJuDuiBi(this.ggpid);
+
+    //      this.getfengSuYueBianHua(this.gdyxValue,this.ggpid);
+    // this.getfengGongLvMiDuTongJi(this.gdyxValue,this.ggpid);
+    // this.getyouXiaoFengSu(this.gdyxValue,this.ggpid);
+    // this.getfengXiangTongJi(this.gdyxValue,this.ggpid);
+    // this.getyaoGanShuJuDuiBi(this.ggpid);
       }
       //调用加载所有图表方法
     this.getfengSuYueBianHua(this.gdyxValue,this.ggpid);
@@ -142,6 +151,8 @@ export default {
   },
   data() {
     return {
+      //图表x轴间隔
+      intervallength:'',
       //站点名称
       zdname:'海试二',
       fbsj:'浮标数据对比',
@@ -150,7 +161,7 @@ export default {
       //向后台传入的卫星参数
       wxvalue2:'',
       //广告牌id
-      ggpid:'',
+      ggpid:'3',
       //高度下拉框数据
       options: [],
       //高度下拉框默认值
@@ -756,6 +767,8 @@ export default {
       //请求接口 获取数据
       await this.$axios.post('/api/show/RemoteSensingData',{"id":ggpid||3,"sat":this.wxvalue2||"ascat"}).then(res=>{
         //判断高度是否为10（只有高度为10的数据）
+        
+        this.intervallength=Math.floor( res.data.length/4)
         if(this.gdyxValue==10){
  //遍历数据 
        res.data.forEach(item=>{
@@ -770,10 +783,10 @@ export default {
        
       })
       //调用 加载遥感数据对比（折现图）
-      this.yaoGanShuJuDuiBi(this.ldfsList,this.ygfsList,this.ygTime);
+      this.yaoGanShuJuDuiBi(this.ldfsList,this.ygfsList,this.ygTime,this.intervallength);
     },
     //加载遥感数据对比
-    yaoGanShuJuDuiBi(ldfsList,ygfsList,ygTime) {
+    yaoGanShuJuDuiBi(ldfsList,ygfsList,ygTime,intervallength) {
       //右侧折线图1
       var mychartsLeft5 = echarts.init(document.getElementById("main-left-5"));
       var optionLeft5 = {
@@ -793,7 +806,7 @@ export default {
           type: "category",
           data: ygTime,
           axisLabel: {
-            interval:18,      //坐标轴是否全部显示
+            interval:intervallength||20,      //坐标轴是否全部显示
             // rotate:8,        //坐标轴文字倾斜
             color: "white",
             textStyle: {
@@ -907,8 +920,9 @@ export default {
      this.fbfsList=[]
      this.fbTime=[]
       //请求接口 获取数据
-    await  this.$axios.post('/api/show/BuoyData',{"id":ggpid||3}).then(res=>{
+    await  this.$axios.post('/api/show/BuoyData',{"id":ggpid}).then(res=>{
        //判断高度是否为10（只有高度为10的数据）
+        this.intervallength=Math.floor( res.data.length/4)
        if(this.gdyxValue==10){
       //遍历数据 获取雷达风速数据
         res.data.forEach(item=>{
@@ -919,23 +933,26 @@ export default {
           this.fbfsList.push(item.wsBuoy)
 
         })
+       }else{
+          this.fbldfsList=[]
+          this.fbfsList=[]
+          this.fbTime=[]
        }
 
       })
       //调用 加载浮标数据对比方法
-      this.fuBiaiShuJuDuiBi(this.fbldfsList,this.fbfsList,this.fbTime);
+      this.fuBiaiShuJuDuiBi(this.fbldfsList,this.fbfsList,this.fbTime,this.intervallength);
     },
    async getYuBaoShuJuDuiBi(ggpid) {
      //清空数组之前的值
-     this.fbldfsList=[]
-     this.fbfsList=[]
+       this.fbldfsList=[]
+       this.fbfsList=[]
+       this.fbTime=[]
       //请求接口 获取数据
     await  this.$axios.post('/api/show/ForecastRes',{"local":ggpid||3,"level":this.gdyxValue||10}).then(res=>{
       // console.log(res.data,'====22预报')
-       //清空数组中原有数据
-       this.fbTime=[]
-      //  this.fbldfsList=[]
-      //  this.fbfsList=[]
+      //获取图表中x轴的显示间隔
+        this.intervallength=Math.floor( res.data.length/4)
        //遍历数据 获取雷达风速数据
         res.data.forEach(item=>{
           this.fbldfsList.push(item.wsLidar)
@@ -943,16 +960,14 @@ export default {
           this.fbTime.push(item.time.substring(0,10))
           //获取预报数据
           this.fbfsList.push(item.wsAscat)
-
         })
-
       })
       let textfs='预报风速'
       //调用 加载浮标数据对比方法
-      this.fuBiaiShuJuDuiBi(this.fbldfsList,this.fbfsList,this.fbTime,textfs);
+      this.fuBiaiShuJuDuiBi(this.fbldfsList,this.fbfsList,this.fbTime,this.intervallength,textfs);
     },
     //加载浮标数据对比
-    fuBiaiShuJuDuiBi(fbldfsList,fbfsList,fbTime,textfs) {
+    fuBiaiShuJuDuiBi(fbldfsList,fbfsList,fbTime,intervallength,textfs) {
       //右侧折线图2
       var mychartsLeft6 = echarts.init(document.getElementById("main-left-6"));
       var optionLeft6 = {
@@ -976,7 +991,7 @@ export default {
           axisLabel: {
             // showMinLabel: true,
             // showMaxLabel: true,
-            interval:540,      //坐标轴是否全部显示
+            interval:intervallength||327,      //坐标轴是否全部显示
             // rotate:8,         //坐标轴文字是否倾斜
             color: "white",
             // interval: 0, //坐标轴全部显示

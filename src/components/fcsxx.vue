@@ -141,7 +141,6 @@ export default {
     //调用接收格点风参方法
     this.getgdfc();
     // this.getwbe();
-
   },
   // 自定义指令（拖动div移动）
         directives:{
@@ -163,7 +162,7 @@ export default {
     //接收格点风参
     getgdfc() {
       bus.$on("addimg", szyb => {
-        // if(this.$route.path=='/szyb'){
+        bus.$emit('ok',szyb)
         this.szyb = szyb;
         if (this.clickLon !== "" &&this.clickLat !== "" &&this.szyb == "格点风参"   ) {
          //传参添加广告牌
@@ -172,15 +171,15 @@ export default {
         } else if( this.clickLon == "" &&this.clickLat == "" &&this.szyb == "格点风参"){
           $('.sjz-srk-z').hide()
           $(".fcsxx-z").hide();
-        }else if(this.clickLon == "" &&this.clickLat == "" &&this.szyb == "风向分布频率"){
-          console.log('经纬度为空的风向分布频率')
-          $('.sjz-srk-z').hide()
-        }else if(this.clickLon !== "" &&this.clickLat !== "" &&this.szyb == "风向分布频率"){
-          console.log('经纬度不为空的风向分布频率')
-          $('.sjz-srk-z').hide()
         }
+        //else if(this.clickLon == "" &&this.clickLat == "" &&this.szyb == "风向分布频率"){
+        //   // console.log('经纬度为空的风向分布频率')
+        //   $('.sjz-srk-z').hide()
+        // }else if(this.clickLon !== "" &&this.clickLat !== "" &&this.szyb == "风向分布频率"){
+        //   // console.log('经纬度不为空的风向分布频率')
+        //   $('.sjz-srk-z').hide()
+        // }
         else{
-          console.log('else')
           $('.sjz-srk-z').show()
           $(".fcsxx-z").hide();
           this.clickLon = "";
@@ -199,7 +198,7 @@ export default {
         
         let lon=clickLon.toString()
         let lat=clickLat.toString()
-        console.log(this.clickLon,this.clickLat)
+        // console.log(this.clickLon,this.clickLat)
         this.clickLon=lon.substring(0,lon.indexOf('.')+5)
         this.clickLat=lat.substring(0,lat.indexOf('.')+5)
         $(".fcsxx-z").show();
@@ -225,7 +224,6 @@ export default {
         this.clickLon='';
         this.clickLat='';
           $('.sjz-srk-z').show()
-
       }
     });
     },
@@ -271,7 +269,7 @@ export default {
        if(res.data.sighr!==0.0){
          $('.fsss').show()
          this.sighr=res.data.sighr;
-       }else{
+        }else{
          $('.fsss').hide()
        }
     
@@ -280,7 +278,7 @@ export default {
          $('.wsn').show()
         let MaxSpeed=res.data.windMaxSpeed.toString()
         this.windMaxSpeed=MaxSpeed.substring(0,MaxSpeed.indexOf('.')+3);
-       }else{
+        }else{
          $('.wsn').hide()
        }
        
@@ -288,14 +286,14 @@ export default {
        this.K=res.data.weibullK
        //C
        this.C=res.data.weibullC
+       //如果请求回来的数据是空的时候（鼠标点击的地方没有数据）
         }else if(this.clickLon!==''&&this.clickLat!==''&&res.data==''){
           $('.fcsxx').hide()
-          //判断路径是否为数值预报页面（不是则不显示暂无数据）
-          if(this.$route.path=='/szyb'){
-          alert('暂无无数据')
+          //判断路径是否为数值预报页面（不是则不显示 暂无数据）
+          if(this.$route.path==='/szyb'){
+          alert('暂无数据')
           }
         }
-       
       })
     },
     //点击出现风玫瑰图

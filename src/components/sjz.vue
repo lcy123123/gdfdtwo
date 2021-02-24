@@ -56,7 +56,7 @@
           </el-form-item>
 
           <el-form-item label="间隔:">
-            <el-select v-model="jg" placeholder="请选择">
+            <el-select v-model="jg"  placeholder="请选择">
               <el-option
                 v-for="item in jgoption"
                 :key="item.value"
@@ -177,6 +177,7 @@ export default {
     };
   },
   methods: {
+    //选择时间轴间隔方法
     Jg(jgvalue){
       if(jgvalue==1){
         this.count=1
@@ -184,9 +185,9 @@ export default {
       }else if(jgvalue==2){
         if(this.index>this.seconddate){
           this.index=this.firstdate
-          console.log(this.index)
+          // console.log(this.index)
         }else{
-          console.log(this.index)
+          // console.log(this.index)
           this.count=2
         }
         //间隔为3
@@ -216,18 +217,15 @@ export default {
     },
     //点击轴上的点
     clikeValue(){
-      console.log(this.firstdate,'---')
+      // console.log(this.firstdate,'---')
       if(this.value-this.options1[this.firstdate].value>=0){
       this.index=this.value-this.options1[this.firstdate].value
-      console.log(this.index,'index1')
+      // console.log(this.index,'index1')
       }else{
         this.index=this.value
       }
-      bus.$emit(this.element, this.index);
-      
+      bus.$emit(this.element, this.index,this.value1);
       this.zt()
-
-
     },
     //点击显示第一张图片
     firstImg() {
@@ -245,7 +243,7 @@ export default {
       this.zt();
       this.index = this.seconddate;
       this.value = this.max1;
-      bus.$emit(this.element, this.index);
+      bus.$emit(this.element, this.index,this.value1);
   
     },
     //点击前一张图片
@@ -258,9 +256,10 @@ export default {
       }else{
         this.index -=1;
         this.value --;
+        console.log(this.index)
       }
-  
-      bus.$emit(this.element, this.index);
+      bus.$emit(this.element, this.index,this.value1);
+
 
     },
     //点击后一张图片
@@ -269,7 +268,7 @@ export default {
       if(this.index <= this.seconddate){
          this.index +=1;
          this.value ++;
-         bus.$emit(this.element, this.index);
+         bus.$emit(this.element, this.index,this.value1);
       }
       // this.play()
     },
@@ -282,7 +281,7 @@ export default {
     //定时器执行的内容
     dsq() {
       
-      console.log(this.index,'index2')
+      // console.log(this.index,'index2')
       if(this.value-2009>=0){
         this.value = this.options1[this.index].value;
       }else{
@@ -290,6 +289,7 @@ export default {
       }
       //发起组件传值（index 默认为0）
       bus.$emit(this.element, this.index,this.value1,this.value2);
+      
       //判断index
       if (this.index >= this.seconddate) {
         this.index = this.firstdate;
@@ -311,7 +311,7 @@ export default {
         // this.index = 0;
         this.element = "yxbg";
         //防止点击单张图片时执行之前的图片加载
-        this.zt();
+        // this.zt();
         if (
           yxbg == "逐月平均值" ||
           yxbg == "逐月最大值" ||
@@ -345,17 +345,17 @@ export default {
     //（数值预报）根据传递过来的参数 动态换时间轴上面框中的内容
     dongtaidate() {
       bus.$on("addimg", date => {
-        this.zt();
+        // this.zt();
         this.date = date;
         this.element = "szyb";
         //组件传过来的值
-        if (date === "年平均风速" || date === "年平均风功率密度" || date === "有效风速时数" || date === "风切变系数" || date === "威布尔分布形状参数" || date === "威布尔分布尺度参数") {
+        if (date === "年平均风速" || date === "年平均风功率密度" || date === "有效风速时数" || date === "风切变系数" || date === "威布尔分布形状参数" || date === "威布尔分布尺度参数"|| date === "各向风功率密度分布频率") {
           $('.sjz-srk-z').show()
          $(".rq2").css("display", "block");
           this.rq1 = "开始年份";
           this.rq2 = "结束年份";
           
-        } else if (date === "月平均风速" || date === "逐小时年平均风速" || date === "月平均风功率密度" || date === "各向风功率密度分布频率" || date === "各区间风速分布频率" || date === "各区间风功率密度分布频率") {
+        } else if (date === "月平均风速" || date === "逐小时年平均风速" || date === "月平均风功率密度"  || date === "各区间风速分布频率" || date === "各区间风功率密度分布频率") {
         
           $('.sjz-srk-z').show()
           this.rq1 = "年份";
@@ -372,7 +372,6 @@ export default {
           this.element=''
         }else if(date==='风向分布频率'){
           $('.sjz-srk-z').hide()
-           
         }
         
         //调用获取日期以及月份方法
@@ -553,13 +552,13 @@ export default {
         this.value1 = this.min1 = this.firstdate = 1;
         this.value2 = this.max1 = this.seconddate = 12;
 
-        let startMounth = new Date().getMonth() + 3;
-        for (var d =  this.min1 ; d < startMounth; d++) {
+        for (var d =  this.min1 ; d < 13; d++) {
           this.options1.push({ label: d, value: d, key: d });
           this.options2.push({ label: d, value: d, key: d });
           this.marks1[d] = "" + d + "";
 
         }
+
       }
       this.index = this.firstdate ; 
       
@@ -687,6 +686,8 @@ export default {
         bus.$on("Wx", Wx => {
           if(Wx=='' || Wx==null){
             this.zt();
+             $(".btn-5>img").attr("src", zt);
+     
             }
           else{
       // 储存参数
@@ -700,6 +701,8 @@ export default {
       bus.$on("Wxcs", Wxcs => {
         if(Wxcs=='' || Wxcs==null){
           this.zt()
+           $(".btn-5>img").attr("src", zt);
+     
           }
         else{
         //储存参数
@@ -718,10 +721,10 @@ export default {
   created() {
     //调用初始化option
     this.startOption();
-    this.zt()
+    // this.zt()
     if(this.$route.path == '/szyb'){
       this.element='szyb'
-
+    
     //根据选择不同框显示的不同
     this.dongtaidate();
     } else if(this.$route.path == '/yxbg'){
@@ -731,7 +734,7 @@ export default {
     }else if(this.$route.path=='/yggc'){
          this.element='yggc1'
         //接收参数
-         this.getWx()
+         this.getWx() 
     }
      //当选中（台风频次）的时候隐藏时间轴
     bus.$on("addzhtqimg", zhtq => {
@@ -739,7 +742,6 @@ export default {
         $(".sjz-srk-z").css("display", "none");
       }
     });
-
   },
 
   watch:{
@@ -747,7 +749,7 @@ export default {
       if ((this.rq1 === "开始年份" && this.rq2 === "结束年份") ) {
         this.min1 = this.value = value; //给轴赋值
         this.index = this.firstdate = value-this.options1[0].value;
-        console.log(this.firstdate,'=-1=1=1=1=1')
+        // console.log(this.firstdate,'=-1=1=1=1=1')
       }else if(this.rq1 === "开始月份" && this.rq2 === "结束月份"){
         this.min1 = this.value = value; //给轴赋值
         this.index = this.firstdate = value-this.options1[0].value+1;
@@ -762,17 +764,28 @@ export default {
         }
       }
     },
-    value(){
-      //调用间隔方法
-      this.Jg(this.jgvalue)
-    },
+    
     //监听间隔的变化 
     jg(jgvalue){
       //储存间隔
     this.jgvalue=jgvalue
-    // this.index=this.firstdate
-    this.Jg()
+    this.Jg(jgvalue)
+    },
+    value(){
+      // console.log(val,'监听value的值')
+      //调用间隔方法
+      this.Jg(this.jgvalue)
+      
+    },
+    //对路由进行监听
+    $route: {
+    handler: function(val, oldVal){
+      if(val.path!==oldVal.path){
+        //判断路由前后不一样则调用暂停方法 防止切换页面时时间轴滑动
+        this.zt()
+      }
     }
+   }
   },
 
   

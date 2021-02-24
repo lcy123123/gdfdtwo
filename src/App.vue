@@ -33,19 +33,24 @@ export default {
     return {
       screenWidth: "",
       screenHeight: "",
-      colorFlag: ''
+      colorFlag: true
     };
   },
    watch:{
      //动态监测路由变化  控制colorBar组件的显示
-    $route(to){
-    if(to.fullPath=='/pgbj'||to.fullPath=='/pgjc'||to.fullPath=='/tb'||to.fullPath=='/index'){
+    $route: {
+    handler: function(val){
+      if(val.fullPath=='/pgbj'||val.fullPath=='/pgjc'||val.fullPath=='/tb'||val.fullPath=='/index'){
       this.colorFlag=false
     }else{
       this.colorFlag=true
-    }
-     },
+      }
+  },
+    // 深度观察监听
+     deep: true,
+     //从第一次开始监听
      immediate:true
+   },
    },
   mounted() {
     //调用获取屏幕尺寸

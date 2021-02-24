@@ -15,8 +15,8 @@ export default {
   // name: "CesiumScene",
   data() {
     return {
-      clickLon:'',
-      clickLat:'',
+      clickLon:"",
+      clickLat:"",
       //站点数据
       dataList: [],
       viewer: null,
@@ -66,14 +66,15 @@ export default {
      //有效波高中单张图片的
      singlePic:{'十年平均值':'YEARS_AVG','十年最大值':'YEARS_MAX','十年最小值':'YEARS_MIN','十年一遇':'PEAK10','三十年一遇':'PEAK30'},
      //数值预报中 开始年份 结束年份的
-     startEndYearPic:{'年平均风速':'WSPD_YR','年平均风功率密度':'Dwp','有效风速时数':'NSIGHR','风切变系数':'ALPHA_ALL','威布尔分布形状参数':'SHAPE','威布尔分布尺度参数':'SCALE'},
+     startEndYearPic:{'风向分布频率':'FWDS','各向风功率密度分布频率':'FWES','年平均风速':'WSPD_YR','年平均风功率密度':'Dwp','有效风速时数':'NSIGHR','风切变系数':'ALPHA_ALL','威布尔分布形状参数':'SHAPE','威布尔分布尺度参数':'SCALE'},
      //年份 （数值预报）
      YearPic:{'月平均风速':'WSPD_MN','逐小时年平均风速':'WSPD_HY','月平均风功率密度':'DWP_MN','各区间风速分布频率':'FWS','各区间风功率密度分布频率':'FWE'},
      //轴为1-12月（遥感观测）
-     yggcImgList:[]
-
+     yggcImgList:[],
+     hander:""
     };
   },
+
   mounted() {
     
     // this.AddSl2(this.viewer)
@@ -109,7 +110,7 @@ export default {
     })
     
     // 调用请求json数据方法
-    this.getdataList();
+    // this.getdataList();
     //调用初始化地球方法
     this.init();
     //接收数值预报组件传过来的值
@@ -122,7 +123,6 @@ export default {
       this.szybvalue = szybvalue;
       //调用添加图片方法并传参
       this.AddImg(this.viewer, this.szybvalue);
-      // this.dbClick() 
       
     });
     //加载矢量数据方法（评估背景）
@@ -160,16 +160,20 @@ export default {
       this.AddImg(this.viewer,szybvalue)
     })
 
-      bus.$on('addzhtqimg',szybvalue=>{
+      bus.$on('addzhtqimg',(szybvalue,flag)=>{
+        //接收台风频次以及标志量（flase为显示 true为不显示）
+        if(flag){
+          //不显示  清除图层
+        this.clearImg()
+        }else{
+          //显示 调用加载图片方法
          bus.$off("szyb");
          bus.$off("yxbg");
-        bus.$off("yggc"); 
-
-      this.AddImg(this.viewer,szybvalue)
-
+         bus.$off("yggc"); 
+        this.AddImg(this.viewer,szybvalue)
+        } 
       })
 
-      
     //接收遥感观测传过来的参数
     bus.$on('yggc',()=>{
       bus.$off("szyb");
@@ -178,7 +182,7 @@ export default {
       this.AddImg(this.viewer)
     })
     //调用添加广告牌方法
-    this.Addggp();   
+    // this.Addggp();   
   },
 
   methods: {
@@ -186,7 +190,6 @@ export default {
     async getdataList() {
       await this.$axios.get("./station_GD.json").then(res => {
         // 将请求到的数据赋值
-        // console.log(res.data);
         this.dataList = res.data;
         //对请求的数据遍历
         res.data.forEach(
@@ -248,7 +251,7 @@ export default {
 
       this.viewer = viewer;
       //调用点击获取经纬度坐标
-      this.dbClick(this.viewer)
+      // this.dbClick(this.viewer)
       
       // // 在地图中添加矢量数据（左下角图）---可执行
       // var colorList = [[120, 0, 136],[90, 0, 184],[70, 0, 245],[0, 170, 225],[0, 200, 200],[0, 200, 125],[195, 255, 0],[255, 255, 0],[255, 155, 0],[255, 0, 0]];
@@ -523,7 +526,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               }
                  this.yggcImg=[]
               await this.$axios.post('/api/swh/GetData',{"ele":ele}).then(res=>{
-              console.log(res.data,'--')
+              // console.log(res.data,'--')
               res.data.forEach(item=>{
                 this.yggcImg.push(item.processPath)
                 this.minLon=item.minLon
@@ -562,7 +565,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               }
                  this.yggcImg=[]
               await this.$axios.post('/api/swh/GetData',{"ele":ele}).then(res=>{
-              console.log(res.data,'--')
+              // console.log(res.data,'--')
               res.data.forEach(item=>{
                 this.yggcImg.push(item.processPath)
                 this.minLon=item.minLon
@@ -600,7 +603,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               }
                  this.yggcImg=[]
               await this.$axios.post('/api/swh/GetData',{"ele":ele}).then(res=>{
-              console.log(res.data,'--')
+              // console.log(res.data,'--')
               res.data.forEach(item=>{
                 this.yggcImg.push(item.processPath)
                 this.minLon=item.minLon
@@ -657,7 +660,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               }
                  this.yggcImg=[]
                await this.$axios.post('/api/swh/GetData',{"ele":ele}).then(res=>{
-              console.log(res.data,'--')
+              // console.log(res.data,'--')
               res.data.forEach(item=>{
                 this.yggcImg.push(item.processPath)
                 this.minLon=item.minLon
@@ -681,11 +684,16 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
      this.clearImg()
         var img1;
 
-        if(szybvalue === "年平均风速"||szybvalue === "年平均风功率密度"||szybvalue === "有效风速时数"||szybvalue === "风切变系数"||szybvalue === "威布尔分布形状参数"||szybvalue === "威布尔分布尺度参数"){
+        if(szybvalue === "年平均风速"||szybvalue === "年平均风功率密度"||szybvalue === "有效风速时数"||szybvalue === "风切变系数"||szybvalue === "威布尔分布形状参数"||szybvalue === "威布尔分布尺度参数"||szybvalue === "风向分布频率"||szybvalue === "各向风功率密度分布频率"){
           this.getstartEndRearPic(szybvalue,gdvalue)
         
       //对传过来的参数进行判断  符合则添加图层 不符合则移除图层
           bus.$on('szyb',index=>{
+            //如果是玫瑰图则一次一清
+            if(szybvalue=='风向分布频率'||szybvalue=='各向风功率密度分布频率'){
+             this.clearImg()
+             }
+             //如果是其他的则一个轮回一清
           if(index==0){
           this.clearImg()
       }
@@ -703,7 +711,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
        this.gethourMounthList(gdvalue)
         
       bus.$on('szyb',(index,value1,value2)=>{
-        console.log(index,'index')
+        // console.log(index,'index')
         //记录开始位置
           var startindexList
           for(let i=0;i<this.hourMounthList.length;i++){
@@ -737,32 +745,8 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
         })
       
     }
-    else if(szybvalue === "风向分布频率"){
-       this.imgList=[]
-      //  this.$axios.post('/api/wind/GetData',{"ele":"SHAPE","level":gdvalue||0}).then(res=>{
-        
-      //    res.data.forEach(item=>{
-      //     this.imgList.push(item.processPath)
-      //    })
 
-      //  })
-      // bus.$on('szyb',index=>{
-      bus.$on('szyb',()=>{
-      // if(index==0){
-      //  this.clearImg()
-      // }
-      
-        //将已经创建好的图层添加
-          img1 = new Cesium.SingleTileImageryProvider({
-          // url:'/static'+this.imgList[index],
-          url:'./22.png',
-          rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
-          show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img1);
-        })
-      
-    }else if(szybvalue === "各区间风功率密度分布频率"||szybvalue === "各区间风速分布频率"||szybvalue === "月平均风速"||szybvalue === "逐小时年平均风速"||szybvalue === "月平均风功率密度"){
+    else if(szybvalue === "各区间风功率密度分布频率"||szybvalue === "各区间风速分布频率"||szybvalue === "月平均风速"||szybvalue === "逐小时年平均风速"||szybvalue === "月平均风功率密度"){
       //调用请求接口方法
       this.getYearPic(szybvalue,gdvalue)
       //存取index
@@ -796,7 +780,6 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           show: false
            });
            viewer.imageryLayers.addImageryProvider(img1);
-
         }
         else if(szybvalue=='月平均风速'||szybvalue=='月平均风功率密度'){
 
@@ -893,6 +876,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
          this.getyggc(Wx,Wxcs)
          
         bus.$on('yggc1',(index,value1)=>{
+          
            var startindexList
           if(index==0){
           this.clearImg()
@@ -908,6 +892,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
                     break;
                    }
               }
+              
               this.yggcImgList=this.yggcImg.slice(startindexList,12+startindexList)
           
               img1 = new Cesium.SingleTileImageryProvider({
@@ -916,6 +901,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               show: false
               });
               viewer.imageryLayers.addImageryProvider(img1);
+          
           }else{
             
             for(let i=0;i<this.yggcImg.length;i++){
@@ -928,12 +914,9 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
               });
               viewer.imageryLayers.addImageryProvider(img1);
           }
-        
         })
-         
       }
-        })
-
+    })
   },
     //添加广告牌
     Addggp(params) {
@@ -961,28 +944,12 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           params.lat +
           "</div>"
       });
+      //禁止双击放大广告牌
+      this.viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+      this.viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
       this.viewer.entities.add(ggp);
-      
-    
 
-      //点击事件获取id
-      // var handlerVideo = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
-
-      //         handlerVideo.setInputAction( (click) =>{
-      //             var pick = this.viewer.scene.pick(click.position);
-  
-      //             if (pick.id.id) {
-      //             // 将原来数组置为空
-      //             this.ggpid=[]
-      //             //将点击的id储存起来
-      //             this.ggpid.push(pick.id.id)
-      //             //向兄弟传递参数
-      //             bus.$emit('myid',this.ggpid)
-      //             } else {
-      //                 return;
-      //             }
-      //         }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
     },
     //台风频次请求方法
     async Tfpc(){
@@ -997,7 +964,10 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
          })
        },
 
-
+//请求风玫瑰图方法
+// getRouse(){
+//  this.$axios.post('/api/rose/GetData',{'ele'})
+// },
    async gethourMounthList(gdvalue){
       await this.$axios.post('/api/wind/GetData',{"ele":"WSPD_HM","level":gdvalue||0}).then(res=>{
        res.data.forEach(item=>{
@@ -1009,12 +979,10 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
     getYearPic(szybvalue,gdvalue){
       this.yearPicList=[]
        this.$axios.post('/api/wind/GetData',{"ele":this.YearPic[szybvalue],"level":gdvalue||0}).then(res=>{
-        
          res.data.forEach(item=>{
           this.yearPicList.push(item.processPath)
          })
        })
-
     },
     //开始年份 结束年份（数值预报）
     getstartEndRearPic(szybvalue,gdvalue){
@@ -1024,11 +992,8 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
          res.data.forEach(item=>{
           this.imgList.push(item.processPath)
          })
-
        })
-
     },
-
     //获取带时间轴的数据(有效波高)
     getRoutePic:function(szybvalue){
 
@@ -1049,17 +1014,14 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
            this.singleImgList=[]
           await this.$axios.post('/api/swh/GetData',{"ele":this.singlePic[szybvalue]}).then(res=>{
           res.data.forEach(item=>{
-            this.singleImgList=item.processPath
+             this.singleImgList=item.processPath
              this.singlemaxLon=item.maxLon
              this.singlemaxLat=item.maxLat
              this.singleminLon=item.minLon
              this.singleminLat=item.minLat
           })
         })
-
-          },
-  
-  
+      },
     ChuanId() {
          var handlerVideo = new Cesium.ScreenSpaceEventHandler(
         this.viewer.scene.canvas
@@ -1073,7 +1035,6 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           this.ggpid.push(pick.id.id);
           //向兄弟传递参数(站点id以及名字)
           bus.$emit("myid", this.ggpid,pick.id.name);
-          
         } else {
           return;
         }
@@ -1121,8 +1082,9 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
     // },
     //点击获取经纬度方法
    dbClick(viewer) {
-      var clickLon
-      var clickLat
+      // var clickLon
+      // var clickLat
+      var $this=this
     var handler= new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
     handler.setInputAction(function (event) {
      var earthPosition  = viewer.camera.pickEllipsoid(event.position,viewer.scene.globe.ellipsoid);
@@ -1130,27 +1092,19 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
      //点击获取经纬度
      var lat=Cesium.Math.toDegrees(cartographic.latitude);
      var lon=Cesium.Math.toDegrees(cartographic.longitude);
-  
-  
      //经度
-     clickLon=lon;
-     //纬度
-     clickLat=lat
-     //传参（经纬度）
-     bus.$emit('lonAndlat',clickLon,clickLat)
+     $this.clickLon=lon;
+    //纬度
+    $this.clickLat=lat
 
-     //判断是否为格点风参
-     
-     //添加广告牌（格点风参）
-     if(lat===clickLat&&lon===clickLon){
-       //清除之前的广告牌
-       if(viewer.entities.getById(`5`)) {
+     //调用加载广告牌方法
+  if(viewer.entities.getById(`5`)) {
        viewer.entities.remove({id: '5'})  
        }
        //添加新的广告牌
-      let ggp=new Cesium.Entity({
+       var ggp=new Cesium.Entity({
        id:'5',
-       position:Cesium.Cartesian3.fromDegrees(clickLon,clickLat),
+       position:Cesium.Cartesian3.fromDegrees(lon,lat),
        billboard:{
          image:'./ggpgdfc.png',
          pixelSize: 1,
@@ -1163,12 +1117,12 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
      });
      //将创建好的广告牌添加上
      viewer.entities.add(ggp)
-     }
-       
-         
-    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+     bus.$emit('lonAndlat',lon,lat)
 
-    },
+    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+    this.hander = handler;
+   },
+
     //鼠标移入事件
     mouseMove() {
       var scene = this.viewer.scene;
@@ -1179,7 +1133,6 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
         if (scene.mode !== Cesium.SceneMode.MORPHING) {
           var pickedObject = scene.pick(movement.endPosition);
           if (scene.pickPositionSupported && Cesium.defined(pickedObject)) {
-      
             TooltipDiv.showAt(
               movement.endPosition,
               '<div style="color: white;border:1px solid #008CFF;font-size:14px;padding:5px;background:rgba(8,26,127,.5)">' +
@@ -1192,8 +1145,52 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
         }
       }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
     }
+  },
+  watch: {
+  $route: {
+    handler: function(val,oldval){
+      console.log(val.fullPath)
+      //监听路由变化 加载广告牌
+      if(val.fullPath==='/tb'){
+        //请求站点数据
+        this.getdataList()
+      }else{
+        //如果不是图表页 就清除广告牌
+       this.viewer.entities.remove({id: '1'})  
+       this.viewer.entities.remove({id: '2'})  
+       this.viewer.entities.remove({id: '3'})  
+       this.viewer.entities.remove({id: '4'}) 
+      }
+      //判断是否切换页面 切换页面时清除上个页面的图片
+      if(val.fullPath!==oldval.fullPath){
+        //如果切换页面 则清除之前的图片
+        this.clearImg()
+        return
+      }
+      
+       //数值预报中格点风参（是则调用添加广告牌）
+       bus.$on('ok',(gdfc)=>{
+        if(val.fullPath==='/szyb'&&gdfc==='格点风参'){
+        this.dbClick(this.viewer)
+        }else{
+
+           this.hander.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+          // if(this.viewer.entities.getById(`5`)) {
+            this.viewer.entities.remove({id: '5'})  
+        // }
+        return
+        }
+      })
+
+    },
+     //是否为第一次监听
+     immediate:true,
+     // 深度观察监听
+     deep: true
   }
+},
 };
+
 </script>
 
 <style scoped>
