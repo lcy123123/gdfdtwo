@@ -72,12 +72,16 @@
     <!-- 时间轴 -->
     <div class="sjz-z">
       <div>
-        <span @click="selectrq" class="btn-1"
+        <span @click="selectrq" class="btn-1" @mouseover="timeover" @mouseleave="timeleave"
           ><img src="../assets/001.png" alt=""
         /></span>
-        <span @click="selectsz" class="btn-2"
+        <!-- 提示框 -->
+        <span style="left:-20px" v-show="timeflag" class="text timetext">时间设置</span>
+
+        <span @click="selectsz" class="btn-2" @mouseover="sdover" @mouseleave="sdleave"
           ><img src="../assets/002.png" alt=""
         /></span>
+        <span style="left:10px" class="text" v-show="sdflag">速度设置</span>
       </div>
       <!-- 中间时间轴 -->
       <div class="sjz-middle">
@@ -91,21 +95,36 @@
         ></el-slider>
       </div>
       <div>
-        <span class="btn-3" @click="firstImg"
+        <span class="btn-3" @click="firstImg"  @mouseover="firstover" @mouseleave="firstleave"
           ><img src="../assets/003.png" alt=""
         /></span>
-        <span class="btn-4" @click="beforeImg"
+        <!-- 第一张提示 -->
+        <span style="right:85px" class="text" v-show="firstflag">第一张</span>
+
+        <span class="btn-4" @click="beforeImg" @mouseover="beforeover" @mouseleave="beforeleave"
           ><img src="../assets/004.png" alt=""
         /></span>
-        <span class="btn-5" @click="changeState"
+        <!-- 前一张提示 -->
+        <span class="text" style="right:60px" v-show="beforeflag">前一张</span>
+
+        <span class="btn-5" @click="changeState"  @mouseover="ztover" @mouseleave="ztleave"
           ><img src="../assets/ks.png" alt=""
         /></span>
-        <span class="btn-6" @click="afterImg"
+        <!-- 暂停提示 -->
+        <span class="text" style="right:40px" v-show="ztflag">{{kszttext}}</span>
+
+        <span class="btn-6" @click="afterImg"   @mouseover="afterover" @mouseleave="afterleave"
           ><img src="../assets/006.png" alt=""
         /></span>
-        <span class="btn-7" @click="lastImg"
+        <!-- 后一张提示 -->
+        <span class="text" style="right:10px" v-show="afterflag">后一张</span>
+
+        <span class="btn-7" @click="lastImg" @mouseover="lastover" @mouseleave="lastleave"
           ><img src="../assets/007.png" alt=""
         /></span>
+        <!-- 最后一张提示 -->
+        <span class="text" style="right:-10px" v-show="lastflag">最后一张</span>
+
       </div>
     </div>
   </div>
@@ -118,6 +137,22 @@ import bus from "../utils/eventBus";
 export default {
   data() {
     return {
+      //开始暂停文字提示
+      kszttext:'开始',
+      // 最后一张标志量
+      lastflag:false,
+      // 后一张标志量
+      afterflag:false,
+      // 暂停标志量
+      ztflag:false,
+      //前一张标志量
+      beforeflag:false,
+      //第一张标志量
+      firstflag:false,
+      //速度设置标志量
+      sdflag:false,
+      //时间设置标志量
+      timeflag:false,
       //开始暂停flag值
       ksztFlag: false,
       value: 2010,
@@ -177,6 +212,35 @@ export default {
     };
   },
   methods: {
+    // 最后一张 鼠标移入移出
+    lastover(){this.lastflag=true},
+    lastleave(){this.lastflag=false},
+    //后一张 鼠标移入移除
+    afterover(){this.afterflag=true},
+    afterleave(){this.afterflag=false},
+    // 暂停 鼠标移入移除
+    ztover(){
+      //根据开始暂停图片判断 填充文字
+      if($('.btn-5>img').attr('src')==ks){
+        this.kszttext='开始'
+      }else{
+        this.kszttext='暂停'
+      }
+      this.ztflag=true
+      },
+    ztleave(){this.ztflag=false},
+    // 前一张 鼠标移入移出
+    beforeover(){this.beforeflag=true},
+    beforeleave(){this.beforeflag=false},
+    //第一张 鼠标移入移出
+    firstover(){this.firstflag=true},
+    firstleave(){this.firstflag=false},
+    //速度设置 鼠标移入移除
+    sdover(){this.sdflag=true},
+    sdleave(){this.sdflag=false},
+    //时间提示 鼠标移入移除
+    timeover(){this.timeflag=true},
+    timeleave(){this.timeflag=false},
     //选择时间轴间隔方法
     Jg(jgvalue){
       if(jgvalue==1){
@@ -185,9 +249,7 @@ export default {
       }else if(jgvalue==2){
         if(this.index>this.seconddate){
           this.index=this.firstdate
-          // console.log(this.index)
         }else{
-          // console.log(this.index)
           this.count=2
         }
         //间隔为3
@@ -217,10 +279,10 @@ export default {
     },
     //点击轴上的点
     clikeValue(){
-      // console.log(this.firstdate,'---')
+      
       if(this.value-this.options1[this.firstdate].value>=0){
       this.index=this.value-this.options1[this.firstdate].value
-      // console.log(this.index,'index1')
+      
       }else{
         this.index=this.value
       }
@@ -249,14 +311,15 @@ export default {
     //点击前一张图片
     beforeImg() {
       this.zt();
+      
       //判断index的值 后退到0时 设置index为0
       if (this.index <= this.firstdate+1) {
         this.index = this.firstdate;
         this.value = this.min1;
+        
       }else{
         this.index -=1;
         this.value --;
-        console.log(this.index)
       }
       bus.$emit(this.element, this.index,this.value1);
 
@@ -280,8 +343,6 @@ export default {
     },
     //定时器执行的内容
     dsq() {
-      
-      // console.log(this.index,'index2')
       if(this.value-2009>=0){
         this.value = this.options1[this.index].value;
       }else{
@@ -373,7 +434,6 @@ export default {
         }else if(date==='风向分布频率'){
           $('.sjz-srk-z').hide()
         }
-        
         //调用获取日期以及月份方法
         this.initOption();
       });
@@ -412,7 +472,6 @@ export default {
           this.Wx === "HY-2B" ||
           this.Wx === "CFOSAT"
         ) {
-          // console.log("2019年的");
           this.rq1 = "年份";
           this.value1 = 2019;
           this.options1 = [];
@@ -435,7 +494,6 @@ export default {
           $(".rq2").css("display", "none");
           $(".rq1").css("margin-top", "20px");
         } else {
-          // console.log("2017年的");
           this.rq1 = "年份";
           this.value1 = 2017;
           this.options1 = [];
@@ -458,7 +516,6 @@ export default {
         this.Wxcs === "年平均风功率密度"
       ) {
         if (this.Wx === "ASCAT" || this.Wx == "WindSat") {
-          // console.log("2010-2019年的");
           this.rq1 = "开始年份";
           this.rq2 = "结束年份";
           this.options1 = [];
@@ -477,7 +534,6 @@ export default {
           $(".rq2").css("display", "block");
           $(".rq1").css("margin-top", "0px");
         } else if (this.Wx === "HY-2A") {
-          // console.log("2012-2018年的");
           this.rq1 = "开始年份";
           this.rq2 = "结束年份";
           this.options1 = [];
@@ -496,7 +552,6 @@ export default {
           $(".rq2").css("display", "block");
           $(".rq1").css("margin-top", "0px");
         } else {
-          // console.log("2019-2020年的");
           this.rq1 = "开始年份";
           this.rq2 = "结束年份";
           this.options1 = [];
@@ -656,8 +711,8 @@ export default {
     },
     //点击暂停方法
     zt() {
+      
       $(".btn-5>img").attr("src", ks);
-      // console.log($(".btn-5>img"),'-------')
       if (this.timer != null) {
         clearInterval(this.timer);
       }
@@ -749,7 +804,6 @@ export default {
       if ((this.rq1 === "开始年份" && this.rq2 === "结束年份") ) {
         this.min1 = this.value = value; //给轴赋值
         this.index = this.firstdate = value-this.options1[0].value;
-        // console.log(this.firstdate,'=-1=1=1=1=1')
       }else if(this.rq1 === "开始月份" && this.rq2 === "结束月份"){
         this.min1 = this.value = value; //给轴赋值
         this.index = this.firstdate = value-this.options1[0].value+1;
@@ -772,7 +826,6 @@ export default {
     this.Jg(jgvalue)
     },
     value(){
-      // console.log(val,'监听value的值')
       //调用间隔方法
       this.Jg(this.jgvalue)
       
@@ -905,4 +958,20 @@ export default {
 .el-form-item__label {
   color: white;
 }
+.text{
+  border: 0px solid black;
+  border-radius: 10px;
+  color:white;
+  background-color: black;
+  /* margin:2px,5px; */
+  width: 80px;
+  height: 30px;
+  display: block;
+  line-height: 30px;
+  text-align: center;
+  font-size: 13px;
+  position:absolute;
+  top:-20px
+}
+
 </style>

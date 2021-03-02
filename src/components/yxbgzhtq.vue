@@ -44,7 +44,7 @@
              <el-radio @change="tfpc($event)" class="radio-tfpc2" v-model="tf" label="台风频次" style="display:block"></el-radio>            
           </el-form-item> -->
           <div @click="tfpc">
-           <el-checkbox  class="singletf" v-model="clickflag"><span class="tfpcstyle">台风频次</span></el-checkbox>
+           <el-checkbox  class="singletf" v-model="clickflag"><span class="tfpcstyle">台风频次（2000年~2019年）</span></el-checkbox>
           </div>
         </el-form>
            

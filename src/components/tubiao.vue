@@ -101,6 +101,7 @@
 <script>
 import echarts from "echarts";
 import bus from '../utils/eventBus'
+import $ from 'jquery'
 
 export default {
   created() {
@@ -200,9 +201,15 @@ export default {
       yxfsLength:[]
     };
   },
-  
+  mounted(){
+    this.sizeinit()
+  },
   methods: {
+    
+    sizeinit(){$(window).resize(function() {
+			
 
+});},
     //高度下拉框 获取选中值
     changeValue(e){
       //获取选中值 并赋值
@@ -241,13 +248,14 @@ export default {
     //请求风速月变化方法
     async getfengSuYueBianHua(gdyxValue,ggpid) {
       //将储存平均风速数组至为空,(以便再次发起请求时，将新请求的数据储存在此数组中)
-      this.pjfsList=[]
+      //请求接口 获取数据
+     await this.$axios.post("/api/show/MonthlyVariationWindSpeed", { "local": ggpid||3, "level": gdyxValue||10 }).then(res => {
+        //清空原数组
+        this.pjfsList=[]
       //将储存风速标准差数组至为空
       this.fsbzcList=[]
       //清空数组原有数据
       this.fsybhLenth=[]
-      //请求接口 获取数据
-     await this.$axios.post("/api/show/MonthlyVariationWindSpeed", { "local": ggpid||3, "level": gdyxValue||10 }).then(res => {
           //遍历
           res.data.forEach((item) => {
             //获取平均风速数据
@@ -255,6 +263,7 @@ export default {
           //获取风速标准差数据
           this.fsbzcList.push(item.vStd)
           this.fsybhLenth.push(item.vDate.substring(6,4)+'月')
+          console.log(this.pjfsList,this.fsbzcList,this.fsybhLenth,'==')
           });
         });
       
@@ -386,11 +395,13 @@ export default {
     },
     //请求 风功率密度统计
     async getfengGongLvMiDuTongJi(gdyxValue,ggpid) {
-      //清空储存风功率密度数组
-      this.fglmdtjList=[]
-      this.fglmdtjLength=[]
+     
       //请求接口 获取数据
      await  this.$axios.post("/api/show/WindPowerDensity",{ "local": ggpid||3, "level": gdyxValue||10 }).then(res=>{
+        //清空储存风功率密度数组
+      this.fglmdtjList=[]
+      this.fglmdtjLength=[]
+
         res.data.forEach(item=>{
           this.fglmdtjList.push(item.vWe);
           this.fglmdtjLength.push(item.vDate.substring(6,4)+'月')
@@ -527,12 +538,12 @@ export default {
     },
     //请求有效风速
    async getyouXiaoFengSu(gdyxValue,ggpid) {
-     //将储存有效风速数组至为空
-     this.yxfsList=[]
-     this.yxfsLength=[]
+  
       //请求接口 获取数据
     await this.$axios.post('/api/show/EffectiveWindSpeed',{"local":ggpid||3,"level":gdyxValue||10}).then(res=>{
-      
+      //将储存有效风速数组至为空
+     this.yxfsList=[]
+     this.yxfsLength=[]
       //遍历数据 获取有效风速数据
         res.data.forEach(item=>{
           
@@ -669,9 +680,10 @@ export default {
     },
     //请求风向统计方法
    async getfengXiangTongJi(gdyxValue,ggpid) {
-        this.fxtjList=[]
       //请求接口 获取数据
       await this.$axios.post('/api/show/WindDirection',{"local":ggpid||3,"level":gdyxValue||10}).then(res=>{
+       //清空原数组
+       this.fxtjList=[]
         //判断data是否为空
       if(res.data.length==0){
         //调用 加载风向统计方法
@@ -760,13 +772,13 @@ export default {
     },
     //请求遥感数据对比
     async getyaoGanShuJuDuiBi(ggpid) {
-      //清楚数组中上一次的值
+      
+      //请求接口 获取数据
+      await this.$axios.post('/api/show/RemoteSensingData',{"id":ggpid||3,"sat":this.wxvalue2||"ascat"}).then(res=>{
+        //清楚数组中上一次的值
       this.ldfsList=[]
       this.ygfsList=[]
       this.ygTime=[]
-      //请求接口 获取数据
-      await this.$axios.post('/api/show/RemoteSensingData',{"id":ggpid||3,"sat":this.wxvalue2||"ascat"}).then(res=>{
-        //判断高度是否为10（只有高度为10的数据）
         
         this.intervallength=Math.floor( res.data.length/4)
         if(this.gdyxValue==10){
@@ -915,12 +927,13 @@ export default {
 
     // 请求 浮标数据对比
    async getfuBiaoShuJuDuiBi(ggpid) {
-     //清空数组之前的值
+     
+      //请求接口 获取数据
+    await  this.$axios.post('/api/show/BuoyData',{"id":ggpid}).then(res=>{
+      //清空数组之前的值
      this.fbldfsList=[]
      this.fbfsList=[]
      this.fbTime=[]
-      //请求接口 获取数据
-    await  this.$axios.post('/api/show/BuoyData',{"id":ggpid}).then(res=>{
        //判断高度是否为10（只有高度为10的数据）
         this.intervallength=Math.floor( res.data.length/4)
        if(this.gdyxValue==10){
@@ -944,13 +957,14 @@ export default {
       this.fuBiaiShuJuDuiBi(this.fbldfsList,this.fbfsList,this.fbTime,this.intervallength);
     },
    async getYuBaoShuJuDuiBi(ggpid) {
-     //清空数组之前的值
+     
+      //请求接口 获取数据
+    await  this.$axios.post('/api/show/ForecastRes',{"local":ggpid||3,"level":this.gdyxValue||10}).then(res=>{
+      
+      //清空数组之前的值
        this.fbldfsList=[]
        this.fbfsList=[]
        this.fbTime=[]
-      //请求接口 获取数据
-    await  this.$axios.post('/api/show/ForecastRes',{"local":ggpid||3,"level":this.gdyxValue||10}).then(res=>{
-      // console.log(res.data,'====22预报')
       //获取图表中x轴的显示间隔
         this.intervallength=Math.floor( res.data.length/4)
        //遍历数据 获取雷达风速数据
@@ -1079,17 +1093,17 @@ export default {
   },
   watch:{
      //动态监测路由变化  控制colorBar组件的显示
-    $route(to){
-    if(to.fullPath=='/tb'){
-      this.getfengSuYueBianHua(this.gdyxValue,this.ggpid);
-    this.getfengGongLvMiDuTongJi(this.gdyxValue,this.ggpid);
-    this.getyouXiaoFengSu(this.gdyxValue,this.ggpid);
-    this.getfengXiangTongJi(this.gdyxValue,this.ggpid);
-    this.getyaoGanShuJuDuiBi(this.ggpid);
-    this.getYuBaoShuJuDuiBi(this.ggpid);
-    this.getfuBiaoShuJuDuiBi(this.ggpid);
-    }
-     },
+    // $route(to){
+    // if(to.fullPath=='/tb'){
+    //   this.getfengSuYueBianHua(this.gdyxValue,this.ggpid);
+    // this.getfengGongLvMiDuTongJi(this.gdyxValue,this.ggpid);
+    // this.getyouXiaoFengSu(this.gdyxValue,this.ggpid);
+    // this.getfengXiangTongJi(this.gdyxValue,this.ggpid);
+    // this.getyaoGanShuJuDuiBi(this.ggpid);
+    // this.getYuBaoShuJuDuiBi(this.ggpid);
+    // this.getfuBiaoShuJuDuiBi(this.ggpid);
+    // }
+    //  },
      //监听卫星值的变化
      wxvalue(value){
        if(value=='ASCAT'){
@@ -1191,6 +1205,10 @@ export default {
   width: 150px;
   border: 1px solid #0c96cd;
   height: 46px;
+  /* background-color: rgba(0, 3, 44, 0.5); */
+  /* background: rgba(4, 38, 125, 0.5); */
+
+
 }
 .el-select .el-input__inner{
   width: 100px;

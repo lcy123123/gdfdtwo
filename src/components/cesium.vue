@@ -76,6 +76,11 @@ export default {
   },
 
   mounted() {
+    bus.$on('hideggp',()=>{
+      this.hander.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+          // if(this.viewer.entities.getById(`5`)) {
+            this.viewer.entities.remove({id: '5'})  
+    })
     
     // this.AddSl2(this.viewer)
     //接收组件传值(高度)
@@ -240,7 +245,8 @@ export default {
       // 将位置定位到中国 通过给xyz的坐标控制在广东位置
       viewer.camera.flyTo({
         destination: Cesium.Cartesian3.fromDegrees(112, 23, 1785000),
-        // destination: Cesium.Cartesian3.fromDegrees(116, 20, 1785000),
+        //改：
+        // destination: Cesium.Cartesian3.fromDegrees(112, 23, 1796999),
         orientation: {
           heading: Cesium.Math.toRadians(348.4202942851978),
           pitch: Cesium.Math.toRadians(-89.74026687972041),
@@ -810,9 +816,10 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
       
     }
     else if(szybvalue === "逐年平均值" ||szybvalue === "逐年最大值"||szybvalue === "逐年最小值"||szybvalue === "逐月平均值"||szybvalue === "逐月最大值"||szybvalue === "逐月最小值"){
+      
       this.clearImg()
       this.getRoutePic(szybvalue);
-      
+
     //接收数据 添加图层
      bus.$on('yxbg',index=>{
        //index从0开始传
@@ -820,6 +827,12 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
          if(index==0){
           this.clearImg()
         }
+        if(szybvalue === "逐年最小值"){
+        for(let i=0;i<this.monthAvg.length;i++){
+          console.log(this.monthAvg.length)
+         this.clearImg()
+        }
+      }
         img1 = new Cesium.SingleTileImageryProvider({
           url:this.monthAvg[index],
           rectangle: Cesium.Rectangle.fromDegrees(this.minLon,this.minLat,this.maxLon,this.maxLat),

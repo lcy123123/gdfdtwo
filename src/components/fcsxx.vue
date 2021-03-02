@@ -58,9 +58,14 @@
             
             style="width:330px;height:230px;position:absolute;left:200px;top:100px;display:none"
           ></div>
+          
         </div>
       </div>
     </div>
+    
+  <el-button type="text" @click="openGdfc"></el-button>
+  <el-button type="text" @click="opents"></el-button>
+
   </div>
 </template>
 <script>
@@ -99,6 +104,7 @@ export default {
   },
   //钩子函数（加载完dom后调用加载图表方法）
   mounted() {
+          // $(".fcsxx-z").hide();
     this.Wbetb()
     //接收高度value
     bus.$on('gdvalue',gdvalue=>{
@@ -159,9 +165,30 @@ export default {
             }
         },
   methods: {
+    //点击出现弹窗
+     openGdfc() {
+        this.$alert('请使用鼠标左键点击地图', {
+          confirmButtonText: '确定',
+          // callback: action => {
+          //   this.$message({
+          //     type: 'info',
+          //     message: `action: ${ action }`
+          //   });
+          // }
+        });
+      },
+      opents() {
+        this.$alert('暂无数据，试试其他地方吧', {
+          confirmButtonText: '确定',
+        });
+      },
     //接收格点风参
     getgdfc() {
       bus.$on("addimg", szyb => {
+        //判断是否为格点风参 是则调用提示方法
+        if(szyb==='格点风参'){
+          this.openGdfc()
+          }
         bus.$emit('ok',szyb)
         this.szyb = szyb;
         if (this.clickLon !== "" &&this.clickLat !== "" &&this.szyb == "格点风参"   ) {
@@ -291,7 +318,8 @@ export default {
           $('.fcsxx').hide()
           //判断路径是否为数值预报页面（不是则不显示 暂无数据）
           if(this.$route.path==='/szyb'){
-          alert('暂无数据')
+          // alert('暂无数据')
+          this.opents()
           }
         }
       })
@@ -522,8 +550,6 @@ export default {
     },
 
 
-
-
     getwbe(k,c){
        //为图表设定容器
       var mychart1 = echarts.init(document.getElementById("main-1"));
@@ -624,7 +650,27 @@ export default {
       mychart1.setOption(option);
     }
 
-  }
+  },
+
+   watch:{
+     //动态监测路由变化  控制colorBar组件的显示
+    $route: {
+    handler: function(val,oldval){
+      //监听路由 当切换路由时隐藏风参数信息
+      if(val.fullPath!==oldval.fullPath){
+      $(".fcsxx-z").hide();
+      // 向cesium发起传值 接收后隐藏广告牌 
+      bus.$emit('hideggp')
+      
+      
+    }
+  },
+    immediate:true,
+    // 深度观察监听
+     deep: true,
+     //从第一次开始监听
+   },
+   },
 };
 </script>
 <style  scoped>
