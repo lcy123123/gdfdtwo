@@ -10,11 +10,13 @@ import bus from "../utils/eventBus";
 let Cesium = require("cesium/Source/Cesium");
 
 import TooltipDiv from "../utils/toolTip";
+import $ from 'jquery'
 
 export default {
   // name: "CesiumScene",
   data() {
     return {
+      zsjdvalue:'中上层',
       clickLon:"",
       clickLat:"",
       //站点数据
@@ -76,6 +78,36 @@ export default {
   },
 
   mounted() {
+    //接收中上层 近底层参数 并调用加载矢量数据方法
+    bus.$on('zsjd',(zsjdvalue)=>{
+      this.zsjdvalue=zsjdvalue
+      this.clearSl()
+      if(zsjdvalue=='中上层'){
+        this.AddSl(this.viewer,this.ylclc,zsjdvalue)
+      }else{
+        this.AddSl(this.viewer,this.ylclc,zsjdvalue)
+      }
+    })
+    //调用初始化地球方法
+    this.init();
+      this.viewer.scene.morphTo2D(1);
+
+    //接收切换二维地图
+    // bus.$on('twodt',()=>{
+    //   // 将三维地球转换为二维地图
+    //   this.viewer.scene.morphTo2D(1);
+    //  //调用自定义切换二三维地图方法
+    //   this.setViewType('二维视图')
+
+    // })
+    //接收切换三维地球
+    // bus.$on('threedt',()=>{
+    //   // 将二维地图转换为三维
+    //   this.viewer.scene.morphTo3D(1)
+    //   //调用自定义切换二三维地图方法
+    //   this.setViewType('三维视图')
+    // })
+    //接收参数 隐藏广告牌
     bus.$on('hideggp',()=>{
       this.hander.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
           // if(this.viewer.entities.getById(`5`)) {
@@ -116,8 +148,7 @@ export default {
     
     // 调用请求json数据方法
     // this.getdataList();
-    //调用初始化地球方法
-    this.init();
+    
     //接收数值预报组件传过来的值
     bus.$on("addimg", szybvalue => {
       bus.$off("szyb");
@@ -135,23 +166,23 @@ export default {
     
       this.clearImg()
       this.ylclc = pgbjvalue;
-      this.AddSl(this.viewer, this.ylclc);
+      this.AddSl(this.viewer, this.ylclc,this.zsjdvalue);
       //海岸线矢量
     //  this.AddSl2(this.viewer,this.ylclc)
 
     });
     //接收传值（评估决策）
     bus.$on('pgjc',(pgjc)=>{
+      //清除图片
       this.clearImg()
+      //清除矢量
+      this.clearSl()
       if(pgjc==='可开发厂址推荐'){
-        this.clearSl()
       this.farmall(this.viewer)
       }else{
-        this.clearSl()
       this.allsites(this.viewer)
       let params={material:'RED'}
       this.AddSlxian(this.viewer,pgjc,params)
-
       }
       // this.mouseMove()
 
@@ -199,9 +230,8 @@ export default {
         //对请求的数据遍历
         res.data.forEach(
           params => {
-            //调用添加点方法
+            //调用添加广告牌方法
             this.Addggp(params);
-            //调用鼠标移入方法
           },
           this.mouseMove(),
           this.ChuanId()
@@ -211,17 +241,22 @@ export default {
     //初始化方法
     init() {
       let viewerOption = {
+        // sceneModePicker : false, //是否显示二三维转换按钮
         geocoder: false, // 地理位置查询定位控件
         homeButton: false, // 默认相机位置控件
         timeline: false, // 时间滚动条控件
         navigationHelpButton: false, // 默认的相机控制提示控件
         fullscreenButton: false, // 全屏控件
-        scene3DOnly: true, // 每个几何实例仅以3D渲染以节省GPU内存
+        // 只在三维加载矢量数据
+        // scene3DOnly: true, // 每个几何实例仅以3D渲染以节省GPU内存
         baseLayerPicker: false, // 底图切换控件
         animation: false, // 控制场景动画的播放速度控件
+        
+        
         // terrainProvider: Cesium.createWorldTerrain(),
               //将三维地图转化为二维地图
-          //   sceneMode : Cesium.SceneMode.SCENE2D,
+            // sceneMode : Cesium.SceneMode.SCENE2D,
+            //图片显示是否倾斜
           //  mapMode2D : Cesium.MapMode2D.ROTATE,
 
 
@@ -240,20 +275,22 @@ export default {
       };
       
       var viewer = new Cesium.Viewer("cesiumContainer", viewerOption);
-     
+      
+     //取消二三维转换的动画
+      viewer.sceneModePicker.viewModel.duration = 0.0
 
       // 将位置定位到中国 通过给xyz的坐标控制在广东位置
       viewer.camera.flyTo({
         destination: Cesium.Cartesian3.fromDegrees(112, 23, 1785000),
-        //改：
-        // destination: Cesium.Cartesian3.fromDegrees(112, 23, 1796999),
-        orientation: {
-          heading: Cesium.Math.toRadians(348.4202942851978),
-          pitch: Cesium.Math.toRadians(-89.74026687972041),
-          roll: Cesium.Math.toRadians(0)
-        },
-        complete: function callback() {}
+        
+        // orientation: {
+        //   heading: Cesium.Math.toRadians(348.4202942851978),
+        //   pitch: Cesium.Math.toRadians(-89.74026687972041),
+        //   roll: Cesium.Math.toRadians(0)
+        // },
+        // complete: function callback() {}
       });
+
 
       this.viewer = viewer;
       //调用点击获取经纬度坐标
@@ -285,6 +322,49 @@ export default {
 
       viewer._cesiumWidget._creditContainer.style.display = "none";
     },
+    //自定义转换二三维地图方法
+    setViewType (viewType) {
+       var scene = this.viewer.scene;
+        switch (viewType) {
+        case "三维视图":
+          //如果参数是三维地图则转成三维并重新定位 
+            scene.morphTo3D(0);
+            $(".cesium-sceneModePicker-wrapper").hide();
+            $(".cesium-sceneModePicker-wrapper").toggle(50);
+            //重新定位
+           this.viewer.camera.flyTo({
+             destination: Cesium.Cartesian3.fromDegrees(112, 23, 1785000),
+            //   orientation: {
+            //   heading: Cesium.Math.toRadians(348.4202942851978),
+            //   pitch: Cesium.Math.toRadians(-89.74026687972041),
+            //   roll: Cesium.Math.toRadians(0)
+            // },
+            // complete: function callback() {}
+             });
+            break;
+        case "二维视图":
+          //转成二维
+            scene.morphTo2D(0);
+            $(".cesium-sceneModePicker-wrapper").hide();
+            $(".cesium-sceneModePicker-wrapper").toggle(50);
+            //重新定位
+            this.viewer.camera.flyTo({
+             destination: Cesium.Cartesian3.fromDegrees(112, 23, 1785000),
+            //  orientation: {
+            //  heading: Cesium.Math.toRadians(348.4202942851978),
+            //  pitch: Cesium.Math.toRadians(-89.74026687972041),
+            //  roll: Cesium.Math.toRadians(0)
+            //  },
+              // complete: function callback() {}
+               });
+            break;
+    }
+},
+
+
+
+
+
 
     //清除图层
     clearImg(){
@@ -306,9 +386,20 @@ export default {
         }
     },
     //添加矢量数据
-    AddSl(viewer, ylclc) {
+    AddSl(viewer, ylclc,zsjdvalue) {
       this.clearSl()
-      var promise = Cesium.GeoJsonDataSource.load("./zsc.json", {
+      var promisezs = Cesium.GeoJsonDataSource.load("./zsc.json", {
+      // var promise = Cesium.GeoJsonDataSource.load("./jdc.json", {
+        stroke: new Cesium.Color(0.019, 0.156, 0.639, 0), //多边形轮廓线的颜色
+        // fill: Cesium.Color.CORNFLOWERBLUE.withAlpha(.7),       //多边形中间的颜色
+        // fill: new Cesium.Color(0.019,0.156,0.639,0.7),       //多边形中间的颜色
+        fill: new Cesium.Color(0.047, 0.588, 0.807, 0.5), //多边形中间的颜色
+        strokeWidth: 5, //多边形的厚度
+        markerSymbol: "?", //多边形
+        show: true
+      });
+      var promisejd = Cesium.GeoJsonDataSource.load("./jdc.json", {
+      // var promise = Cesium.GeoJsonDataSource.load("./jdc.json", {
         stroke: new Cesium.Color(0.019, 0.156, 0.639, 0), //多边形轮廓线的颜色
         // fill: Cesium.Color.CORNFLOWERBLUE.withAlpha(.7),       //多边形中间的颜色
         // fill: new Cesium.Color(0.019,0.156,0.639,0.7),       //多边形中间的颜色
@@ -318,10 +409,14 @@ export default {
         show: true
       });
       //判断被点击是不是鱼类产卵场 是则将创建好的矢量是加载上 不是则判断是否有矢量数据 如果有则取消
-      if (ylclc === "鱼类产卵场") {
-        viewer.dataSources.add(promise);
+      //判断渔场为中上层还是近底层 并加载不同json文件
+      if (ylclc === "鱼类产卵场"&&zsjdvalue=='中上层') {
+        viewer.dataSources.add(promisezs);
         viewer._cesiumWidget._creditContainer.style.display = "none"; // 隐藏版权
-      } 
+      } else if(ylclc === "鱼类产卵场"&&zsjdvalue=='近底层'){
+        viewer.dataSources.add(promisejd);
+        viewer._cesiumWidget._creditContainer.style.display = "none"; // 隐藏版权
+      }
     },
      //添加矢量数据（沿海线）
     AddSl2(viewer, ylclc) {
@@ -403,9 +498,12 @@ export default {
         if (len > 0) {
           for (var i = 0; i < len; i++) {
             //获取到矢量数据
-            var dataSource = this.viewer.dataSources.get(i);
+            // var dataSource = this.viewer.dataSources.get(i);
             //移除矢量数据
-            this.viewer.dataSources.remove(dataSource);
+            // this.viewer.dataSources.remove(dataSource);
+            // console.log(dataSource)
+            // 清除所有矢量
+            this.viewer.dataSources.removeAll();
           }
         } else {
           return;
@@ -685,7 +783,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
    async AddImg(viewer,szybvalue,gdvalue) {
      //清除矢量
      this.clearSl()
-     this.clearSl()
+    //  this.clearSl()
         //清除图层
      this.clearImg()
         var img1;
@@ -693,7 +791,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
         if(szybvalue === "年平均风速"||szybvalue === "年平均风功率密度"||szybvalue === "有效风速时数"||szybvalue === "风切变系数"||szybvalue === "威布尔分布形状参数"||szybvalue === "威布尔分布尺度参数"||szybvalue === "风向分布频率"||szybvalue === "各向风功率密度分布频率"){
           this.getstartEndRearPic(szybvalue,gdvalue)
         
-      //对传过来的参数进行判断  符合则添加图层 不符合则移除图层
+         //对传过来的参数进行判断  符合则添加图层 不符合则移除图层
           bus.$on('szyb',index=>{
             //如果是玫瑰图则一次一清
             if(szybvalue=='风向分布频率'||szybvalue=='各向风功率密度分布频率'){
@@ -702,15 +800,15 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
              //如果是其他的则一个轮回一清
           if(index==0){
           this.clearImg()
-      }
-        //将已经创建好的图层添加
+          }
+         //将已经创建好的图层添加
           img1 = new Cesium.SingleTileImageryProvider({
           url:this.imgList[index],
           rectangle: Cesium.Rectangle.fromDegrees(107.98, 17.8, 118.39, 24.57),
           // rectangle: Cesium.Rectangle.fromDegrees(this.minLon, this.minLat, this.maxLon, this.maxLat),
           show: false
-        });
-        viewer.imageryLayers.addImageryProvider(img1);
+         });
+         viewer.imageryLayers.addImageryProvider(img1);
         })
       
     }else if(szybvalue === "逐小时月平均风速"){
@@ -833,6 +931,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
          this.clearImg()
         }
       }
+      console.log(this.monthAvg,'==')
         img1 = new Cesium.SingleTileImageryProvider({
           url:this.monthAvg[index],
           rectangle: Cesium.Rectangle.fromDegrees(this.minLon,this.minLat,this.maxLon,this.maxLat),
@@ -869,11 +968,13 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
         });
         viewer.imageryLayers.addImageryProvider(img1);
       })
-    }else if(szybvalue=='台风频次'){
+      }else if(szybvalue=='台风频次'){
          await  this.Tfpc()
           img1 = new Cesium.SingleTileImageryProvider({
           url:this.tfpcimg,
+          // url:'./29.png',
           rectangle: Cesium.Rectangle.fromDegrees(this.tfpcminLon,this.tfpcminLat,this.tfpcmaxLon,this.tfpcmaxLat),
+          // rectangle: Cesium.Rectangle.fromDegrees(106,18,122,26),
           // show: false
         });
         this.viewer.imageryLayers.addImageryProvider(img1);
@@ -981,7 +1082,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
 // getRouse(){
 //  this.$axios.post('/api/rose/GetData',{'ele'})
 // },
-   async gethourMounthList(gdvalue){
+     async gethourMounthList(gdvalue){
       await this.$axios.post('/api/wind/GetData',{"ele":"WSPD_HM","level":gdvalue||0}).then(res=>{
        res.data.forEach(item=>{
           this.hourMounthList.push(item.processPath)
@@ -1035,6 +1136,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
           })
         })
       },
+      //传id
     ChuanId() {
          var handlerVideo = new Cesium.ScreenSpaceEventHandler(
         this.viewer.scene.canvas
@@ -1055,44 +1157,44 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
       },
 
     // 声明添加点的方法
-    // AddPoint(params) {
-    //   if (params.lon === undefined || params.lat === undefined) {
-    //     alert("请提供经纬度!");
-    //     return;
-    //   }
-    //   let entity = new Cesium.Entity({
-    //     id: params.dataId || `${params.lon}点`,
-    //     name: params.stationName || "点",
-    //     show: true,
-    //     position: Cesium.Cartesian3.fromDegrees(params.lon, params.lat),
-    //     point: new Cesium.PointGraphics({
-    //       show: true,
-    //       pixelSize: params.pixelSize || 5,
-    //       heightReference: params.pixelSize || Cesium.HeightReference.NONE,
-    //       color: params.color || new Cesium.Color(255, 255, 0, 1),
-    //       outlineColor: params.color || new Cesium.Color(0, 0, 0, 0),
-    //       outlineWidth: params.outlineWidth || 0,
-    //       scaleByDistance:
-    //         params.scaleByDistance || new Cesium.NearFarScalar(0, 1, 5e10, 1),
-    //       translucencyByDistance:
-    //         params.translucencyByDistance ||
-    //         new Cesium.NearFarScalar(0, 1, 5e10, 1),
-    //       distanceDisplayCondition:
-    //         params.translucencyByDistance ||
-    //         new Cesium.DistanceDisplayCondition(0, 4.8e10),
-    //     }),
-    //     //框
-    //     description:
-    //       "<div>位置：" +
-    //       params.stationName +
-    //       "</div><div>经度：" +
-    //       params.lon +
-    //       "</div><div>纬度：" +
-    //       params.lat +
-    //       "</div>"
-    //   });
-    //   return entity;
-    // },
+     // AddPoint(params) {
+     //   if (params.lon === undefined || params.lat === undefined) {
+     //     alert("请提供经纬度!");
+     //     return;
+     //   }
+     //   let entity = new Cesium.Entity({
+     //     id: params.dataId || `${params.lon}点`,
+     //     name: params.stationName || "点",
+     //     show: true,
+     //     position: Cesium.Cartesian3.fromDegrees(params.lon, params.lat),
+     //     point: new Cesium.PointGraphics({
+     //       show: true,
+     //       pixelSize: params.pixelSize || 5,
+     //       heightReference: params.pixelSize || Cesium.HeightReference.NONE,
+     //       color: params.color || new Cesium.Color(255, 255, 0, 1),
+     //       outlineColor: params.color || new Cesium.Color(0, 0, 0, 0),
+     //       outlineWidth: params.outlineWidth || 0,
+     //       scaleByDistance:
+     //         params.scaleByDistance || new Cesium.NearFarScalar(0, 1, 5e10, 1),
+     //       translucencyByDistance:
+     //         params.translucencyByDistance ||
+     //         new Cesium.NearFarScalar(0, 1, 5e10, 1),
+     //       distanceDisplayCondition:
+     //         params.translucencyByDistance ||
+     //         new Cesium.DistanceDisplayCondition(0, 4.8e10),
+     //     }),
+     //     //框
+     //     description:
+     //       "<div>位置：" +
+     //       params.stationName +
+     //       "</div><div>经度：" +
+     //       params.lon +
+     //       "</div><div>纬度：" +
+     //       params.lat +
+     //       "</div>"
+     //   });
+     //   return entity;
+     // },
     //点击获取经纬度方法
    dbClick(viewer) {
       // var clickLon
@@ -1111,7 +1213,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
     $this.clickLat=lat
 
      //调用加载广告牌方法
-  if(viewer.entities.getById(`5`)) {
+     if(viewer.entities.getById(`5`)) {
        viewer.entities.remove({id: '5'})  
        }
        //添加新的广告牌
@@ -1125,11 +1227,18 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
          verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
          scale: 1,
          disableDepthTestDistance: 0, //广告牌不进行深度检测
-         heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND 
+        //  heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND 
        }
      });
+    //二维地图添加广告牌
+    // viewer.pixelOffset = new Cesium.Cartesian2(0.0, 1.0);
+    // viewer.pixelOffsetScaleByDistance = new Cesium.NearFarScalar(1.5e2, 0.0, 8.0e6, 10.0);
+
+
      //将创建好的广告牌添加上
      viewer.entities.add(ggp)
+    // console.log(viewer.entities.ggp2)
+
      bus.$emit('lonAndlat',lon,lat)
 
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
@@ -1162,7 +1271,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
   watch: {
   $route: {
     handler: function(val,oldval){
-      console.log(val.fullPath)
+      
       //监听路由变化 加载广告牌
       if(val.fullPath==='/tb'){
         //请求站点数据
@@ -1176,8 +1285,19 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
       }
       //判断是否切换页面 切换页面时清除上个页面的图片
       if(val.fullPath!==oldval.fullPath){
-        //如果切换页面 则清除之前的图片
+        //如果切换页面 则清除之前的图片 和矢量
         this.clearImg()
+        this.clearSl()
+        if(val.fullPath==='/tb'){
+        //请求站点数据
+        this.getdataList()
+      }else{
+        //如果不是图表页 就清除广告牌
+       this.viewer.entities.remove({id: '1'})  
+       this.viewer.entities.remove({id: '2'})  
+       this.viewer.entities.remove({id: '3'})  
+       this.viewer.entities.remove({id: '4'}) 
+      }
         return
       }
       
@@ -1186,7 +1306,6 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
         if(val.fullPath==='/szyb'&&gdfc==='格点风参'){
         this.dbClick(this.viewer)
         }else{
-
            this.hander.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
           // if(this.viewer.entities.getById(`5`)) {
             this.viewer.entities.remove({id: '5'})  
@@ -1206,7 +1325,7 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
 
 </script>
 
-<style scoped>
+<style >
 #cesiumContainer {
   width: 100%;
   height: 100%;
@@ -1219,15 +1338,15 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
   padding: 3px 8px;
 }
 /* 向左 */
-.toolTip-left {
+/* .toolTip-left {
   position: absolute;
   width: 300px;
   min-height: 80px;
   border: 4px solid rgba(19, 159, 255, 1);
   border-radius: 20px;
   background-color: rgba(30, 49, 74, 0.6);
-}
-.toolTip-left:before {
+} 
+ .toolTip-left:before {
   content: "";
   display: block;
   position: absolute;
@@ -1237,10 +1356,22 @@ var promise = Cesium.GeoJsonDataSource.load("./seedepth50mline_GD.json");
   border-top: 20px solid transparent;
   border-bottom: 20px solid transparent;
   border-right: 20px solid rgba(19, 159, 255, 1);
-}
+} */
 .con {
   font-size: 28px;
   color: #ffff;
   line-height: 80px;
 }
+.cesium-toolbar-button{
+  z-index:999;
+  height: 25px;
+  right: 110px;
+  top: 8px;
+  border: 0px;
+}
+.cesium-button{
+  background: rgba(49, 49, 109, 0.3);
+}
+
+
 </style>

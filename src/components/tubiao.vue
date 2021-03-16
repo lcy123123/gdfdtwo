@@ -1,5 +1,5 @@
 <template>
-  <div style="width:1680px">
+  <div style="width:1680px display:flex">
     <!-- <router-view></router-view> -->
     <div class="left-z" style="width:20px">
     <!-- 左面第一个图表 -->
@@ -205,11 +205,9 @@ export default {
     this.sizeinit()
   },
   methods: {
-    
+    //监测浏览器窗口是否发生了变化
     sizeinit(){$(window).resize(function() {
-			
-
-});},
+     });},
     //高度下拉框 获取选中值
     changeValue(e){
       //获取选中值 并赋值
@@ -263,7 +261,6 @@ export default {
           //获取风速标准差数据
           this.fsbzcList.push(item.vStd)
           this.fsybhLenth.push(item.vDate.substring(6,4)+'月')
-          console.log(this.pjfsList,this.fsbzcList,this.fsybhLenth,'==')
           });
         });
       
@@ -775,14 +772,14 @@ export default {
       
       //请求接口 获取数据
       await this.$axios.post('/api/show/RemoteSensingData',{"id":ggpid||3,"sat":this.wxvalue2||"ascat"}).then(res=>{
-        //清楚数组中上一次的值
+        //清除数组中上一次的值
       this.ldfsList=[]
       this.ygfsList=[]
       this.ygTime=[]
         
         this.intervallength=Math.floor( res.data.length/4)
         if(this.gdyxValue==10){
- //遍历数据 
+         //遍历数据 
        res.data.forEach(item=>{
          //获取雷达风速数据
          this.ldfsList.push(item.wsLidar)

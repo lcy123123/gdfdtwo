@@ -38,6 +38,7 @@ export default {
   },
    
   mounted() {
+    
     //调用获取屏幕尺寸
     this.changeSize();
     window.onresize = () => {
@@ -47,6 +48,7 @@ export default {
     };
   },
   methods: {
+    
      //获取屏幕尺寸（判断是pc端还是移动端）
     changeSize() {
       this.screenWidth = document.body.clientWidth;

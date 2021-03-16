@@ -200,10 +200,8 @@ export default {
           $(".fcsxx-z").hide();
         }
         //else if(this.clickLon == "" &&this.clickLat == "" &&this.szyb == "风向分布频率"){
-        //   // console.log('经纬度为空的风向分布频率')
         //   $('.sjz-srk-z').hide()
         // }else if(this.clickLon !== "" &&this.clickLat !== "" &&this.szyb == "风向分布频率"){
-        //   // console.log('经纬度不为空的风向分布频率')
         //   $('.sjz-srk-z').hide()
         // }
         else{
@@ -225,7 +223,6 @@ export default {
         
         let lon=clickLon.toString()
         let lat=clickLat.toString()
-        // console.log(this.clickLon,this.clickLat)
         this.clickLon=lon.substring(0,lon.indexOf('.')+5)
         this.clickLat=lat.substring(0,lat.indexOf('.')+5)
         $(".fcsxx-z").show();

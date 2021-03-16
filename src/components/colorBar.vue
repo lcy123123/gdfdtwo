@@ -5,7 +5,6 @@
         <span class="span1"  style="position:absolute;top:-185px;margin-left:-70px;color:rgb(255,255,255,.7)">{{maxvalue}}</span><br />
         <span class="span2" style="position:absolute;top:-99px;margin-left:-69px;color:rgb(255,255,255,.7)">{{minvalue}}</span><br />
        <span style="position:absolute;top:-210px;margin-left:-102px;color:rgb(255,255,255,.7)">{{dw}}</span>
-
     </div>
     <!-- 右下角图表 -->
     <div id="main-rightBottom" style="position:absolute;top:430px;right:20px;height:160px;width:160px"></div>
@@ -24,6 +23,7 @@ export default {
       dw:'(m/s)'
     }
   },
+ 
   mounted(){
         $('#temp_legend').hide()
 
@@ -57,9 +57,43 @@ export default {
       }
     })
     //接收有效波高  设置colorbar最大值（最大值都一样）
-    bus.$on('addyxbgimg',()=>{
-      this.maxvalue=12
-      this.minvalue=0
+    bus.$on('addyxbgimg',(yxbgvalue)=>{
+      
+      if(yxbgvalue=='逐月平均值'){
+        this.maxvalue=2.5
+        this.minvalue=0.5
+      }else if(yxbgvalue=='逐月最大值'){
+        this.maxvalue=7.5
+        this.minvalue=1.5
+      }else if(yxbgvalue=='逐月最小值'){
+        this.maxvalue=1.5
+        this.minvalue=0
+      }else if(yxbgvalue=='逐年平均值'){
+        this.maxvalue=2.5
+        this.minvalue=0
+      }else if(yxbgvalue=='逐年最大值'){
+        this.maxvalue=7
+        this.minvalue=2
+      }else if(yxbgvalue=='逐年最小值'){
+        this.maxvalue=1.5
+        this.minvalue=0
+      }else if(yxbgvalue=='十年平均值'){
+        this.maxvalue=2
+        this.minvalue=1
+      }else if(yxbgvalue=='十年最大值'){
+        this.maxvalue=7.5
+        this.minvalue=4.5
+      }else if(yxbgvalue=='十年最小值'){
+        this.maxvalue=0.4
+        this.minvalue=0
+      }else if(yxbgvalue=='十年一遇'){
+        this.maxvalue=7
+        this.minvalue=4
+      }else if(yxbgvalue=='三十年一遇'){
+        this.maxvalue=7
+        this.minvalue=4
+      }
+      
       this.dw='（m）'
       $('#temp_legend').show()
       $('#main-rightBottom').hide()

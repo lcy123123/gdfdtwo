@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="pg-z">
         <!-- 评估背景和评估决策组件 -->
         <div class="right bottom-line">
       <div class="right-top" @click="Cli1">
@@ -27,7 +27,7 @@
       </div>
       <!-- 下边的 -->
       <div class="right-bottom" @click="Cli2">
-        <img class="y2" src="../assets/jc1.png" alt="">
+        <img class="y2" src="../assets/jc1.png" alt="未能正确加载">
         <span class="y2-text">评估决策</span>
         <span  class="c2" style="float:right;margin-right:5px"><i style="color:white" class="el-icon-caret-right"></i></span>
       </div>
@@ -42,6 +42,21 @@
         </el-form>
            
         </div>
+    </div>
+    <!-- 近底层和中上层下拉框 -->
+    <div class="pgbjgd" style="display:none">
+    <el-form class="gdxlk">
+      <el-form-item label="高度:">
+        <el-select v-model="gdvalue">
+         <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+ </el-select>
+      </el-form-item>
+    </el-form>
     </div>
     </div>
 </template>
@@ -62,11 +77,24 @@ export default {
     return{
       pgbj:'',
       tf:'',
+        options: [{
+          value: '中上层',
+          label: '中上层'
+        }, {
+          value: '近底层',
+          label: '近底层'
+        }],
+        gdvalue: '中上层'
     }
   },
   //监听
      watch:{
+       gdvalue(value){
+      bus.$emit('zsjd',value)
+    },
        tf(value){
+        //  隐藏评估背景的高度下拉框
+         $('.pgbjgd').hide()
          bus.$emit('pgjc',value)
          bus.$off('szyb','')
          bus.$off('yxbg','')
@@ -78,6 +106,13 @@ export default {
          
        },
        pgbj(value){
+        //  对高度下拉框控制显示隐藏
+         if(this.pgbj!=='鱼类产卵场'){
+           $('.pgbjgd').hide()
+         }else{
+           $('.pgbjgd').show()
+         }
+
          bus.$emit('pgbj',value)
          bus.$off('szyb')
         //  bus.$off('yggc')
@@ -109,7 +144,6 @@ export default {
         //点击切换后面的小图标
         // $('.c1,.el-icon-caret-bottom').attr('class','el-icon-caret-right')
         $('.c1').find('i').attr('class','el-icon-caret-right')
-        // console.log($('.c1').find('i'))
 
       }else{
         //将小图标变成亮的
@@ -158,22 +192,22 @@ export default {
   }
 }
 </script>
-<style  scoped>
-.el-radio{
+<style  >
+.pg-z .el-radio{
   margin-right: 13px;
   margin-top:10px;
   color: white;
 }
-.radio-tfpc{
+.pg-z .radio-tfpc{
   margin-left: 24px;
   margin-top:32px
 }
-.radio-san{
+.pg-z .radio-san{
   margin-left: 14px;
 }
 
 
-.right{
+.pg-z .right{
   width: 360px;
   border: 1px solid rgba(8,26,127,.5);
   position: fixed;
@@ -187,37 +221,37 @@ export default {
                 linear-gradient(to bottom,#01A2FE,#01A2FE) right bottom no-repeat;
    background-size: 2px 23px,23px 2px,2px 23px,23px 2px;
 }
-.right-top{
+.pg-z .right-top{
 background: rgba(3,37,127,.5);
 border: 2px solid rgba(8,26,127,.5);
 cursor: pointer;
 }
-.y1,.y2{
+.pg-z .y1,.y2{
   width: 15px;
   height: 15px;
   margin-left: 10px;
   vertical-align: middle;
 }
-.y1-text,.y2-text{
+.pg-z .y1-text,.y2-text{
   color: white;
   margin-left: 5px;
   vertical-align: middle;
 }
-.y1-text{
+.pg-z .y1-text{
   color: #04BFEA;
 }
-.top-11{
+.pg-z .pg-z .top-11{
   color: white;
   font-size: 14px;
   padding: 20px;
 }
-.top-11>input{
+.pg-z .top-11>input{
   margin: 10px;
 }
-.top-1{
+.pg-z .top-1{
   background-color:rgba(0,3,44,.5) ;
 }
-.top-2{
+.pg-z .top-2{
   height: 82px;
 color: white;
 display: none;
@@ -227,25 +261,29 @@ background-color:rgba(0,3,44,.5) ;
 
 
 
-.right-bottom{
+.pg-z .right-bottom{
 background: rgba(3,37,127,.5);
 border: 2px solid rgba(8,26,127,.5);
 cursor: pointer;
 }
-.sli1{
+.pg-z .sli1{
   width: 280px;
   margin:10px 30px 30px 30px;
 }
-.p2{
+.pg-z .p2{
     margin-left: 10px;
 }
 .p4{
     margin-left: 66px;
 }
-.p6{
+.pg-z .p6{
     margin-left: 46px;
 }
-.p8{
+.pg-z .p8{
     margin-left: 66px;
+}
+.pg-z .el-select .el-input__inner{
+  width: 90px;
+  height: 30px;
 }
 </style>

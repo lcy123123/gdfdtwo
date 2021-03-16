@@ -104,7 +104,6 @@ export default {
     methods:{
       //选择高度值
       changeGdValue(gdvalue){
-        console.log(gdvalue,'-----')
         
         if(gdvalue==10){
           this.gdvaluecs=10
@@ -144,27 +143,27 @@ export default {
 
       },
       //根据卫星以及卫星参数判断前端输入数据方法
-      wxAndWxcs(){
-        if(this.Wzcs==='月平均风速'||this.Wzcs==='月平均风功率密度'){
-          if(this.Wx==='ASCAT'||this.Wx==='WindSat'||this.Wx==='HY-2B'||this.Wx==='CFOSAT'){
-            console.log('2019年的')
+      // wxAndWxcs(){
+      //   if(this.Wzcs==='月平均风速'||this.Wzcs==='月平均风功率密度'){
+      //     if(this.Wx==='ASCAT'||this.Wx==='WindSat'||this.Wx==='HY-2B'||this.Wx==='CFOSAT'){
+      //       console.log('2019年的')
             
-          }else{
-            console.log('2017年的')
-          }
+      //     }else{
+      //       console.log('2017年的')
+      //     }
 
-        }else if(this.Wzcs==='年平均风速'||this.Wzcs==='年平均风功率密度'){
-          if(this.Wx==='ASCAT'||this.Wx=='WindSat'){
-            console.log('2010-2019年的')
-          }else if(this.Wx==='HY-2A'){
-            console.log('2012-2018年的')
-          }else{
-            console.log('2019-2020年的')
-          }
+      //   }else if(this.Wzcs==='年平均风速'||this.Wzcs==='年平均风功率密度'){
+      //     if(this.Wx==='ASCAT'||this.Wx=='WindSat'){
+      //       console.log('2010-2019年的')
+      //     }else if(this.Wx==='HY-2A'){
+      //       console.log('2012-2018年的')
+      //     }else{
+      //       console.log('2019-2020年的')
+      //     }
 
-        }
+      //   }
 
-      },
+      // },
       //点击年平均风速 出图片（添加图片方法）
       addimg(){
         bus.$emit('addimg',this.szybvalue)
