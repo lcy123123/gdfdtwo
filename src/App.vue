@@ -26,7 +26,7 @@ export default {
   components: {
     Cesium,
     Headerimg,
-    ColorBar
+    ColorBar,
   },
   
   data() {
@@ -88,6 +88,7 @@ html,
 body {
   width: 100%;
   overflow: hidden;
+  height: 100%;
   /* width: 1280px;
   height: 650px; */
   margin: 0;

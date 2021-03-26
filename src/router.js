@@ -15,49 +15,49 @@ import Pgjc from './components/pgjc'
 
 
 export default new Router({
-    routes:[
+    routes: [
         {
-            path:'/',
+            path: '/',
             // redirect:'/index',
             //防止弹窗以及格点风参出错
-            redirect:'/szyb',
+            redirect: '/szyb',
             // children:[]
         },
         {
-            path:'/',
-            component:Index
+            path: '/',
+            component: Index
         },
         {
-            path:'/zi',
-            component:Zi
+            path: '/zi',
+            component: Zi
         },
         {
-            path:'/tb',
-            component:Tubiao
+            path: '/tb',
+            component: Tubiao
         },
         {
-            path:'/yggc',
-            component:Yggc
+            path: '/yggc',
+            component: Yggc
         },
         {
-            path:'/yxbg',
-            component:Yxbg
+            path: '/yxbg',
+            component: Yxbg
         },
         {
-            path:'/zhtq',
-            component:Zhtq
+            path: '/zhtq',
+            component: Zhtq
         },
         {
-            path:'/szyb',
-            component:Szyb
+            path: '/szyb',
+            component: Szyb
         },
         {
-            path:'/pgjc',
-            component:Pgjc
+            path: '/pgjc',
+            component: Pgjc
         },
         {
-            path:'/pgbj',
-            component:Pgbj
+            path: '/pgbj',
+            component: Pgbj
         },
     ]
 })

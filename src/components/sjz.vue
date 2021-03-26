@@ -211,6 +211,7 @@ export default {
       jgvalue:1,
     };
   },
+  
   methods: {
     // 最后一张 鼠标移入移出
     lastover(){this.lastflag=true},
@@ -848,7 +849,8 @@ export default {
 .sjz-srk-z {
   position: relative;
   bottom: 240px;
-  left: 200px;
+  /* left: 200px; */
+  left: calc((100vh - 480px));
   display: block;
 }
 .sjz-srk {

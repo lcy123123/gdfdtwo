@@ -20,13 +20,24 @@ module.exports = {
             //   }
             // }, 
             '/':{
-              target: 'http://10.1.100.52:8080',
+              //  target: 'http://192.168.1.53:8080',    //后改地址
+              target: 'http://10.1.100.52:8080',       //原地址
               changeOrigin: true,
               ws: true, 
               pathRewrite: {
                 '^/': ''
               }
             },
+
+            //正确
+            // '/':{
+            //   target: 'http://10.1.100.52:8080',
+            //   changeOrigin: true,
+            //   ws: true, 
+            //   pathRewrite: {
+            //     '^/': ''
+            //   }
+            // }
             
           },
     },
